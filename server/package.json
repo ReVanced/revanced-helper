@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "description": "The AI and OCR server for ReVanced Helper.",
+  "type": "module",
+  "main": "index.js",
+  "author": "Reis Can",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "bson": "^4.7.0",
+    "fasttext.js": "^1.1.2",
+    "node-tesseract-ocr": "^2.2.1"
+  }
+}

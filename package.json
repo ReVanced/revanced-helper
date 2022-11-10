@@ -1,0 +1,15 @@
+{
+  "name": "revanced-helper",
+  "version": "0.0.1",
+  "description": "The community bots (and the server) to help the community and make moderators job easy.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reisxd/revanced-helper.git"
+  },
+  "author": "Reis Can",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/reisxd/revanced-helper/issues"
+  },
+  "homepage": "https://github.com/reisxd/revanced-helper#readme"
+}
