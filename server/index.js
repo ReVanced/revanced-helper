@@ -9,7 +9,6 @@ global.__dirname = dirname(__filename);
 const configJSON = readFileSync('./config.json', 'utf-8');
 const config = JSON.parse(configJSON);
 global.config = config;
-console.log(config);
 import { createServer } from 'node:net';
 import { deserialize } from 'bson';
 import FastText from 'fasttext.js';

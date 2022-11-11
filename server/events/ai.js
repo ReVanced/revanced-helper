@@ -7,7 +7,7 @@ export default async function runAI(client, data) {
         id: data.id,
         predictions
     };
-    console.log(predictions)
+
     const bsonData = serialize(jsonData);
     client.write(bsonData);
     
