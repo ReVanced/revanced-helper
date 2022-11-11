@@ -1,16 +1,15 @@
 import { serialize } from 'bson';
 
-export default async function runAI(client, data, predict) {
-    const predictions = await predict(data.text);
+export default async function runAI(client, data) {
+    const predictions = await global.ft.predict(data.text);
     const jsonData = {
-        event: 'ai_response',
+        op: 2,
         id: data.id,
         predictions
     };
-
+    console.log(predictions)
     const bsonData = serialize(jsonData);
-
-    client.pipe(bsonData);
+    client.write(bsonData);
     
     return;
 }
