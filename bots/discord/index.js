@@ -5,7 +5,7 @@ import HelperClient from '../../client/index.js';
 const configJSON = readFileSync('../config.json', 'utf-8');
 const config = JSON.parse(configJSON);
 
-const helper = new HelperClient(config.server);
+const helper = new HelperClient(config);
 
 helper.connect();
 

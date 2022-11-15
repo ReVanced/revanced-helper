@@ -5,7 +5,7 @@ import EventEmitter from 'node:events';
 class HelperClient extends EventEmitter {
     constructor({ server }) {
         super();
-        if (!server.port) throw new Error('You did not specify the server port.');
+        if (!server?.port) throw new Error('You did not specify the server port.');
         this.server = server;
     };
 

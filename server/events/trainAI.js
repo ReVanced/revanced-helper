@@ -41,6 +41,7 @@ export default async function trainAI() {
         },
         serializeTo: join(global.__dirname, global.config.fasttext.loadModel).replace('.bin', ''),
         trainFile: join(global.__dirname, global.config.fasttext.trainFile),
+        bin: join(global.__dirname, global.config.fasttext.bin)
     });
     
     global.ft.unload();
