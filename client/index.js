@@ -15,7 +15,7 @@ class HelperClient extends EventEmitter {
         });
 
         this.client.on('data', (data) => {
-            const eventData = deserialize(data);
+            const eventData = deserialize(data, { allowObjectSmallerThanBufferSize: true });
 
             switch (eventData.op) {
                 case 2: {

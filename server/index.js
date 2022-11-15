@@ -23,7 +23,7 @@ global.ft = ft;
 
 const server = createServer(async (client) => {
     client.on('data', async (data) => {
-        const eventData = deserialize(data);
+        const eventData = deserialize(data, { allowObjectSmallerThanBufferSize: true });
 
         switch(eventData.op) {
             case 1: {

@@ -1,5 +1,18 @@
 {
     "discord": {
         "token": "YOUR-BOT-TOKEN-HERE"
-    }
+    },
+    
+    "server": {
+        "port": 3000,
+        "host": "192.168.1.6"
+    },
+
+    "responses": [
+        {
+            "label": "DOWNLOAD",
+            "threshold": 0.85,
+            "text": "you wanted peevanced"
+        }
+    ]
 }
