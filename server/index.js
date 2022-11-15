@@ -12,7 +12,7 @@ global.config = config;
 import { createServer } from 'node:net';
 import { deserialize } from 'bson';
 import FastText from 'fasttext.js';
-import { runAI, trainAI, runOCR } from './events/index.js';
+import { runAI, trainAI, runOCR, addTrainData } from './events/index.js';
 
 const ft = new FastText(global.config.fasttext);
 
@@ -28,6 +28,11 @@ const server = createServer(async (client) => {
         switch(eventData.op) {
             case 1: {
                 runAI(client, eventData);
+                break;
+            };
+
+            case 3: {
+                addTrainData(eventData);
                 break;
             };
 
