@@ -15,7 +15,7 @@ const helper = new HelperClient(config);
 
 helper.connect();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+global.client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.commands = new Collection();
 client.helper = helper;
@@ -33,58 +33,32 @@ for (const file of commandFiles) {
 	}
 }
 
-client.on(Events.MessageCreate, async (msg) => {
-    helper.scanText(msg.content, `${msg.channelId}/${msg.id}`);
-});
+const discordEventsPath = join(__dirname, 'events/discord');
+const discordEventFiles = readdirSync(discordEventsPath).filter(file => file.endsWith('.js'));
 
-client.on(Events.InteractionCreate, async (interaction) => {
-    if (!interaction.isMessageContextMenuCommand()) return;
-
-    const command = interaction.client.commands.get(interaction.commandName);
-
-	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
+for (const file of discordEventFiles) {
+	const filePath = join(discordEventsPath, file);
+	const event = (await import(`file://${filePath}`)).default;
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
 	}
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
-});
+}
 
 // The ReVanced Helper events.
 
-helper.on('aiResponse', async (aiRes) => {
-    const response = config.responses.find(res => res.label === aiRes.predictions[0].label);
-    if (!response) return;
+const helperEventsPath = join(__dirname, 'events/helper');
+const helperEventFiles = readdirSync(helperEventsPath).filter(file => file.endsWith('.js'));
 
-    if (Number(aiRes.predictions[0].score) >= response.threshold) {
-        const ids = aiRes.id.split('/');
-        let channel = client.channels.cache.get(ids[0]);
-
-        if (!channel) {
-            await client.channels.fetch(ids[0]);
-            channel = client.channels.cache.get(ids[0]);
-        }
-
-        let message = channel.messages.cache.get(ids[1]);
-
-        if (!message) {
-            await channel.messages.fetch(ids[1]);
-            message = channel.messages.cache.get(ids[1]);
-        }
-
-        message.reply(response.text);
-
-        return;
-    }
-});
-
-helper.on('ocrResponse', async (aiRes) => {
-
-});
+for (const file of helperEventFiles) {
+	const filePath = join(helperEventsPath, file);
+	const event = (await import(`file://${filePath}`)).default;
+	if (event.once) {
+		helper.once(event.name, (...args) => event.execute(...args));
+	} else {
+		helper.on(event.name, (...args) => event.execute(...args));
+	}
+}
 
 client.login(config.discord.token);
