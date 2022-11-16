@@ -60,7 +60,7 @@ class HelperClient extends EventEmitter {
 
     sendTrainData(text, label) {
         this.sendData({
-            op: 5,
+            op: 3,
             label, 
             text
         });

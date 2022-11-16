@@ -1,6 +1,7 @@
 {
     "discord": {
-        "token": "YOUR-BOT-TOKEN-HERE"
+        "token": "YOUR-BOT-TOKEN-HERE",
+        "id": "1038762591805247518"
     },
     
     "server": {
