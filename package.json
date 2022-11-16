@@ -11,5 +11,12 @@
   "bugs": {
     "url": "https://github.com/reisxd/revanced-helper/issues"
   },
-  "homepage": "https://github.com/reisxd/revanced-helper#readme"
+  "homepage": "https://github.com/reisxd/revanced-helper#readme",
+  "scripts": {
+    "lint": "prettier --write . && eslint --fix ."
+  },
+  "devDependencies": {
+    "eslint": "^8.27.0",
+    "prettier": "2.7.1"
+  }
 }

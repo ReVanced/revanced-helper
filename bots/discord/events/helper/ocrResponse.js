@@ -1,7 +1,7 @@
 export default {
-    name: 'ocrResponse',
-    once: false,
-    execute(client, ocrRes) {
-        // TODO
-    }
-}
+	name: 'ocrResponse',
+	once: false,
+	execute() {
+		// TODO
+	}
+};

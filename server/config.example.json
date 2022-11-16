@@ -1,12 +1,12 @@
 {
-    "server": {
-        "port": 3000
-    },
+  "server": {
+    "port": 3000
+  },
 
-    "fasttext": {
-        "bin": "./model/fastText/fasttext",
-        "loadModel": "./model/model.bin",
-        "trainFile": "./model/train.tsv",
-        "debug": true
-    }
+  "fasttext": {
+    "bin": "./model/fastText/fasttext",
+    "loadModel": "./model/model.bin",
+    "trainFile": "./model/train.tsv",
+    "debug": true
+  }
 }

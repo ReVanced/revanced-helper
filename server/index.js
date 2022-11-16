@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 // Fix __dirname not being defined in ES modules. (https://stackoverflow.com/a/64383997)
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
 global.__dirname = dirname(__filename);
@@ -22,33 +22,33 @@ ft.load();
 global.ft = ft;
 
 const server = createServer(async (client) => {
-    client.on('data', async (data) => {
-        const eventData = deserialize(data, { allowObjectSmallerThanBufferSize: true });
+	client.on('data', async (data) => {
+		const eventData = deserialize(data, {
+			allowObjectSmallerThanBufferSize: true
+		});
 
-        switch(eventData.op) {
-            case 1: {
-                runAI(client, eventData);
-                break;
-            };
+		switch (eventData.op) {
+		case 1: {
+			runAI(client, eventData);
+			break;
+		}
 
-            case 3: {
-                addTrainData(eventData);
-                break;
-            };
+		case 3: {
+			addTrainData(eventData);
+			break;
+		}
 
-            case 4: {
-                trainAI();
-                break;
-            
-            };
+		case 4: {
+			trainAI();
+			break;
+		}
 
-            case 5: {
-                runOCR(client, eventData);
-                break;
-            };
-        };
-
-    });
+		case 5: {
+			runOCR(client, eventData);
+			break;
+		}
+		}
+	});
 });
 
 server.listen(global.config.server.port || 3000);
