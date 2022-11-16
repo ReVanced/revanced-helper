@@ -14,7 +14,7 @@ global.config = JSON.parse(configJSON);
 global.helper = new HelperClient(global.config);
 global.helper.connect();
 
-global.bot = new TelegramBot(config.telegram.token, { polling: true });
+global.bot = new TelegramBot(global.config.telegram.token, { polling: true });
 
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
@@ -31,7 +31,7 @@ for (const file of commandFiles) {
 			`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
 		);
 	}
-};
+}
 
 const tgEventsPath = join(__dirname, 'events/telegram');
 const tgEventFiles = readdirSync(tgEventsPath).filter((file) =>

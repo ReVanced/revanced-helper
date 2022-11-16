@@ -9,10 +9,13 @@ export default {
 
 		if (Number(aiRes.predictions[0].score) >= response.threshold) {
 			const ids = aiRes.id.split('/');
-            
-            global.bot.sendMessage(ids[0], response.text, { message_thread_id: ids[1], reply_to_message_id: ids[2] });
-			
-            return;
+
+			global.bot.sendMessage(ids[0], response.text, {
+				message_thread_id: ids[1],
+				reply_to_message_id: ids[2]
+			});
+
+			return;
 		}
 	}
 };

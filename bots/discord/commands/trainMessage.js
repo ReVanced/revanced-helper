@@ -5,11 +5,17 @@ import {
 	SelectMenuBuilder,
 	ComponentType
 } from 'discord.js';
+
 export default {
 	data: new ContextMenuCommandBuilder()
 		.setName('Train Message')
 		.setType(ApplicationCommandType.Message),
 	async execute(interaction) {
+		if (!interaction.member.roles.cache.get(global.config.discord.trainRole))
+			return interaction.reply({
+				content: 'You don\'t have the permission to do this.',
+				ephemeral: true
+			});
 		const options = [];
 
 		for (const { label } of global.config.responses) {

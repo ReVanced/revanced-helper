@@ -1,11 +1,12 @@
 {
   "discord": {
     "token": "YOUR-BOT-TOKEN-HERE",
-    "id": "1038762591805247518"
+    "id": "1038762591805247518",
+    "trainRole": "965267139902705744"
   },
 
   "telegram": {
-      "token": "YOUR-BOT-TOKEN-HERE"
+    "token": "YOUR-BOT-TOKEN-HERE"
   },
 
   "server": {
