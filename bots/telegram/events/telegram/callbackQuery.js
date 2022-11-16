@@ -3,9 +3,7 @@ export default {
 	once: false,
 	async execute(cb) {
 		const admins = await global.bot.getChatAdministrators(cb.message.chat.id);
-		const isAdmin = admins.find(
-			(admin) => admin.user.id === cb.from.id
-		);
+		const isAdmin = admins.find((admin) => admin.user.id === cb.from.id);
 
 		if (!isAdmin)
 			return global.bot.sendMessage(

@@ -8,6 +8,8 @@ export default {
 		if (!response) return;
 
 		if (Number(aiRes.predictions[0].score) >= response.threshold) {
+			if (!response.text) return;
+
 			const ids = aiRes.id.split('/');
 			let channel = global.client.channels.cache.get(ids[0]);
 

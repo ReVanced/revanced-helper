@@ -1,7 +1,6 @@
 export default {
 	command: /\/train/,
 	async execute(msg) {
-		console.log(msg);
 		if (msg.reply_to_message.message_id === msg.message_thread_id)
 			return global.bot.sendMessage(msg.chat.id, 'Please reply to a message!', {
 				message_thread_id: msg.message_thread_id,

@@ -45,7 +45,7 @@ export default {
 
 		collector.on('collect', (i) => {
 			i.client.helper.sendTrainData(
-				interaction.targetMessage.content,
+				interaction.targetMessage.content.toLowerCase(),
 				i.values[0].toUpperCase()
 			);
 
