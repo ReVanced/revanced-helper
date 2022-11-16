@@ -4,6 +4,7 @@ export default {
 	name: Events.MessageCreate,
 	once: false,
 	execute(msg) {
-		msg.client.helper.scanText(msg.content, `${msg.channelId}/${msg.id}`);
+        if (!msg.content) return;
+		msg.client.helper.scanText(msg.content.toLowerCase(), `${msg.channelId}/${msg.id}`);
 	}
 };
