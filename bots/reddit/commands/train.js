@@ -5,7 +5,8 @@ export default {
 		const isAdmin = await client
 			.getSubreddit('revancedapp')
 			.getModerators({ name: item.author.name });
-		if (!isAdmin)
+
+		if (!isAdmin[0])
 			return client.getComment(item.id).reply('You\'re not an admin.');
 		if (!args[0])
 			return client.getComment(item.id).reply('You didn\'t specifiy the label!');
