@@ -4,7 +4,11 @@ export default {
 	name: Events.InteractionCreate,
 	once: false,
 	async execute(interaction) {
-		if (!interaction.isMessageContextMenuCommand()) return;
+		if (
+			!interaction.isMessageContextMenuCommand() ||
+      !interaction.isChatInputCommand()
+		)
+			return;
 
 		const command = interaction.client.commands.get(interaction.commandName);
 
