@@ -2,7 +2,8 @@
   "discord": {
     "token": "YOUR-BOT-TOKEN-HERE",
     "id": "1038762591805247518",
-    "trainRole": "965267139902705744"
+    "trainRole": "965267139902705744",
+    "trainingRole": "952987191401926697"
   },
 
   "telegram": {
