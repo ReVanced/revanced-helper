@@ -12,18 +12,22 @@ export default {
 		let i = 0;
 		for (const { label } of global.config.responses) {
 			if (arrI === 0 && i === 0) {
-				options.push([{
-					text: label,
-					callback_data: `label_${label.toLowerCase()}`
-				}]);
+				options.push([
+					{
+						text: label,
+						callback_data: `label_${label.toLowerCase()}`
+					}
+				]);
 				i++;
 			} else if (i === 2) {
-				options.push([{
-					text: label,
-					callback_data: `label_${label.toLowerCase()}`
-				}]);
+				options.push([
+					{
+						text: label,
+						callback_data: `label_${label.toLowerCase()}`
+					}
+				]);
 				i = 0;
-				arrI++
+				arrI++;
 			} else {
 				options[arrI].push({
 					text: label,

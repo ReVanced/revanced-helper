@@ -24,5 +24,7 @@ export default {
 			message_thread_id: cb.message.message_thread_id,
 			reply_to_message_id: cb.message.message_id
 		});
+
+		global.bot.deleteMessage(cb.message.chat.id, cb.message.message_id);
 	}
 };
