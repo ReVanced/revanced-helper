@@ -37,7 +37,6 @@ export default {
 			}
 		}
 
-		console.log(options);
 		const admins = await global.bot.getChatAdministrators(msg.chat.id);
 		const isAdmin = admins.find((admin) => admin.user.id === msg.from.id);
 
