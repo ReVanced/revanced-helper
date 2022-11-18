@@ -24,7 +24,9 @@ for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
 	const command = (await import(`file://${filePath}`)).default;
 	if ('command' in command && 'execute' in command) {
-		bot.onText(command.command, (...args) => command.execute(bot, config, ...args));
+		bot.onText(command.command, (...args) =>
+			command.execute(bot, config, ...args)
+		);
 	} else {
 		console.log(
 			`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`

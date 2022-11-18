@@ -6,14 +6,10 @@ export default {
 		const isAdmin = admins.find((admin) => admin.user.id === cb.from.id);
 
 		if (!isAdmin)
-			return bot.sendMessage(
-				cb.message.chat.id,
-				'You\'re not an admin.',
-				{
-					message_thread_id: cb.message.message_thread_id,
-					reply_to_message_id: cb.message.message_id
-				}
-			);
+			return bot.sendMessage(cb.message.chat.id, 'You\'re not an admin.', {
+				message_thread_id: cb.message.message_thread_id,
+				reply_to_message_id: cb.message.message_id
+			});
 
 		helper.sendTrainData(
 			cb.message.reply_to_message.text.toLowerCase(),
