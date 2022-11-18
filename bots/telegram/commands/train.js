@@ -1,6 +1,15 @@
 export default {
 	command: /\/train/,
 	async execute(bot, config, msg) {
+		const admins = await bot.getChatAdministrators(msg.chat.id);
+		const isAdmin = admins.find((admin) => admin.user.id === msg.from.id);
+
+		if (!isAdmin)
+			return bot.sendMessage(msg.chat.id, 'You\'re not an admin.', {
+				message_thread_id: msg.message_thread_id,
+				reply_to_message_id: msg.message_id
+			});
+		
 		if (msg.reply_to_message.message_id === msg.message_thread_id)
 			return bot.sendMessage(msg.chat.id, 'Please reply to a message!', {
 				message_thread_id: msg.message_thread_id,
@@ -37,14 +46,6 @@ export default {
 			}
 		}
 
-		const admins = await bot.getChatAdministrators(msg.chat.id);
-		const isAdmin = admins.find((admin) => admin.user.id === msg.from.id);
-
-		if (!isAdmin)
-			return bot.sendMessage(msg.chat.id, 'You\'re not an admin.', {
-				message_thread_id: msg.message_thread_id,
-				reply_to_message_id: msg.message_id
-			});
 		bot.sendMessage(
 			msg.chat.id,
 			'Please select the corresponding label to train the bot.',
