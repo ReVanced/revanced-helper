@@ -1,7 +1,7 @@
 import FastText from 'fasttext.js';
 import { join } from 'node:path';
 
-export default async function trainAI() {
+export default async function trainAI(ftext, __dirname, config) {
 	const ft = new FastText({
 		train: {
 			// number of concurrent threads
@@ -39,19 +39,16 @@ export default async function trainAI() {
 			// load pre trained word vectors from unsupervised model
 			pretrainedVectors: ''
 		},
-		serializeTo: join(
-			global.__dirname,
-			global.config.fasttext.loadModel
-		).replace('.bin', ''),
-		trainFile: join(global.__dirname, global.config.fasttext.trainFile),
-		bin: join(global.__dirname, global.config.fasttext.bin)
+		serializeTo: join(__dirname, config.fasttext.loadModel).replace('.bin', ''),
+		trainFile: join(__dirname, config.fasttext.trainFile),
+		bin: join(__dirname, config.fasttext.bin)
 	});
 
-	global.ft.unload();
+	ftext.unload();
 
 	await ft.train();
 
-	global.ft.load();
+	ftext.load();
 
 	return;
 }

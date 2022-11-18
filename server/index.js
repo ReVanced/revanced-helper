@@ -4,22 +4,18 @@ import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
-global.__dirname = dirname(__filename);
+const __dirname = dirname(__filename);
 
-const configJSON = readFileSync('./config.json', 'utf-8');
-const config = JSON.parse(configJSON);
-global.config = config;
+const config = JSON.parse(readFileSync('./config.json', 'utf-8'));
+
 import { createServer } from 'node:net';
 import { deserialize } from 'bson';
 import FastText from 'fasttext.js';
 import { runAI, trainAI, runOCR, addTrainData } from './events/index.js';
 
-const ft = new FastText(global.config.fasttext);
+const ft = new FastText(config.fasttext);
 
 ft.load();
-
-// I'm sorry. This is probably the only solution.
-global.ft = ft;
 
 const server = createServer(async (client) => {
 	client.on('data', async (data) => {
@@ -29,17 +25,17 @@ const server = createServer(async (client) => {
 
 		switch (eventData.op) {
 		case 1: {
-			runAI(client, eventData);
+			runAI(client, eventData, ft);
 			break;
 		}
 
 		case 3: {
-			addTrainData(eventData);
+			addTrainData(eventData, __dirname, config);
 			break;
 		}
 
 		case 4: {
-			trainAI();
+			trainAI(ft, __dirname, config);
 			break;
 		}
 
@@ -51,4 +47,4 @@ const server = createServer(async (client) => {
 	});
 });
 
-server.listen(global.config.server.port || 3000);
+server.listen(config.server.port || 3000);
