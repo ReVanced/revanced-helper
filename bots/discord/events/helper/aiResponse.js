@@ -1,8 +1,8 @@
 export default {
 	name: 'aiResponse',
 	once: false,
-	async execute(aiRes) {
-		const response = global.config.responses.find(
+	async execute(client, config, aiRes) {
+		const response = config.responses.find(
 			(res) => res.label === aiRes.predictions[0].label
 		);
 		if (!response) return;
@@ -11,11 +11,11 @@ export default {
 			if (!response.text) return;
 
 			const ids = aiRes.id.split('/');
-			let channel = global.client.channels.cache.get(ids[0]);
+			let channel = client.channels.cache.get(ids[0]);
 
 			if (!channel) {
-				await global.client.channels.fetch(ids[0]);
-				channel = global.client.channels.cache.get(ids[0]);
+				await client.channels.fetch(ids[0]);
+				channel = client.channels.cache.get(ids[0]);
 			}
 
 			let message = channel.messages.cache.get(ids[1]);

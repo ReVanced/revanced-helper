@@ -10,12 +10,11 @@ export default {
 	data: new ContextMenuCommandBuilder()
 		.setName('Train Message')
 		.setType(ApplicationCommandType.Message),
-	async execute(interaction) {
-		// Prettier and ESLint doesn't like to play nicely here.
+	async execute(helper, config, interaction) {
 		if (
-			interaction.member.roles.highest.position <
-      interaction.member.guild.roles.cache.get(global.config.discord.trainRole)
-      	.position
+			interaction.member.roles.highest.comparePositionTo(
+				interaction.member.guild.roles.cache.get(config.discord.trainRole)
+			) < 0
 		)
 			return interaction.reply({
 				content: 'You don\'t have the permission to do this.',
@@ -23,7 +22,7 @@ export default {
 			});
 		const options = [];
 
-		for (const { label } of global.config.responses) {
+		for (const { label } of config.responses) {
 			options.push({
 				label: label,
 				description: `The ${label} label.`,
@@ -49,7 +48,7 @@ export default {
 		});
 
 		collector.on('collect', (i) => {
-			i.client.helper.sendTrainData(
+			helper.sendTrainData(
 				interaction.targetMessage.content.toLowerCase(),
 				i.values[0].toUpperCase()
 			);

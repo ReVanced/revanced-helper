@@ -3,7 +3,7 @@ import { Events } from 'discord.js';
 export default {
 	name: Events.InteractionCreate,
 	once: false,
-	async execute(interaction) {
+	async execute(helper, config, interaction) {
 		if (!interaction.isMessageContextMenuCommand()) {
 			if (!interaction.isChatInputCommand()) return;
 		}
@@ -18,7 +18,7 @@ export default {
 		}
 
 		try {
-			await command.execute(interaction);
+			await command.execute(helper, config, interaction);
 		} catch (error) {
 			console.error(error);
 			await interaction.reply({

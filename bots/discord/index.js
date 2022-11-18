@@ -8,14 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import HelperClient from '../../client/index.js';
 
-const configJSON = readFileSync('../config.json', 'utf-8');
-global.config = JSON.parse(configJSON);
+const config = JSON.parse(readFileSync('../config.json', 'utf-8'));
 
-const helper = new HelperClient(global.config);
+const helper = new HelperClient(config);
 
 helper.connect();
 
-global.client = new Client({
+const client = new Client({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
@@ -23,8 +22,7 @@ global.client = new Client({
 	]
 });
 
-global.client.commands = new Collection();
-global.client.helper = helper;
+client.commands = new Collection();
 
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
@@ -35,7 +33,7 @@ for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
 	const command = (await import(`file://${filePath}`)).default;
 	if ('data' in command && 'execute' in command) {
-		global.client.commands.set(command.data.name, command);
+		client.commands.set(command.data.name, command);
 	} else {
 		console.log(
 			`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
@@ -52,9 +50,11 @@ for (const file of discordEventFiles) {
 	const filePath = join(discordEventsPath, file);
 	const event = (await import(`file://${filePath}`)).default;
 	if (event.once) {
-		global.client.once(event.name, (...args) => event.execute(...args));
+		client.once(event.name, (...args) =>
+			event.execute(helper, config, ...args)
+		);
 	} else {
-		global.client.on(event.name, (...args) => event.execute(...args));
+		client.on(event.name, (...args) => event.execute(helper, config, ...args));
 	}
 }
 
@@ -69,10 +69,12 @@ for (const file of helperEventFiles) {
 	const filePath = join(helperEventsPath, file);
 	const event = (await import(`file://${filePath}`)).default;
 	if (event.once) {
-		helper.once(event.name, (...args) => event.execute(...args));
+		helper.once(event.name, (...args) =>
+			event.execute(client, config, ...args)
+		);
 	} else {
-		helper.on(event.name, (...args) => event.execute(...args));
+		helper.on(event.name, (...args) => event.execute(client, config, ...args));
 	}
 }
 
-global.client.login(global.config.discord.token);
+client.login(config.discord.token);
