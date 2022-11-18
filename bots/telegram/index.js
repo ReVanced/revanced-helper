@@ -8,13 +8,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import HelperClient from '../../client/index.js';
 
-const configJSON = readFileSync('../config.json', 'utf-8');
-global.config = JSON.parse(configJSON);
+const config = JSON.parse(readFileSync('../config.json', 'utf-8'));
 
-global.helper = new HelperClient(global.config);
-global.helper.connect();
+const helper = new HelperClient(config);
+helper.connect();
 
-global.bot = new TelegramBot(global.config.telegram.token, { polling: true });
+const bot = new TelegramBot(config.telegram.token, { polling: true });
 
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
@@ -25,7 +24,7 @@ for (const file of commandFiles) {
 	const filePath = join(commandsPath, file);
 	const command = (await import(`file://${filePath}`)).default;
 	if ('command' in command && 'execute' in command) {
-		global.bot.onText(command.command, (...args) => command.execute(...args));
+		bot.onText(command.command, (...args) => command.execute(bot, config, ...args));
 	} else {
 		console.log(
 			`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
@@ -42,9 +41,9 @@ for (const file of tgEventFiles) {
 	const filePath = join(tgEventsPath, file);
 	const event = (await import(`file://${filePath}`)).default;
 	if (event.once) {
-		global.bot.once(event.name, (...args) => event.execute(...args));
+		bot.once(event.name, (...args) => event.execute(bot, helper, ...args));
 	} else {
-		global.bot.on(event.name, (...args) => event.execute(...args));
+		bot.on(event.name, (...args) => event.execute(bot, helper, ...args));
 	}
 }
 
@@ -59,8 +58,8 @@ for (const file of helperEventFiles) {
 	const filePath = join(helperEventsPath, file);
 	const event = (await import(`file://${filePath}`)).default;
 	if (event.once) {
-		global.helper.once(event.name, (...args) => event.execute(...args));
+		helper.once(event.name, (...args) => event.execute(bot, config, ...args));
 	} else {
-		global.helper.on(event.name, (...args) => event.execute(...args));
+		helper.on(event.name, (...args) => event.execute(bot, config, ...args));
 	}
 }
