@@ -38,7 +38,6 @@ for (const file of commandFiles) {
 	}
 }
 
-const BOT_START = Date.now() / 1000;
 global.checkedItems = [];
 
 const args = {
@@ -52,17 +51,15 @@ const comments = new CommentStream(global.client, args);
 const posts = new SubmissionStream(global.client, args);
 
 comments.on('item', async (item) => {
-	if (item.created_utc < BOT_START) return;
 	await handleItem(item, false);
 });
 
 posts.on('item', async (item) => {
-	//if (item.created_utc < BOT_START) return;
 	await handleItem(item, true);
 });
 
 async function handleItem(item, isPost) {
-	// The "skill issue (refresh) incident."
+	// The "skill issue (refresh)" incident.
 	if (item.author.name === global.config.reddit.username) return;
 
 	if (global.checkedItems.includes(item.id)) return;
