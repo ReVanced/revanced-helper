@@ -6,8 +6,11 @@ export default function addTrainData(eventData) {
 		join(global.__dirname, global.config.fasttext.trainFile),
 		'utf-8'
 	);
-	const data = file.split('\n');
 	const { label, text } = eventData;
+
+	if (file.includes(text)) return;
+	
+	const data = file.split('\n');
 
 	const labelIndex = data.findIndex((data) => data.startsWith(label));
 
