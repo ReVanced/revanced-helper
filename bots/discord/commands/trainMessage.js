@@ -11,7 +11,12 @@ export default {
 		.setName('Train Message')
 		.setType(ApplicationCommandType.Message),
 	async execute(interaction) {
-		if (!interaction.member.roles.cache.get(global.config.discord.trainRole))
+		// Prettier and ESLint doesn't like to play nicely here.
+		if (
+			interaction.member.roles.highest.position <
+      interaction.member.guild.roles.cache.get(global.config.discord.trainRole)
+      	.position
+		)
 			return interaction.reply({
 				content: 'You don\'t have the permission to do this.',
 				ephemeral: true
