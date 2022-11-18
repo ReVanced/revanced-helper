@@ -1,6 +1,6 @@
 export default {
 	command: 'train',
-	async execute(client, item, args) {
+	async execute(client, helper, item, args) {
 		console.log(args);
 		const isAdmin = await client
 			.getSubreddit('revancedapp')
@@ -14,7 +14,7 @@ export default {
 		if (isComment) {
 			const commentData = (await client.getComment(item.parent_id).fetch())
 				.body;
-			client.helper.sendTrainData(commentData, args[0].toUpperCase());
+			helper.sendTrainData(commentData, args[0].toUpperCase());
 		} else {
 			if (!args[1])
 				return client
@@ -24,7 +24,7 @@ export default {
 					);
 			const postData = await client.getSubmission(item.parent_id).fetch();
 
-			client.helper.sendTrainData(
+			helper.sendTrainData(
 				args[1] === 'title' ? postData.title : postData.selftext,
 				args[0].toUpperCase()
 			);

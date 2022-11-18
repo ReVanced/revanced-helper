@@ -1,8 +1,8 @@
 export default {
 	name: 'aiResponse',
 	once: false,
-	async execute(aiRes) {
-		const response = global.config.responses.find(
+	async execute(client, config, aiRes) {
+		const response = config.responses.find(
 			(res) => res.label === aiRes.predictions[0].label
 		);
 		if (!response) return;
@@ -14,12 +14,12 @@ export default {
 
 			switch (ids[0]) {
 			case 'comment': {
-				global.client.getComment(ids[1]).reply(response.text);
+				client.getComment(ids[1]).reply(response.text);
 				break;
 			}
 
 			case 'post': {
-				global.client.getSubmission(ids[1]).reply(response.text);
+				client.getSubmission(ids[1]).reply(response.text);
 				break;
 			}
 			}
