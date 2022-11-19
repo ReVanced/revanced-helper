@@ -10,16 +10,18 @@ export default {
 		if (Number(aiRes.predictions[0].score) >= response.threshold) {
 			const ids = aiRes.id.split('/');
 
-			if (!response.text) return;
+			if (!response.responses[0]) return;
+
+			const replyMsg = response.responses.find(res => res.p === 'reddit').text;
 
 			switch (ids[0]) {
 			case 'comment': {
-				client.getComment(ids[1]).reply(response.text);
+				client.getComment(ids[1]).reply(replyMsg);
 				break;
 			}
 
 			case 'post': {
-				client.getSubmission(ids[1]).reply(response.text);
+				client.getSubmission(ids[1]).reply(replyMsg);
 				break;
 			}
 			}

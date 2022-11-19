@@ -10,9 +10,11 @@ export default {
 		if (Number(aiRes.predictions[0].score) >= response.threshold) {
 			const ids = aiRes.id.split('/');
 
-			if (!response.text) return;
+			if (!response.responses[0]) return;
 
-			bot.sendMessage(ids[0], response.text, {
+			const replyMsg = response.responses.find(res => res.p === 'telegram').text;
+
+			bot.sendMessage(ids[0], replyMsg, {
 				message_thread_id: ids[1],
 				reply_to_message_id: ids[2]
 			});

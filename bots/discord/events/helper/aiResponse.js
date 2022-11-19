@@ -8,7 +8,7 @@ export default {
 		if (!response) return;
 
 		if (Number(aiRes.predictions[0].score) >= response.threshold) {
-			if (!response.text) return;
+			if (!response.responses[0]) return;
 
 			const ids = aiRes.id.split('/');
 			let channel = client.channels.cache.get(ids[0]);
@@ -24,8 +24,10 @@ export default {
 				await channel.messages.fetch(ids[1]);
 				message = channel.messages.cache.get(ids[1]);
 			}
-
-			message.reply(response.text);
+			
+			const replyMsg = response.responses.find(res => res.p === 'discord').text;
+			
+			message.reply(replyMsg);
 
 			return;
 		}

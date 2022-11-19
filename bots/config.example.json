@@ -27,7 +27,20 @@
     {
       "label": "DOWNLOAD",
       "threshold": 0.85,
-      "text": "you wanted peevanced"
+      "responses": [
+        {
+          "p": "discord",
+          "text": "you wanted peevanced"
+        },
+        {
+          "p": "telegram",
+          "text":"you wanted peevanced, on telegram"
+        },
+        {
+          "p": "reddit",
+          "text": "you wanted peevanced, on reddit"
+        }
+      ]
     }
   ]
 }
