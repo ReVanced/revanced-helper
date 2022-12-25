@@ -8,8 +8,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Reis Can",
-  "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "snoostorm": "^1.5.2"
-  }
+  "license": "GPL-3.0-or-later"
 }

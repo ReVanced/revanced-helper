@@ -5,5 +5,10 @@
   "main": "index.js",
   "type": "module",
   "author": "Reis Can",
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "node-telegram-bot-api": "^0.60.0",
+    "snoostorm": "^1.5.2"
+  }
 }
