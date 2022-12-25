@@ -1,0 +1,9 @@
+{
+  "name": "bots",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "author": "Reis Can",
+  "license": "GPL-3.0-or-later"
+}

@@ -3,11 +3,11 @@ import { readFileSync, readdirSync } from 'node:fs';
 // Fix __dirname not being defined in ES modules. (https://stackoverflow.com/a/64383997)
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import HelperClient from '../../client/index.js';
 
+export default async () => {
 const config = JSON.parse(readFileSync('../config.json', 'utf-8'));
 
 const helper = new HelperClient(config);
@@ -78,3 +78,5 @@ for (const file of helperEventFiles) {
 }
 
 client.login(config.discord.token);
+
+}
