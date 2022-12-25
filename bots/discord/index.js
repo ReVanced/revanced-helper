@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 import HelperClient from '../../client/index.js';
 
 export default async () => {
-const config = JSON.parse(readFileSync('../config.json', 'utf-8'));
+const config = JSON.parse(readFileSync('./config.json', 'utf-8'));
 
 const helper = new HelperClient(config);
 
