@@ -2,14 +2,9 @@ export default {
 	name: 'aiResponse',
 	once: false,
 	async execute(client, config, aiRes) {
-		const response = config.responses.find(
-			(res) => res.label === aiRes.predictions[0].label
-		);
-		if (!response) return;
+		if (!aiRes.response) return;
 
-		if (Number(aiRes.predictions[0].score) >= response.threshold) {
-			if (!response.responses[0]) return;
-
+		try {
 			const ids = aiRes.id.split('/');
 			let channel = client.channels.cache.get(ids[0]);
 
@@ -24,12 +19,11 @@ export default {
 				await channel.messages.fetch(ids[1]);
 				message = channel.messages.cache.get(ids[1]);
 			}
-			
-			const replyMsg = response.responses.find(res => res.p === 'discord').text;
-			
-			message.reply(replyMsg);
+
+			message.reply(aiRes.response);
 
 			return;
-		}
+		} catch (e) {}
+
 	}
 };

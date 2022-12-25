@@ -10,12 +10,11 @@ const config = JSON.parse(readFileSync('./config.json', 'utf-8'));
 
 import { createServer } from 'node:net';
 import { deserialize } from 'bson';
-import FastText from 'fasttext.js';
-import { runAI, trainAI, runOCR, addTrainData } from './events/index.js';
+import transformers from 'transformers-nodejs';
+import { runAI, runOCR } from './events/index.js';
 
-const ft = new FastText(config.fasttext);
-
-ft.load();
+const tokenizer = await transformers.AutoTokenizer.fromPretrained(config.transformers.tokenizer);
+const model = await transformers.AutoModelForSeq2SeqLM.fromPretrained(config.transformers.model);
 
 const server = createServer(async (client) => {
 	client.on('data', async (data) => {
@@ -25,17 +24,7 @@ const server = createServer(async (client) => {
 
 		switch (eventData.op) {
 		case 1: {
-			runAI(client, eventData, ft);
-			break;
-		}
-
-		case 3: {
-			addTrainData(eventData, __dirname, config);
-			break;
-		}
-
-		case 4: {
-			trainAI(ft, __dirname, config);
+			runAI(client, eventData, tokenizer, model, config.transformers);
 			break;
 		}
 

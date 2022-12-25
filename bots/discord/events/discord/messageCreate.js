@@ -5,6 +5,7 @@ export default {
 	once: false,
 	execute(helper, _, msg) {
 		if (!msg.content || msg.author.bot) return;
-		helper.scanText(msg.content.toLowerCase(), `${msg.channelId}/${msg.id}`);
+		if (!msg.mentions.has(msg.client.user)) return;
+		helper.scanText(msg.content.toLowerCase().replace(/<.*?>/g, ''), `${msg.channelId}/${msg.id}`);
 	}
 };

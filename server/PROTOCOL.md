@@ -20,32 +20,7 @@ And the server would return something like this:
 {
   "op": 2,
   "id": "String",
-  "predictions": [
-    {
-      "label": "DOWNLOAD",
-      "score": "1"
-    }
-  ]
-}
-```
-
-# Training the AI
-
-To add data to the train data, send a BSON (JSON) like this:
-
-```json
-{
-  "op": 3,
-  "label": "FALSEPOSITIVE",
-  "text": "how"
-}
-```
-
-To train the AI and to re-load it, send this BSON (JSON):
-
-```json
-{
-  "event": 4
+  "response": "I think the term afn is just a generic slang term for the app that allows you to modify the behavior of Dalvik based android application..."
 }
 ```
 

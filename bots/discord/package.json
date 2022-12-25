@@ -11,6 +11,6 @@
   "author": "Reis Can",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "discord.js": "^14.6.0"
+    "discord.js": "^14.7.1"
   }
 }
