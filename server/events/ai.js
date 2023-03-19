@@ -1,24 +1,19 @@
 import { serialize } from 'bson';
 
-async function generateResponse(tokenizer, model, config, dialog) {
-	const knowledge = `[KNOWLEDGE] ${config.knowledge.join(' ')}`;
-	const context = `[CONTEXT] ${dialog.substring(0, 64)}`;
+export default async function runAI(client, data, config) {
+	const witAIReq = await fetch(`https://api.wit.ai/message?v20230319&q=${encodeURI(data.text)}`, {
+		headers: {
+			authorization: `Bearer ${config.authToken}`
+		}
+	});
 
-	const query = `${config.instruction} ${context} ${knowledge}`;
-
-	const inputTokenIds = tokenizer.encode(query);
-	const outputTokenIds = await model.generate(inputTokenIds, { maxLength: 64, topK: 10 });
-	return await tokenizer.decode(outputTokenIds, true);
-}
-
-export default async function runAI(client, data, tokenizer, model, config) {
-	const response = await generateResponse(tokenizer, model, config, data.text);
+	const response = await witAIReq.json();
 
 	client.write(
 		serialize({
 			op: 2,
 			id: data.id,
-			response
+			response: response.intents
 		})
 	);
 

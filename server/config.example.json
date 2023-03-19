@@ -2,13 +2,7 @@
   "server": {
     "port": 3000
   },
-  
-  "transformers": {
-    "model": "./model.onnx",
-    "tokenizer": "./tokenizer.json",
-    "instruction": "Instruction: given a dialog context and related knowledge, you need to answer the question based on the knowledge.",
-    "knowledge": [
-      "ReVanced is a generic patcher that allows you to modify the behavior of any Dalvik based Android application"
-    ]
+  "witAI": {
+    "authToken": "AUTH-TOKEN"
   }
 }
