@@ -72,11 +72,11 @@ export default async () => {
 		const event = (await import(`file://${filePath}`)).default;
 		if (event.once) {
 			helper.once(event.name, (...args) =>
-				event.execute(client, config, ...args)
+				event.execute(client, config, helper, ...args)
 			);
 		} else {
 			helper.on(event.name, (...args) =>
-				event.execute(client, config, ...args)
+				event.execute(client, config, helper, ...args)
 			);
 		}
 	}
