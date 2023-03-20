@@ -2,7 +2,7 @@ import {
 	ContextMenuCommandBuilder,
 	ApplicationCommandType,
 	ActionRowBuilder,
-	SelectMenuBuilder,
+	StringSelectMenuBuilder,
 	ComponentType
 } from 'discord.js';
 
@@ -31,7 +31,7 @@ export default {
 		}
 
 		const row = new ActionRowBuilder().addComponents(
-			new SelectMenuBuilder()
+			new StringSelectMenuBuilder()
 				.setCustomId('select')
 				.setPlaceholder('Nothing selected')
 				.addOptions(options)
