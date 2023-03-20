@@ -97,7 +97,9 @@ export default async () => {
 				event.execute(client, config, ...args)
 			);
 		} else {
-			helper.on(event.name, (...args) => event.execute(client, config, ...args));
+			helper.on(event.name, (...args) =>
+				event.execute(client, config, ...args)
+			);
 		}
 	}
-}
+};

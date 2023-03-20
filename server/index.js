@@ -3,7 +3,7 @@ const config = JSON.parse(readFileSync('./config.json', 'utf-8'));
 
 import { createServer } from 'node:net';
 import { deserialize } from 'bson';
-import { runAI, runOCR } from './events/index.js';
+import { runAI, runOCR, trainAI } from './events/index.js';
 
 const server = createServer(async (client) => {
 	client.on('data', async (data) => {
@@ -14,6 +14,11 @@ const server = createServer(async (client) => {
 		switch (eventData.op) {
 		case 1: {
 			runAI(client, eventData, config.witAI);
+			break;
+		}
+
+		case 3: {
+			trainAI(eventData, config.witAI);
 			break;
 		}
 

@@ -23,19 +23,26 @@ export default {
 				message = channel.messages.cache.get(ids[1]);
 			}
 
-			const intent = aiRes.response.reduce((a, b) => a.confidence > b.confidence ? a : b);
-			const response = config.responses.find((res) => res.label === intent.name);
+			const intent = aiRes.response.reduce((a, b) =>
+				a.confidence > b.confidence ? a : b
+			);
+			const response = config.responses.find(
+				(res) => res.label === intent.name
+			);
 			if (response.threshold > intent.confidence) return;
-			
-			const embed = new EmbedBuilder()
-								.setTitle('You have asked a Frequently Asked Question')
-								.setDescription(response.text)
-								.setFooter({ text: `Confidence: ${intent.confidence}` });
+			if (!response.reply) return;
 
-			message.reply({ embeds: [embed]});
+			const embed = new EmbedBuilder()
+				.setTitle(response.reply.title)
+				.setDescription(response.reply.desc)
+				.setColor(14908858)
+				.setFooter({ text: `Confidence: ${intent.confidence}` });
+
+			message.reply({ embeds: [embed] });
 
 			return;
-		} catch (e) {console.log(e)}
-
+		} catch (e) {
+			console.log(e);
+		}
 	}
 };

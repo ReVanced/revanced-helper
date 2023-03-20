@@ -1,4 +1,5 @@
 import runAI from './ai.js';
 import runOCR from './ocr.js';
+import trainAI from './train.js';
 
-export { runAI, runOCR };
+export { runAI, runOCR, trainAI };

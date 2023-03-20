@@ -2,7 +2,7 @@
 
 The server uses TCP for connection and BSON for messages, so you need to serialize and deserialize the messages.
 
-# AI
+## AI
 
 Sending the server this JSON (BSON) will send you back the AI predictions.
 
@@ -20,11 +20,28 @@ And the server would return something like this:
 {
   "op": 2,
   "id": "String",
-  "response": "I think the term afn is just a generic slang term for the app that allows you to modify the behavior of Dalvik based android application..."
+  "response": [
+    {
+      "confidence": 0.99,
+      "id": "String",
+      "name": "revanced_download"
+    }
+  ]
+```
+
+### Training the AI
+
+To train the AI, send the server a JSON (BSON) like this:
+
+```json
+{
+  "op": 3,
+  "label": "revanced_download",
+  "text": "how to download revanced"
 }
 ```
 
-# OCR
+## OCR
 
 Sending the server this JSON (BSON) will send you back the read text.
 

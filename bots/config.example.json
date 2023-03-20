@@ -27,7 +27,10 @@
     {
       "label": "DOWNLOAD",
       "threshold": 0.85,
-      "text": "the download?"
+      "reply": {
+        "title": "download??",
+        "desc": "the download?"
+      }
     }
   ]
 }

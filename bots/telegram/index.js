@@ -66,4 +66,4 @@ export default async () => {
 			helper.on(event.name, (...args) => event.execute(bot, config, ...args));
 		}
 	}
-}
+};

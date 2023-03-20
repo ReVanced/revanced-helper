@@ -9,7 +9,7 @@ export default {
 				message_thread_id: msg.message_thread_id,
 				reply_to_message_id: msg.message_id
 			});
-		
+
 		if (msg.reply_to_message.message_id === msg.message_thread_id)
 			return bot.sendMessage(msg.chat.id, 'Please reply to a message!', {
 				message_thread_id: msg.message_thread_id,
