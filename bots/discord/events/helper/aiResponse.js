@@ -55,7 +55,7 @@ export default {
 			const reply = await message.reply({ embeds: [embed], components: [feedbackRow] });
 			const filter = (i) => i.member.roles.highest.comparePositionTo(
 				i.member.guild.roles.cache.get(config.discord.trainRole)
-			) < 0
+			) > 0
 
 			const collector = reply.createMessageComponentCollector({ filter, time: 15_000 });
 			collector.on('collect', (i) => {
