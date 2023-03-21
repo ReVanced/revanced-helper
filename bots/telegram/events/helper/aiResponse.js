@@ -19,7 +19,7 @@ export default {
 			`## ${response.reply.title}\n\n${response.reply.desc}\n\n_Confidence: ${intent.confidence}_\n\nThis bot is currently being tested in production. Ignore it, if it's wrong.`,
 			{
 				message_thread_id: ids[1],
-				reply_to_message_id: ids[2],
+				reply_to_message_id: ids[2]
 			}
 		);
 

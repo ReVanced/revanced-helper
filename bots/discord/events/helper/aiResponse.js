@@ -1,4 +1,9 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import {
+	EmbedBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle
+} from 'discord.js';
 import trainAISelectMenu from '../../utils/trainAISelectMenu.js';
 
 export default {
@@ -52,12 +57,19 @@ export default {
 					.setStyle(ButtonStyle.Danger)
 			);
 
-			const reply = await message.reply({ embeds: [embed], components: [feedbackRow] });
-			const filter = (i) => i.member.roles.highest.comparePositionTo(
-				i.member.guild.roles.cache.get(config.discord.trainRole)
-			) > 0
+			const reply = await message.reply({
+				embeds: [embed],
+				components: [feedbackRow]
+			});
+			const filter = (i) =>
+				i.member.roles.highest.comparePositionTo(
+					i.member.guild.roles.cache.get(config.discord.trainRole)
+				) > 0;
 
-			const collector = reply.createMessageComponentCollector({ filter, time: 15_000 });
+			const collector = reply.createMessageComponentCollector({
+				filter,
+				time: 15_000
+			});
 			collector.on('collect', (i) => {
 				if (i.customId == 'fb-like') {
 					// We train it using the label the AI gave.
@@ -65,9 +77,9 @@ export default {
 					i.reply({ ephemeral: true, content: 'Sent train data to server.' });
 				} else {
 					// We ask the trainer to train it using the select menu.
-					trainAISelectMenu(i, config, helper);
+					trainAISelectMenu(i, config, helper, message);
 				}
-			})
+			});
 			return;
 		} catch (e) {
 			console.log(e);
