@@ -19,6 +19,8 @@ export default {
       helper.sendTrainData(interactedMessage, i.values[0]);
 
       i.reply({ content: 'Sent training data to server.', ephemeral: true });
+
+      interaction.message.edit({ components: [] });
     */
     interaction.reply({
       content: 'Feature currently not available. Please use the dislike button.',

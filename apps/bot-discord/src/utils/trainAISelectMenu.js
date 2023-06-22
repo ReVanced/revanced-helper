@@ -51,5 +51,9 @@ export default async function trainAISelectMenu(
 		helper.sendTrainData(interactedMessage, i.values[0]);
 
 		i.reply({ content: 'Sent training data to server.', ephemeral: true });
+
+		if (!interaction.isMessageContextMenuCommand()) {
+			interaction.message.edit({ components: [] });
+		}
 	});
 }
