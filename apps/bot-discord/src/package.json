@@ -1,0 +1,14 @@
+{
+  "name": "bot-discord",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [],
+  "author": "Reis Can",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@revanced-helper/helper-client": "file:../../../packages/client",
+    "discord.js": "^14.11.0"
+  }
+}
