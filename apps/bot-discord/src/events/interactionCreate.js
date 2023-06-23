@@ -4,7 +4,6 @@ export default {
 	name: Events.InteractionCreate,
 	once: false,
 	async execute(helper, config, interaction) {
-		console.log(interaction.commandName);
 		const command = interaction.client.commands.get(interaction.commandName || interaction.customId);
 
 		if (!command) {

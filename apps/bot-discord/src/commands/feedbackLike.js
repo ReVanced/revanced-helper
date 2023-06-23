@@ -3,7 +3,6 @@ export default {
     name: 'fb-like'
   },
   async execute(helper, config, interaction) {
-    console.log(config.discord.trainRole)
     if (
       interaction.member.roles.highest.comparePositionTo(
         config.discord.trainRole
