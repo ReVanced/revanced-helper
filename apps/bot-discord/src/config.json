@@ -1,0 +1,32 @@
+{
+  "discord": {
+    "trainRole": "955220417969262612",
+    "botId": "1038762591805247518",
+    "ignoreRole": "1027874293192863765"
+  },
+  "server": {
+    "port": 3000,
+    "host": "127.0.0.1"
+  },
+  "responses": [
+    {
+      "label": "revanced_download",
+      "threshold": 0.85,
+      "reply": {
+        "title": "How to download ReVanced?",
+        "description": "You don't.",
+        "color": 14908858
+      }
+    }
+  ],
+  "ocrResponses": [
+    {
+      "regex": "is not installed",
+      "reply": {
+        "title": "Why can't I download videos",
+        "description": "Because you didn't install the app.",
+        "color": 14908858
+      }
+    }
+  ]
+}

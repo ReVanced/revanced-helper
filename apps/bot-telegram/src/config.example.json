@@ -1,0 +1,26 @@
+{
+    "server": {
+      "port": 3000,
+      "host": "192.168.1.6"
+    },
+    "responses": [
+      {
+        "label": "revanced_download",
+        "threshold": 0.85,
+        "reply": {
+          "title": "How to download ReVanced?",
+          "desc": "You don't."
+        }
+      }
+    ],
+  
+    "ocrResponses": [
+      {
+        "regex": "is not installed",
+        "reply": {
+          "title": "Why can't I download videos",
+          "desc": "Because you didn't install the app."
+        }
+      }
+    ]
+  }
