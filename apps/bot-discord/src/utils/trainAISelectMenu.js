@@ -55,13 +55,23 @@ export default async function trainAISelectMenu(
 		time: 15000
 	});
 
+	const voteId = interaction.targetMessage ? interaction.targetMessage.id :
+		interaction.message.reference.messageId;
 	collector.on('collect', (i) => {
-		helper.sendTrainData(interactedMessage, i.values[0]);
-
 		i.reply({ content: 'Sent training data to server.', ephemeral: true });
 
-		if (!interaction.isMessageContextMenuCommand()) {
-			interaction.message.edit({ components: [] });
-		}
+		const existingVote = interaction.client.trainingVotes.get(voteId);
+		if (existingVote) clearTimeout(existingVote);
+		interaction.client.trainingVotes.set(voteId,
+			setTimeout(() => {
+				helper.sendTrainData(interactedMessage, i.values[0]);
+
+				if (!interaction.isMessageContextMenuCommand()) {
+					interaction.message.edit({ components: [] });
+				}
+
+				interaction.client.trainingVotes.delete(voteId);
+			}, 10_000)
+		);
 	});
 }

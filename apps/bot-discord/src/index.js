@@ -20,6 +20,7 @@ const client = new Client({
 });
 
 client.commands = new Collection();
+client.trainingVotes = new Collection();
 
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
