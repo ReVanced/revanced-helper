@@ -25,6 +25,25 @@ export default async function trainAISelectMenu(
 			.setPlaceholder('Nothing selected')
 			.addOptions(options)
 	);
+
+	let interactedMessage;
+
+	if (!interaction.isMessageContextMenuCommand()) {
+		try {
+			const channel = await interaction.client.channels.fetch(interaction.message.reference.channelId);
+			const message = await channel.messages.fetch(interaction.message.reference.messageId);
+			interactedMessage = message.content.toLowerCase();
+		} catch (e) {
+			interaction.reply({
+				content: 'The message that you wanted to train the bot with was deleted.',
+				ephemeral: true
+			})
+		}
+
+	} else {
+		interactedMessage = interaction.targetMessage.content.toLowerCase()
+	}
+
 	const reply = await interaction.reply({
 		content: 'Please select the corresponding label to train the bot.',
 		components: [row],
@@ -35,17 +54,6 @@ export default async function trainAISelectMenu(
 		componentType: ComponentType.StringSelect,
 		time: 15000
 	});
-
-	let interactedMessage;
-
-	if (!interaction.isMessageContextMenuCommand()) {
-		const channel = await interaction.client.channels.fetch(interaction.message.reference.channelId);
-		const message = await channel.messages.fetch(interaction.message.reference.messageId);
-		interactedMessage = message.content.toLowerCase();
-
-	} else {
-		interactedMessage = interaction.targetMessage.content.toLowerCase()
-	}
 
 	collector.on('collect', (i) => {
 		helper.sendTrainData(interactedMessage, i.values[0]);
