@@ -1,5 +1,6 @@
 import { ContextMenuCommandBuilder, ApplicationCommandType } from 'discord.js';
 import trainAISelectMenu from '../utils/trainAISelectMenu.js';
+import { checkForPerms } from '../utils/checkPerms.js';
 
 export default {
 	data: new ContextMenuCommandBuilder()
@@ -7,9 +8,7 @@ export default {
 		.setType(ApplicationCommandType.Message),
 	async execute(helper, config, interaction) {
 		if (
-			interaction.member.roles.highest.comparePositionTo(
-				interaction.member.guild.roles.cache.get(config.discord.trainRole)
-			) < 0
+			checkForPerms(config, interaction.member)
 		)
 			return interaction.reply({
 				content: 'You don\'t have the permission to do this.',
