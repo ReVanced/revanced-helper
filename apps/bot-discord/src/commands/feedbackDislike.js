@@ -1,3 +1,4 @@
+import { checkForPerms } from '../utils/checkPerms.js';
 import trainAISelectMenu from '../utils/trainAISelectMenu.js';
 
 export default {
@@ -6,9 +7,7 @@ export default {
 	},
 	async execute(helper, config, interaction) {
 		if (
-			interaction.member.roles.highest.comparePositionTo(
-				config.discord.trainRole
-			) < 0
+			checkForPerms(config, interaction.member)
 		)
 			return interaction.reply({
 				content: 'You don\'t have the permission to do this.',
