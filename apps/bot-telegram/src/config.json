@@ -84,6 +84,11 @@
             "description": "The official sites for ReVanced are [revanced.app](https://revanced.app) and [github.com/revanced](https://github.com/revanced).",
             "color": 14908858
           }
+        },
+        {
+          "label": "false",
+          "threshold": 0,
+          "reply": null
         }
       ],
       "ocrResponses": [
@@ -97,3 +102,5 @@
         }
       ]
     }
+
+    
