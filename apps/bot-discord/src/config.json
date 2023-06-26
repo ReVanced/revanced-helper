@@ -50,7 +50,7 @@
       "threshold": 0.85,
       "reply": {
         "title": "Why can't I download videos?",
-        "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and can downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
+        "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and can be downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
         "color": 14908858
       }
     },
@@ -101,7 +101,7 @@
       "regex": "is not installed",
       "reply": {
         "title": "Why can't I download videos?",
-        "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and can downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
+        "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and can be downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
         "color": 14908858
       }
     }
