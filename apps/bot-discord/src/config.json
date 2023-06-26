@@ -14,7 +14,7 @@
       "threshold": 0.85,
       "reply": {
         "title": "Why is my patched app crashing?",
-        "description": "It seems like your patched application is crashing, these might be the reason why:\n  * You patched an unrecommended version.\n  * Patches failed to apply.\n   * Unrecommended patches.\n  * Split APK was used.",
+        "description": "It seems like your patched application is crashing, these might be the reason why:\n  * You patched an unrecommended version.\n  * Patches failed to apply.\n   * Non-default patches were used.\n  * Split APK was used.",
         "color": 14908858
       }
     },
@@ -23,7 +23,7 @@
       "threshold": 0.85,
       "reply": {
         "title": "Why is ReVanced Manager aborting?",
-        "description": "It seems like your Manager is aborting. If you see the text \"exit code = 135\" or \"exit code = 139\", then your devices architecture is not supported. Please patch on an another device or on your PC.",
+        "description": "It seems like your Manager is aborting. If you see the text \"exit code = 135\" or \"exit code = 139\", then your device's architecture is not supported. Please patch on another device or on your PC.",
         "color": 14908858
       }
     },
@@ -85,7 +85,7 @@
       "label": "rvdownload_unofficial",
       "threshold": 0.85,
       "reply": {
-        "title": "Is revanced.io official?",
+        "title": "What are the official ReVanced sites?",
         "description": "The official sites for ReVanced are [revanced.app](https://revanced.app) and [github.com/revanced](https://github.com/revanced).",
         "color": 14908858
       }
