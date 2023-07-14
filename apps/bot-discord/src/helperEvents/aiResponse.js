@@ -48,6 +48,15 @@ export default {
 			}
 
 			if (!ids[1]) {
+				// This means that it's a thread/forum.
+				if (response.closeThread) {
+					channel.setArchived(true);
+				}
+
+				if (response.lockThread) {
+					channel.setLocked(true);
+				}
+				
 				channel.send({
 					embeds: [embed],
 					components: [feedbackRow]

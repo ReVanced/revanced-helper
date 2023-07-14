@@ -2,7 +2,8 @@
   "discord": {
     "trainRoles": ["1019903194941362198", "955220417969262612"],
     "botId": "1038762591805247518",
-    "ignoreRole": "1027874293192863765"
+    "ignoreRole": "1027874293192863765",
+    "ignoreChannels": ["953965039105232906", "953964264400515092", "952987428786941952"]
   },
   "server": {
     "port": 3000,
@@ -16,7 +17,9 @@
         "title": "Why is my patched app crashing?",
         "description": "It seems like your patched application is crashing, these might be the reason why:\n  * You patched a non-suggested version.\n  * Patches failed to apply.\n   * Non-default patches were used.\n  * Split APK was used.",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "rvmanager_abort",
@@ -25,7 +28,9 @@
         "title": "Why is ReVanced Manager aborting?",
         "description": "It seems like your Manager is aborting. If you see the text \"exit code = 135\" or \"exit code = 139\", then your device's architecture is not supported. Please patch on another device or on your PC.",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "revanced_download",
@@ -34,7 +39,9 @@
         "title": "How to download ReVanced?",
         "description": "ReVanced is a patcher. You can use the [ReVanced Manager](https://github.com/revanced/revanced-manager/releases/latest) or the [ReVanced CLI](https://github.com/revanced/revanced-cli) to patch the app you want to modify.\n  * [ReVanced Manager docs](https://github.com/revanced/revanced-manager/tree/main/docs#-revanced-manager)\n  * [ReVanced CLI docshttps://github.com/revanced/revanced-cli/tree/main#-documentation-and-guides-of-revanced-clihttps://github.com/revanced/revanced-cli/tree/main#-documentation-and-guides-of-revanced-cli](https://github.com/revanced/revanced-cli/tree/main#-documentation-and-guides-of-revanced-cli)",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "androidtv_support",
@@ -43,7 +50,9 @@
         "title": "Will YT ReVanced support Android TVs?",
         "description": "YouTube ReVanced for Android/Google TVs won't be made. There are alternatives, such as [SmartTubeNext](https://github.com/yuliskov/SmartTubeNext#smarttube).",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "revanced_nodownloader",
@@ -52,7 +61,9 @@
         "title": "Why can't I download videos?",
         "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and it can be downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "revanced_casting",
@@ -61,7 +72,9 @@
         "title": "Why can't I cast?",
         "description": "Because of devices like Chromecast, Android/Google TVs using the Cast v2 API, casting to those devices won't work.",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "microg_download",
@@ -70,7 +83,9 @@
         "title": "From where can I download Vanced MicroG?",
         "description": "You can download Vanced MicroG from [here](https://github.com/TeamVanced/VancedMicroG/releases/latest).",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "microg_nointernet",
@@ -79,7 +94,9 @@
         "title": "Why does YT ReVanced say I'm offline?",
         "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in.",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "rvdownload_unofficial",
@@ -88,12 +105,16 @@
         "title": "What are the official ReVanced sites?",
         "description": "The official sites for ReVanced are [revanced.app](https://revanced.app) and [github.com/revanced](https://github.com/revanced).",
         "color": 14908858
-      }
+      },
+      "closeThread": false,
+      "lockThread": false
     },
     {
       "label": "false",
       "threshold": 0,
-      "reply": null
+      "reply": null,
+      "closeThread": false,
+      "lockThread": false
     }
   ],
   "ocrResponses": [

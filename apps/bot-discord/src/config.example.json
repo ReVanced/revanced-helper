@@ -2,7 +2,8 @@
   "discord": {
     "trainRoles": ["1019903194941362198", "955220417969262612"],
     "botId": "1038762591805247518",
-    "ignoreRole": "1027874293192863765"
+    "ignoreRole": "1027874293192863765",
+    "ignoreChannels": ["953965039105232906", "953964264400515092", "952987428786941952"]
   },
   "server": {
     "port": 3000,
@@ -16,7 +17,9 @@
         "title": "How to download ReVanced?",
         "description": "You don't.",
         "color": 14908858
-      }
+      },
+      "closeThread": true,
+      "lockThread": true
     }
   ],
   "ocrResponses": [
