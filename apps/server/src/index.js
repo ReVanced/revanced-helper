@@ -1,6 +1,7 @@
 import { createServer } from 'node:net';
 import { deserialize } from 'bson';
 import { runAI, runOCR, trainAI } from './events/index.js';
+import Config from './config.json' assert { type: 'json' };
 
 const server = createServer(async (client) => {
 	client.on('data', async (data) => {
@@ -10,7 +11,7 @@ const server = createServer(async (client) => {
 
 		switch (eventData.op) {
 		case 1: {
-			runAI(client, eventData);
+			runAI(client, eventData, Config);
 			break;
 		}
 

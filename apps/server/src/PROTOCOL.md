@@ -23,10 +23,10 @@ And the server would return something like this:
   "response": [
     {
       "confidence": 0.99,
-      "id": "String",
       "name": "revanced_download"
     }
   ]
+}
 ```
 
 ### Training the AI
