@@ -49,18 +49,21 @@ export default {
 
 			if (!ids[1]) {
 				// This means that it's a thread/forum.
+				const threadEditOption = { locked: false, archived: false };
 				if (response.closeThread) {
-					channel.setArchived(true);
+					threadEditOption.archived = true;
 				}
 
 				if (response.lockThread) {
-					channel.setLocked(true);
+					threadEditOption.locked = true;
 				}
-				
-				channel.send({
+
+				await channel.send({
 					embeds: [embed],
 					components: [feedbackRow]
 				});
+
+				channel.edit(threadEditOption);
 			} else {
 				let message = channel.messages.cache.get(ids[1]);
 
@@ -69,10 +72,25 @@ export default {
 					message = channel.messages.cache.get(ids[1]);
 				}
 
-				message.reply({
+				const firstMsg = (await channel.messages.fetch()).first();
+
+				await message.reply({
 					embeds: [embed],
 					components: [feedbackRow]
 				});
+
+				if (firstMsg == message) {
+					const threadEditOption = { locked: false, archived: false };
+					if (response.closeThread) {
+						threadEditOption.archived = true;
+					}
+
+					if (response.lockThread) {
+						threadEditOption.locked = true;
+					}
+
+					channel.edit(threadEditOption);
+				}
 			}
 		} catch (e) {
 			console.log(e);
