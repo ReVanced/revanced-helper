@@ -37,7 +37,7 @@
       "threshold": 0.85,
       "reply": {
         "title": "How to download ReVanced?",
-        "description": "ReVanced is a patcher. You can use the [ReVanced Manager](https://github.com/revanced/revanced-manager/releases/latest) or the [ReVanced CLI](https://github.com/revanced/revanced-cli) to patch the app you want to modify.\n  * [ReVanced Manager docs](https://github.com/revanced/revanced-manager/tree/main/docs#-revanced-manager)\n  * [ReVanced CLI docshttps://github.com/revanced/revanced-cli/tree/main#-documentation-and-guides-of-revanced-clihttps://github.com/revanced/revanced-cli/tree/main#-documentation-and-guides-of-revanced-cli](https://github.com/revanced/revanced-cli/tree/main#-documentation-and-guides-of-revanced-cli)",
+        "description": "ReVanced is a patcher. You can use the [ReVanced Manager](https://github.com/revanced/revanced-manager/releases/latest) or the [ReVanced CLI](https://github.com/revanced/revanced-cli) to patch the app you want to modify.\n* [ReVanced Manager docs](https://github.com/revanced/revanced-manager/tree/main/docs#-revanced-manager)\n* [ReVanced CLI docs](https://github.com/revanced/revanced-cli/tree/main/docs#-documentation-and-guides-of-revanced-cli)",
         "color": 14908858
       },
       "closeThread": false,
