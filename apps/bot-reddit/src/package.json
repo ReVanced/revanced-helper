@@ -10,6 +10,7 @@
   "author": "Reis Can",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@revanced-helper/helper-client": "file:../../../packages/client",
     "snoostorm": "^1.5.2"
   }
 }
