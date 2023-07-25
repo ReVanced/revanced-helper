@@ -58,7 +58,7 @@ export default async function trainAISelectMenu(
 	const voteId = interaction.targetMessage ? interaction.targetMessage.id :
 		interaction.message.reference.messageId;
 	collector.on('collect', (i) => {
-		i.reply({ content: 'Sent training data to server.', ephemeral: true });
+		i.message.edit({ content: 'Sent training data to server.', components: [] });
 
 		const existingVote = interaction.client.trainingVotes.get(voteId);
 		if (existingVote) clearTimeout(existingVote);
