@@ -17,7 +17,7 @@ export default {
 		// there won't be markdown support for now.
 		bot.sendMessage(
 			ids[0],
-			`## ${response.reply.title}\n\n${response.reply.desc}\n\n_Confidence: ${intent.confidence}_\n\nThis bot is currently being tested in production. Ignore it, if it's wrong.`,
+			`## ${response.reply.title}\n\n${response.reply.description}\n\n_Confidence: ${intent.confidence}_\n\nThis bot is currently being tested in production. Ignore it, if it's wrong.`,
 			{
 				message_thread_id: ids[1],
 				reply_to_message_id: ids[2]
