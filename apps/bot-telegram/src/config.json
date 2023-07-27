@@ -99,11 +99,10 @@
       }
     },
     {
-      "regex": "you're offline|please check your",
+      "regex": "You're offline|Please check your",
       "reply": {
         "title": "Why does YT ReVanced say I'm offline?",
-        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in.",
-        "color": 14908858
+        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in."
       }
     }
   ]
