@@ -110,6 +110,17 @@
       "lockThread": false
     },
     {
+      "label": "yt_buffering",
+      "threshold": 0.85,
+      "reply": {
+        "title": "Why do videos fail to play?",
+        "description": "Check [this)(https://discord.com/channels/952946952348270622/954833032114733086/1121235521801310229) announcement.",
+        "color": 14908858
+      },
+      "closeThread": false,
+      "lockThread": false
+    },
+    {
       "label": "false",
       "threshold": 0,
       "reply": null,
