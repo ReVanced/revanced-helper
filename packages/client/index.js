@@ -1,4 +1,4 @@
-import { createConnection } from 'node:net';
+import { Socket } from 'node:net';
 import { serialize, deserialize } from 'bson';
 import EventEmitter from 'node:events';
 
@@ -7,15 +7,13 @@ class HelperClient extends EventEmitter {
 		super();
 		if (!server?.port) throw new Error('You did not specify the server port.');
 		this.server = server;
+		this.client = new Socket();
 	}
 
 	connect() {
-		this.client = createConnection(
+		this.client.connect(
 			this.server.port,
-			this.server.host ? this.server.host : 'localhost',
-			() => {
-				this.emit('connect');
-			}
+			this.server.host ? this.server.host : 'localhost'
 		);
 
 		this.client.on('data', (data) => {
@@ -24,21 +22,39 @@ class HelperClient extends EventEmitter {
 			});
 
 			switch (eventData.op) {
-			case 2: {
-				// The 'aiResponse' event.
+				case 2: {
+					// The 'aiResponse' event.
 
-				this.emit('aiResponse', eventData);
-				break;
-			}
+					this.emit('aiResponse', eventData);
+					break;
+				}
 
-			case 6: {
-				// The 'ocrResponse' event.
+				case 6: {
+					// The 'ocrResponse' event.
 
-				this.emit('ocrResponse', eventData);
-				break;
-			}
+					this.emit('ocrResponse', eventData);
+					break;
+				}
 			}
 		});
+
+		tvSdb.on('connect', () => {
+			if (this.reconnectionInterval) {
+				clearInterval(this.reconnectionInterval);
+				this.reconnectionInterval = null;
+			}
+
+			this.emit('connect');
+		});
+
+		this.client.on('close', () => {
+			this.reconnectionInterval = setInterval(() => {
+				this.client.connect(
+					this.server.port,
+					this.server.host ? this.server.host : 'localhost'
+				);
+			}, 5000);
+		})
 	}
 
 	sendData(data) {
