@@ -38,7 +38,7 @@ class HelperClient extends EventEmitter {
 			}
 		});
 
-		tvSdb.on('connect', () => {
+		this.client.on('connect', () => {
 			if (this.reconnectionInterval) {
 				clearInterval(this.reconnectionInterval);
 				this.reconnectionInterval = null;
