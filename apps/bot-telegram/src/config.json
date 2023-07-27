@@ -97,6 +97,14 @@
         "title": "Why can't I download videos?",
         "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and it can be downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest)."
       }
+    },
+    {
+      "regex": "you're offline|please check your",
+      "reply": {
+        "title": "Why does YT ReVanced say I'm offline?",
+        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in.",
+        "color": 14908858
+      }
     }
   ]
 }
