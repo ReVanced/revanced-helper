@@ -23,9 +23,13 @@
   "sticky": {
     "channelId": "1135563848586379264",
     "stickyMessage": {
-      "title": "Read me!"
+      "title": "Read me!",
+      "description": "It is required to read <#953993848374325269> and search <#1135563848586379264> for existing questions.",
+      "image": {
+        "url": "https://cdn.discordapp.com/attachments/1135563848586379264/1135564251440873493/warning.gif"
+      }
     },
-    "timeout": 30000
+    "timeout": 60000
   },
   "server": {
     "port": 3000,
