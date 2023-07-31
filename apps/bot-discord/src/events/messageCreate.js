@@ -20,8 +20,8 @@ export default {
 		// Sticky message
 		if (msg.channel.id !== config.sticky.channelId) return;
 		if (msg.client.stickiedMessageTimeout) clearInterval(msg.client.stickiedMessageTimeout);
-		
-		msg.client.stickiedMessageTimeout = setTimeout(() => {
+
+		msg.client.stickiedMessageTimeout = setTimeout(async () => {
 			const channel = await msg.client.channels.fetch(config.sticky.channelId);
 
 			const message = await channel.send({ embeds: [config.sticky.stickyMessage] });
