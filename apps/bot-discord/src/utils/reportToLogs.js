@@ -1,6 +1,6 @@
 import { EmbedBuilder, messageLink } from 'discord.js';
 
-export default async function reportToLogs(config, client, action, message, { reason, expire, actionTo, actionBy }, channel) {
+export default async function reportToLogs(config, client, action, message, { reason, expire, actionTo, actionBy }, msgChannel) {
     const channel = await client.channels.fetch(config.logs.channelId);
     const thread = await channel.threads.fetch(config.logs.threadId);
 
@@ -28,8 +28,8 @@ export default async function reportToLogs(config, client, action, message, { re
 
     actionEmbed.setFields(fields);
 
-    if (channel) {
-        const msg = await channel.send({ embeds: [actionEmbed] });
+    if (msgChannel) {
+        const msg = await msgChannel.send({ embeds: [actionEmbed] });
         reportToLogs(config, client, action, msg, { reason, expire, actionTo, actionBy });
     } else thread.send({ embeds: [actionEmbed] });
 }
