@@ -1,4 +1,4 @@
-import { checkForPerms } from '../utils/checkPerms.js';
+import { checkForPerms } from '../utils/checkSupporterPerms.js';
 
 export default {
 	data: {

@@ -1,4 +1,4 @@
-import { checkForPerms } from '../utils/checkPerms.js';
+import { checkForPerms } from '../utils/checkSupporterPerms.js';
 import trainAISelectMenu from '../utils/trainAISelectMenu.js';
 
 export default {
