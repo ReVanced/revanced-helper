@@ -1,6 +1,6 @@
 import { ContextMenuCommandBuilder, ApplicationCommandType } from 'discord.js';
 import trainAISelectMenu from '../utils/trainAISelectMenu.js';
-import { checkForPerms } from '../utils/checkPerms.js';
+import { checkForPerms } from '../utils/checkSupporterPerms.js'
 
 export default {
 	data: new ContextMenuCommandBuilder()
