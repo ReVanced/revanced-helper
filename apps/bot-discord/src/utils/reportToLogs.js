@@ -13,15 +13,17 @@ export default async function reportToLogs(config, client, action, message, { re
 
     if (action === 'banned' || action === 'muted') fields.push({
         name: 'Reason',
-        value: reason ? reason : 'No reason provided'
+        value: reason ? reason : 'No reason provided',
+        inline: true
     });
 
-    if (expire) fields.push({ name: 'Expires', value: `<t:${expire}:F>`});
+    if (expire) fields.push({ name: 'Expires', value: `<t:${expire}:F>`, inline: true });
 
     if (!message) fields.push({ name: 'Reference', value: `[Jump to message](${messageLink(
         message.channelId,
         message.id,
-        message.guild.id)})`
+        message.guild.id)})`,
+        inline: true
     });
 
     actionEmbed.setFields(fields);
