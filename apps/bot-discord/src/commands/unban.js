@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { checkForPerms } from '../utils/checkModPerms';
+import { checkForPerms } from '../utils/checkModPerms.js';
 import reportToLogs from '../utils/reportToLogs.js';
 
 export default {
