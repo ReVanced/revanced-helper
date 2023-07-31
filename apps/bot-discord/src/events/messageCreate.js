@@ -10,11 +10,25 @@ export default {
 		if (msg.attachments.first() && msg.attachments.first().contentType.startsWith('image')) {
 			helper.scanImage(msg.attachments.first().url, `${msg.channelId}/${msg.id}`);
 		}
-		
+
 		if (!msg.content || msg.author.bot) return;
 		helper.scanText(
 			msg.content.toLowerCase().replace(/<.*?>/g, ''),
 			`${msg.channelId}/${msg.id}`
 		);
+
+		// Sticky message
+		if (msg.channel.id !== config.sticky.channelId) return;
+		if (msg.client.stickiedMessageTimeout) clearInterval(msg.client.stickiedMessageTimeout);
+		
+		msg.client.stickiedMessageTimeout = setTimeout(() => {
+			const channel = await msg.client.channels.fetch(config.sticky.channelId);
+
+			const message = await channel.send({ embeds: [config.sticky.stickyMessage] });
+
+			if (msg.client.stickiedMessage) channel.delete(msg.client.stickiedMessage);
+
+			msg.client.stickiedMessage = message.id;
+		}, config.sticky.timeout);
 	}
 };

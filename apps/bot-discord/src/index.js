@@ -21,6 +21,8 @@ const client = new Client({
 
 client.commands = new Collection();
 client.trainingVotes = new Collection();
+client.stickiedMessage = null;
+client.stickiedMessageTimeout = null;
 
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>
