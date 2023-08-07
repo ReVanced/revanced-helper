@@ -4,8 +4,15 @@ import setMuteTimeout from './setMuteTimeout.js';
 parse['mo'] = parse['month']
 
 export default async function muteMember(config, member, { duration, reason, supportMute }) {
-    const parsedDuration = parse(duration);
-    const expires = Date.now() + parsedDuration;
+    let expires;
+    
+    if (supportMute) {
+        expires = Date.now() + supportMuteDuration;
+    } else {
+        const parsedDuration = parse(duration);
+        expires = Date.now() + parsedDuration;
+    }
+
     const takenRoles = [];
     for (const takeRole of supportMute ? 
         config.discord.mute.supportTakeRoles :

@@ -5,6 +5,7 @@ export default async function unmuteMember(config, member) {
     });
 
     if (!mute) return false;
+    if (!mute.support_mute) return false;
 
     member.roles.remove(mute.support_mute ?
         config.mute.supportGiveRoles :
