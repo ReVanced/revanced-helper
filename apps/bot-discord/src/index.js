@@ -7,9 +7,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import HelperClient from '@revanced-helper/helper-client';
 import config from './config.json' assert { type: 'json' };
+import { MongoClient } from 'mongodb';
 const helper = new HelperClient(config);
+const mongoDBClient = new MongoClient(process.env.MONGODB_URI);
 
+await mongoDBClient.connect();
 helper.connect();
+
 
 const client = new Client({
     intents: [
@@ -23,6 +27,8 @@ client.commands = new Collection();
 client.trainingVotes = new Collection();
 client.stickiedMessage = null;
 client.stickiedMessageTimeout = null;
+client.db = mongoDBClient.db('revanced_discord_bot');
+client.mutes = new Collection();
 
 const commandsPath = join(__dirname, 'commands');
 const commandFiles = readdirSync(commandsPath).filter((file) =>

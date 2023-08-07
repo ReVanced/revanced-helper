@@ -9,6 +9,8 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@revanced-helper/helper-client": "file:../../../packages/client",
-    "discord.js": "^14.11.0"
+    "discord.js": "^14.11.0",
+    "mongodb": "^5.7.0",
+    "parse-duration": "^1.1.0"
   }
 }

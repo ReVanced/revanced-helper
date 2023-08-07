@@ -3,9 +3,12 @@ import { EmbedBuilder, messageLink } from 'discord.js';
 export default async function reportToLogs(config, client, action, message, { reason, expire, actionTo, actionBy }, msgChannel) {
     const channel = await client.channels.fetch(config.logs.channelId);
     const thread = await channel.threads.fetch(config.logs.threadId);
-
+    
+    const actionUpper = action.charAt(0).toUpperCase() + action.slice(1);
+    const actionTitle = `${actionUpper} ${actionTo.tag}`;
     const actionEmbed = new EmbedBuilder()
-        .setThumbnail(actionTo.user.avatarURL());
+        .setThumbnail(actionTo.user.avatarURL())
+        .setTitle(actionTitle);
 
     const fields = [
         { name: 'Action', value: `${actionTo.toString()} was ${action} by ${actionBy.toString()}` }
