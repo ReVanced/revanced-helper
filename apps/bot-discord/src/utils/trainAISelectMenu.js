@@ -52,7 +52,7 @@ export default async function trainAISelectMenu(
 
 	const collector = reply.createMessageComponentCollector({
 		componentType: ComponentType.StringSelect,
-		time: 15000
+		time: 30000
 	});
 
 	const voteId = interaction.targetMessage ? interaction.targetMessage.id :
