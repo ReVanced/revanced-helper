@@ -50,7 +50,7 @@
 	 },
         {
           "name": "🔸 How to ask",
-          "value": "Include the following:\n* Version of ReVanced Manager\n*Name of the app you are patching\n*Version of the app you are patching"
+          "value": "Include the following information:\n* Version of ReVanced Manager\n*Name of the app you are patching\n*Version of the app you are patching"
         }
       ],
       "footer": {
