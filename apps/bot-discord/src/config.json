@@ -50,8 +50,8 @@
           "value": "Read the pinned messages and <#953993848374325269> for common problems."
 	 },
         {
-          "name": "🔸 Properly ask for assistance",
-          "value": "* Version of ReVanced Manager\n*Name of the app you are patching\n*Version of the app you are patching"
+          "name": "🔸 How to ask",
+          "value": "Include the following:\n* Version of ReVanced Manager\n*Name of the app you are patching\n*Version of the app you are patching"
         }
       ],
       "footer": {
