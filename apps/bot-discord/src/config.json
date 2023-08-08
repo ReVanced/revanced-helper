@@ -42,9 +42,13 @@
     "channelId": "1135563848586379264",
     "stickyMessage": {
       "title": "Sticky notice",
-      "description": "Read the pinned messages and <#953993848374325269> for common problems.",
+      "description": " ",
       "color": 5150960,
       "fields": [
+         {
+          "name": "Read the pinned messages and <#953993848374325269> for common problems.",
+          "value": " "
+	 },
         {
           "name": "🔸 Properly ask for assistance",
           "value": "* Version of ReVanced Manager\n*Name of the app you are patching\n*Version of the app you are patching"
