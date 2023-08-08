@@ -42,12 +42,12 @@
     "channelId": "1135563848586379264",
     "stickyMessage": {
       "title": "Sticky notice",
-      "description": " ",
+      "description": "",
       "color": 5150960,
       "fields": [
          {
-          "name": "Read the pinned messages and <#953993848374325269> for common problems.",
-          "value": " "
+          "name": "🔸 Before you ask",
+          "value": "Read the pinned messages and <#953993848374325269> for common problems."
 	 },
         {
           "name": "🔸 Properly ask for assistance",
