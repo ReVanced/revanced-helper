@@ -42,16 +42,12 @@
     "channelId": "1135563848586379264",
     "stickyMessage": {
       "title": "Sticky notice",
-      "description": "In this channel, you can get assistance with your questions, issues, or concerns. Before continuing, please continue to read this sticky message.",
+      "description": "Read the pinned messages and <#953993848374325269> for common problems.",
       "color": 5150960,
       "fields": [
         {
-          "name": "🔸 Before requesting  assistance",
-          "value": "It is required to read <#953993848374325269> as it contains valuable information guaranteed to answer many of your questions.\nPlease ensure your inquiry is not already addressed in <#1135563848586379264> before requesting assistance."
-        },
-        {
-          "name": "🔸 Properly request assistance",
-          "value": "Explain your question or issue clearly and concisely. Including relevant details will help us provide better assistance. Please refer to <#953993848374325269> `11`."
+          "name": "🔸 To properly ask for support, include the following:",
+          "value": "* Manager version\n * What you are patching\n * The version of what you're patching"
         }
       ],
       "footer": {
