@@ -47,7 +47,7 @@
       "fields": [
         {
           "name": "🔸 Properly ask for assistance",
-          "value": "* Manager version\n * What you are patching\n * The version of what you're patching"
+          "value": "* Version of ReVanced Manager\n*Name of the app you are patching\n*Version of the app you are patching"
         }
       ],
       "footer": {
