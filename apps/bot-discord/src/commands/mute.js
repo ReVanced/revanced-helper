@@ -14,7 +14,7 @@ export default {
                 .setDescription('The member to mute')
                 .setRequired(true)
         )
-        .addIntegerOption(option =>
+        .addStringOption(option =>
             option
                 .setName('duration')
                 .setDescription('The duration of mute')
@@ -27,7 +27,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(_, config, interaction) {
-        if (!checkForPerms(config, interaction.member)) return interaction.reply({
+        if (checkForPerms(config, interaction.member)) return interaction.reply({
             epheremal: true,
             content: 'You don\'t have the required permissions.'
         });
@@ -36,7 +36,7 @@ export default {
 
         let member;
         try {
-            member = await interaction.guild.members.fetch(interaction.getString('user'));
+            member = await interaction.guild.members.fetch(interaction.options.getString('user'));
         } catch (_) {
             await interaction.editReply({
                 content: 'Could not find member.'
@@ -45,16 +45,16 @@ export default {
             return;
         }
 
-        const reason = interaction.getString('reason');
+        const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {
-            duration: interaction.getString('duration'),
+            duration: interaction.options.getString('duration'),
             reason,
             supportMute: false
         });
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
-            actionTo: await client.users.fetch(interaction.getString('user')),
+            actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration

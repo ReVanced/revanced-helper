@@ -24,7 +24,7 @@ export default {
 
         let member;
         try {
-            member = await interaction.guild.members.fetch(interaction.getString('user'));
+            member = await interaction.guild.members.fetch(interaction.options.getString('user'));
         } catch (_) {
             await interaction.editReply({
                 content: 'Could not find member.'
@@ -33,7 +33,7 @@ export default {
             return;
         }
 
-        const reason = interaction.getString('reason');
+        const reason = interaction.options.getString('reason');
         const isMuted = await unmuteMember(config, member);
 
         if (!isMuted) {
@@ -46,7 +46,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'unmuted', null, {
             reason,
-            actionTo: await client.users.fetch(interaction.getString('user')),
+            actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel,
         });

@@ -19,12 +19,12 @@ export default {
             content: 'You don\'t have the required permissions.'
         });
         
-        interaction.guild.members.unban(interaction.getString('user'),
-            interaction.getString('reason'));
+        interaction.guild.members.unban(interaction.options.getString('user'),
+            interaction.options.getString('reason'));
 
         reportToLogs(config, interaction.client, 'unbanned', null, {
-            reason: interaction.getString('reason'),
-            actionTo: await client.users.fetch(interaction.getString('user')),
+            reason: interaction.options.getString('reason'),
+            actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel
         });

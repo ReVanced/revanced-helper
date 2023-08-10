@@ -30,7 +30,7 @@ export default {
 
         let member;
         try {
-            member = await interaction.guild.members.fetch(interaction.getString('user'));
+            member = await interaction.guild.members.fetch(interaction.options.getString('user'));
         } catch (_) {
             await interaction.editReply({
                 content: 'Could not find member.'
@@ -39,7 +39,7 @@ export default {
             return;
         }
 
-        const reason = interaction.getString('reason');
+        const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {
             duration: config.discord.mute.supportMuteDuration,
             reason,
@@ -48,7 +48,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
-            actionTo: await client.users.fetch(interaction.getString('user')),
+            actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration
