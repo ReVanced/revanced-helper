@@ -69,8 +69,7 @@ export default async function muteMember(config, member, { duration, reason, sup
         setRoles = setRoles.concat(supportMute ?
             config.discord.mute.supportGiveRoles :
             config.discord.mute.giveRoles)
-        const member = await member.roles.set(takenRoles);
-        console.log(member)
+        await member.roles.set(takenRoles);
     }
     
 
