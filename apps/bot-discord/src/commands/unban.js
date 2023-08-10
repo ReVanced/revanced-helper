@@ -4,24 +4,14 @@ import reportToLogs from '../utils/reportToLogs.js';
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('ban')
-        .setDescription('Ban a member.')
+        .setName('unban')
+        .setDescription('Unban a member.')
         .setDMPermission(false)
         .addStringOption(option =>
             option
                 .setName('user')
                 .setDescription('The member to ban')
                 .setRequired(true)
-        )
-        .addIntegerOption(option =>
-            option
-                .setName('dmd')
-                .setDescription('Amount of days to delete messages')
-        )
-        .addStringOption(option =>
-            option
-                .setName('reason')
-                .setDescription('Reason for the ban')
         ),
     async execute(_, config, interaction) {
         if (!checkForPerms(config, interaction.member)) return interaction.reply({
