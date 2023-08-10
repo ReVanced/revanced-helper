@@ -10,7 +10,7 @@ export default {
        const mutes = await client.db.collection('muted').find().toArray();
 
        for (const mute of mutes) {
-           await setMuteTimeout(mute, client.mutes);
+           await setMuteTimeout(mute, client.mutes, client);
        }
 
        console.log(`Loaded ${mutes.length} mutes.`);

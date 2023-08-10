@@ -74,7 +74,7 @@ export default async function muteMember(config, member, { duration, reason, sup
         taken_roles: takenRoles,
         expires,
         support_mute: supportMute
-    }, member.client.mutes);
+    }, member.client.mutes, member.client);
 
     // Return parsed time for the mute command to resolve.
     return expires;
