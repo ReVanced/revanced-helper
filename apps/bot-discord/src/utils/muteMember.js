@@ -19,7 +19,7 @@ export default async function muteMember(config, member, { duration, reason, sup
         config.discord.mute.takeRoles
         ) {
         if (member.roles.cache.get(takeRole)) {
-            takenRoles.push(takeRoles);
+            takenRoles.push(takeRole);
         }
     }
 
@@ -42,9 +42,9 @@ export default async function muteMember(config, member, { duration, reason, sup
             }
         });
 
-        if (client.mutes.has(member.id)) {
-            clearTimeout(client.mutes.get(member.id))
-            client.mutes.delete(member.id);
+        if (member.client.mutes.has(member.id)) {
+            clearTimeout(member.client.mutes.get(member.id))
+            member.client.mutes.delete(member.id);
         }
     } else {
         await member.client.db.collection('muted').insertOne({
@@ -59,11 +59,18 @@ export default async function muteMember(config, member, { duration, reason, sup
 
     // Remove the roles, give defined roles.
     if (!existingMute) {
-        member.roles.remove(takenRoles);
-        member.roles.add(supportMute ?
-            config.discord.mute.giveRoles :
-            config.discord.mute.supportGiveRoles
-        );
+        const currentRoles = member.roles.map((role) => role.id);
+        let setRoles = [];
+        for (const role of currentRoles) {
+            if (takenRoles.includes(role)) continue;
+            setRoles.push(role);
+        }
+
+        setRoles = setRoles.concat(supportMute ?
+            config.discord.mute.supportGiveRoles :
+            config.discord.mute.giveRoles)
+        const member = await member.roles.set(takenRoles);
+        console.log(member)
     }
     
 
@@ -74,7 +81,7 @@ export default async function muteMember(config, member, { duration, reason, sup
         taken_roles: takenRoles,
         expires,
         support_mute: supportMute
-    }, member.client.mutes, member.client);
+    }, member.client.mutes, member.client, config);
 
     // Return parsed time for the mute command to resolve.
     return expires;
