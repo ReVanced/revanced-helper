@@ -7,7 +7,7 @@ export default {
         .setName('ban')
         .setDescription('Ban a member.')
         .setDMPermission(false)
-        .addStringOption(option =>
+        .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('The member to ban')
@@ -29,7 +29,7 @@ export default {
             content: 'You don\'t have the required permissions.'
         });
 
-        interaction.guild.members.ban(interaction.options.getString('user'), {
+        interaction.guild.members.ban(interaction.options.getUser('user'), {
             reason: interaction.options.getString('reason'),
             deleteMessageSeconds: interaction.options.getString('dmd') ?
                 interaction.options.getString('dmd') * 86_400 : 0
@@ -37,7 +37,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'banned', null, {
             reason: interaction.options.getString('reason'),
-            actionTo: await client.users.fetch(interaction.options.getString('user')),
+            actionTo: await client.users.fetch(interaction.options.getUser('user')),
             actionBy: interaction.member,
             channel: interaction.channel
         }, interaction);

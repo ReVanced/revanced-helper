@@ -8,7 +8,7 @@ export default {
         .setName('exile')
         .setDescription('Exile a member to support.')
         .setDMPermission(false)
-        .addStringOption(option =>
+        .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('The member to exile')
@@ -28,16 +28,7 @@ export default {
 
         await interaction.deferReply();
 
-        let member;
-        try {
-            member = await interaction.guild.members.fetch(interaction.options.getString('user'));
-        } catch (_) {
-            await interaction.editReply({
-                content: 'Could not find member.'
-            });
-
-            return;
-        }
+        const member = interaction.options.getUser('user');
 
         const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {

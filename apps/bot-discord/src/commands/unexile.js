@@ -8,7 +8,7 @@ export default {
         .setName('unexile')
         .setDescription('Get the member back from an exilation.')
         .setDMPermission(false)
-        .addStringOption(option =>
+        .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('The member to unexile')
@@ -22,19 +22,9 @@ export default {
 
         await interaction.deferReply();
 
-        let member;
-        try {
-            member = await interaction.guild.members.fetch(interaction.options.getString('user'));
-        } catch (_) {
-            await interaction.editReply({
-                content: 'Could not find member.'
-            });
+        const member = interaction.options.getUser('user');
 
-            return;
-        }
-
-        const reason = interaction.options.getString('reason');
-        const isExiled = await unmuteMember(config, member);
+        const isExiled = await unmuteMember(config, member, true);
 
         if (!isExiled) {
             await interaction.editReply({
@@ -45,7 +35,7 @@ export default {
         }
 
         reportToLogs(config, interaction.client, 'unmuted', null, {
-            reason,
+            reason: null,
             actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel,

@@ -8,7 +8,7 @@ export default {
         .setName('mute')
         .setDescription('Mute a member.')
         .setDMPermission(false)
-        .addStringOption(option =>
+        .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('The member to mute')
@@ -34,16 +34,7 @@ export default {
 
         await interaction.deferReply();
 
-        let member;
-        try {
-            member = await interaction.guild.members.fetch(interaction.options.getString('user'));
-        } catch (_) {
-            await interaction.editReply({
-                content: 'Could not find member.'
-            });
-
-            return;
-        }
+        const member = interaction.options.getUser('user');
 
         const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {
@@ -54,7 +45,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
-            actionTo: await member.client.users.fetch(interaction.options.getString('user')),
+            actionTo: member,
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration

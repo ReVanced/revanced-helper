@@ -7,7 +7,7 @@ export default {
         .setName('unban')
         .setDescription('Unban a member.')
         .setDMPermission(false)
-        .addStringOption(option =>
+        .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('The member to ban')
@@ -19,11 +19,10 @@ export default {
             content: 'You don\'t have the required permissions.'
         });
         
-        interaction.guild.members.unban(interaction.options.getString('user'),
-            interaction.options.getString('reason'));
+        interaction.guild.members.unban(interaction.options.getUser('user'));
 
         reportToLogs(config, interaction.client, 'unbanned', null, {
-            reason: interaction.options.getString('reason'),
+            reason: null,
             actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel
