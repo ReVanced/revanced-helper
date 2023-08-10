@@ -7,7 +7,7 @@ export default async function muteMember(config, member, { duration, reason, sup
     let expires;
     
     if (supportMute) {
-        expires = Date.now() + supportMuteDuration;
+        expires = Date.now() + duration;
     } else {
         const parsedDuration = parse(duration);
         expires = Date.now() + parsedDuration;
