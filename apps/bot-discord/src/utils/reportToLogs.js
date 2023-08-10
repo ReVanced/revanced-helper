@@ -19,7 +19,7 @@ export default async function reportToLogs(config, client, action, message, { re
 
     if (expire) fields.push({ name: 'Expires', value: `<t:${expire}:F>`, inline: true });
 
-    if (!message) fields.push({ name: 'Reference', value: `[Jump to message](${messageLink(
+    if (message) fields.push({ name: 'Reference', value: `[Jump to message](${messageLink(
         message.channelId,
         message.id,
         message.guild.id)})`,
