@@ -7,10 +7,10 @@ export default async function muteMember(config, member, { duration, reason, sup
     let expires;
     
     if (supportMute) {
-        expires = Date.now() + duration;
+        expires = Math.floor((Date.now() + duration) / 1000);
     } else {
         const parsedDuration = parse(duration);
-        expires = Date.now() + parsedDuration;
+        expires = Math.floor((Date.now() + parsedDuration) / 1000);
     }
 
     const takenRoles = [];
@@ -47,7 +47,7 @@ export default async function muteMember(config, member, { duration, reason, sup
             client.mutes.delete(member.id);
         }
     } else {
-        await member.client.db.collection('muted').insert({
+        await member.client.db.collection('muted').insertOne({
             guild_id: member.guild.id,
             user_id: member.id,
             taken_roles: takenRoles,

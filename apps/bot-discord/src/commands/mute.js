@@ -54,7 +54,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
-            actionTo: await client.users.fetch(interaction.options.getString('user')),
+            actionTo: await member.client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration
