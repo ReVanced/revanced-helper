@@ -27,6 +27,6 @@ export default {
             actionTo: await client.users.fetch(interaction.options.getString('user')),
             actionBy: interaction.member,
             channel: interaction.channel
-        });
+        }, interaction);
     }
 };

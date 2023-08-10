@@ -59,7 +59,7 @@ export default async function muteMember(config, member, { duration, reason, sup
 
     // Remove the roles, give defined roles.
     if (!existingMute) {
-        const currentRoles = member.roles.map((role) => role.id);
+        const currentRoles = member.roles.cache.map((role) => role.id);
         let setRoles = [];
         for (const role of currentRoles) {
             if (takenRoles.includes(role)) continue;
@@ -69,7 +69,7 @@ export default async function muteMember(config, member, { duration, reason, sup
         setRoles = setRoles.concat(supportMute ?
             config.discord.mute.supportGiveRoles :
             config.discord.mute.giveRoles)
-        await member.roles.set(takenRoles);
+        await member.roles.set(setRoles);
     }
     
 

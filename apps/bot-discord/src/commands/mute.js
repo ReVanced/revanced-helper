@@ -58,6 +58,6 @@ export default {
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration
-        });
+        }, interaction);
     }
 };
