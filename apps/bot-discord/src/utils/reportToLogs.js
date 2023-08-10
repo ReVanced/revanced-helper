@@ -4,7 +4,7 @@ export default async function reportToLogs(config, client, action, message, { re
     const actionUpper = action.charAt(0).toUpperCase() + action.slice(1);
     const actionTitle = `${actionUpper} ${actionTo.tag}`;
     const actionEmbed = new EmbedBuilder()
-        .setThumbnail(actionTo.user.avatarURL())
+        .setThumbnail(actionTo.avatarURL())
         .setTitle(actionTitle);
 
     const fields = [
