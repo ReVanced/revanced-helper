@@ -1,5 +1,5 @@
 export default async function unmuteMember(config, member) {
-    const mute = await member.client.db.collection('mute').findOne({
+    const mute = await member.client.db.collection('mutes').findOne({
         guild_id: member.guild.id,
         user_id: member.id
     });
@@ -14,7 +14,7 @@ export default async function unmuteMember(config, member) {
 
     member.roles.add(mute.taken_roles);
 
-    await member.client.db.collection('mute').remove({
+    await member.client.db.collection('mutes').remove({
         guild_id: member.guild.id,
         user_id: member.id
     });

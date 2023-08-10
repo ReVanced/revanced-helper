@@ -7,7 +7,7 @@ export default {
 	async execute(_, config, client) {
        console.log('Client is ready. Reloading mutes.');
        
-       const mutes = await client.db.collection('mute').find().toArray();
+       const mutes = await client.db.collection('mutes').find().toArray();
 
        for (const mute of mutes) {
            await setMuteTimeout(mute, client.mutes);

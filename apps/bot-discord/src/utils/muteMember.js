@@ -23,7 +23,7 @@ export default async function muteMember(config, member, { duration, reason, sup
         }
     }
 
-    const existingMute = await member.client.db.collection('mute').findOne({
+    const existingMute = await member.client.db.collection('mutes').findOne({
         guild_id: member.guild.id,
         user_id: member.id
     });
@@ -31,7 +31,7 @@ export default async function muteMember(config, member, { duration, reason, sup
     if (existingMute) {
         // Update existing mute
 
-        await member.client.db.collection('mute').updateOne({
+        await member.client.db.collection('mutes').updateOne({
             guild_id: member.guild.id,
             user_id: member.id
         }, {
@@ -47,7 +47,7 @@ export default async function muteMember(config, member, { duration, reason, sup
             client.mutes.delete(member.id);
         }
     } else {
-        await member.client.db.collection('mute').insert({
+        await member.client.db.collection('mutes').insert({
             guild_id: member.guild.id,
             user_id: member.id,
             taken_roles: takenRoles,

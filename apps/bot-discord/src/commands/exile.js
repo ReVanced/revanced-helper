@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { checkForPerms } from '../utils/checkSupporterPerms.JS'
+import { checkForPerms } from '../utils/checkSupporterPerms.js'
 import reportToLogs from '../utils/reportToLogs.js';
 import muteMember from '../utils/muteMember.js';
 

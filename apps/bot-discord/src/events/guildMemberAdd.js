@@ -4,7 +4,7 @@ export default {
 	name: Events.GuildMemberAdd,
 	once: false,
 	async execute(_, config, member) {       
-       const mute = await client.db.collection('mute').findOne({
+       const mute = await client.db.collection('mutes').findOne({
            guild_id: member.guild.id,
            user_id: member.id
        });
