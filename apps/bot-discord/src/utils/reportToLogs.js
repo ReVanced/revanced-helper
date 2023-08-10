@@ -1,9 +1,6 @@
 import { EmbedBuilder, messageLink } from 'discord.js';
 
 export default async function reportToLogs(config, client, action, message, { reason, expire, actionTo, actionBy }, interaction) {
-    const channel = await client.channels.fetch(config.logs.channelId);
-    const thread = await channel.threads.fetch(config.logs.threadId);
-    
     const actionUpper = action.charAt(0).toUpperCase() + action.slice(1);
     const actionTitle = `${actionUpper} ${actionTo.tag}`;
     const actionEmbed = new EmbedBuilder()
@@ -32,7 +29,12 @@ export default async function reportToLogs(config, client, action, message, { re
     actionEmbed.setFields(fields);
 
     if (interaction) {
-        const msg = await interaction.editReply({ embeds: [actionEmbed] });
+        await interaction.editReply({ embeds: [actionEmbed] });
+        const msg = await interaction.fetchReply();
         reportToLogs(config, client, action, msg, { reason, expire, actionTo, actionBy });
-    } else thread.send({ embeds: [actionEmbed] });
+    } else {
+        const channel = await client.channels.fetch(config.logs.channelId);
+        const thread = await channel.threads.fetch(config.logs.threadId);
+        thread.send({ embeds: [actionEmbed] });
+    }
 }
