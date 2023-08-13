@@ -22,7 +22,9 @@ export default {
 
         await interaction.deferReply();
 
-        const member = interaction.options.getUser('user');
+        const user = interaction.options.getUser('user');
+
+        const member = await interaction.guild.members.fetch(user);
         const isExiled = await unmuteMember(config, member, true);
 
         if (!isExiled) {
@@ -35,7 +37,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'unmuted', null, {
             reason: null,
-            actionTo: member,
+            actionTo: user,
             actionBy: interaction.member,
             channel: interaction.channel,
         }, interaction);

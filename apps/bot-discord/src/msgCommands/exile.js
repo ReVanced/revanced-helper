@@ -13,9 +13,9 @@ export default {
         if (args && args[0]) {
             if (isNaN(args[0])) return msg.reply('The argument you entered is not a number!');
 
-            const msgsByAuthor = (await msg.channels.fetch({ limit: 50 })).filter(
+            const msgsByAuthor = (await msg.channel.messages.fetch({ limit: 50 })).filter(
                 m => m.author.id === referencedMsg.author.id
-            );
+            ).map(m => m.content);
             message = msgsByAuthor.slice(Number(`-${args[0]}`));
         }
 

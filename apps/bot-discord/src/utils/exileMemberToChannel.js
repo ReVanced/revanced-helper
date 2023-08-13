@@ -1,10 +1,10 @@
-export default async function exileMemberToChannel(member, channel, message, config, isSlash) {
+export default async function exileMemberToChannel(member, channel, message, config, ) {
     const redirectChannel = await channel.client.channels.fetch(config.discord.supportChannel);
 
     let messageContent = '';
     if (Array.isArray(message)) {
         for (const msg of message) {
-            messageContent += `${msg.content}\n`;
+            messageContent += `${msg}\n`;
         } 
     } else if (!message) message = 'No message provided';
     else messageContent = message;
@@ -23,18 +23,4 @@ export default async function exileMemberToChannel(member, channel, message, con
             }
         ]
     });
-
-    const messageParams = {
-        content: `<@${member.id}>`,
-        embeds: [
-            {
-                title: '❗ You have been exiled!',
-                description: 'This is due to you asking support in non-support channels. Please use the support channel next time.'
-            }
-        ]
-    };
-    
-    if (isSlash) channel.editReply(messageParams);
-    else channel.send(messageParams);
-
 }

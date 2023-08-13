@@ -25,7 +25,7 @@ export default {
         const user = interaction.options.getUser('user');
 
         const member = await interaction.guild.members.fetch(user);
-        const isMuted = await unmuteMember(config, member);
+        const isMuted = await unmuteMember(config, member, false);
 
         if (!isMuted) {
             await interaction.editReply({
@@ -37,7 +37,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'unmuted', null, {
             reason: null,
-            actionTo: member,
+            actionTo: user,
             actionBy: interaction.member,
             channel: interaction.channel,
         }, interaction);

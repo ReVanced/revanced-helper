@@ -7,7 +7,7 @@ export default async function muteMember(config, member, { duration, reason, sup
     let expires;
     
     if (supportMute) {
-        expires = Math.floor((Date.now() + config.mute.supportMuteDuration) / 1000);
+        expires = Math.floor((Date.now() + config.discord.mute.supportMuteDuration) / 1000);
     } else {
         const parsedDuration = parse(duration);
         expires = Math.floor((Date.now() + parsedDuration) / 1000);
