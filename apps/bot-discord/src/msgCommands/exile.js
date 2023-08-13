@@ -5,7 +5,7 @@ import muteMember from '../utils/muteMember.js';
 export default {
     name: 'exile',
     async execute(msg, args, config) {
-        if (!checkForPerms(config, message.member)) return msg.reply('You don\'t have the permission to do this.');
+        if (!checkForPerms(config, msg.member)) return msg.reply('You don\'t have the permission to do this.');
         
         if (!msg.reference) return msg.reply('You did not reply to anyone!');
         const referencedMsg = await msg.channel.messages.fetch(msg.reference.messageId);
