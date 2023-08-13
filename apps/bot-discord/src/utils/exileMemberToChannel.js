@@ -34,7 +34,7 @@ export default async function exileMemberToChannel(member, channel, message, con
         ]
     };
     
-    if (isSlash) channel.reply(messageParams);
+    if (isSlash) channel.editReply(messageParams);
     else channel.send(messageParams);
 
 }

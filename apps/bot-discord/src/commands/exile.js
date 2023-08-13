@@ -29,19 +29,21 @@ export default {
 
         await interaction.deferReply();
 
-        const member = interaction.options.getUser('user');
+        const user = interaction.options.getUser('user');
 
+        const member = await interaction.guild.members.fetch(user);
         const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {
             reason,
-            supportMute: true
+            supportMute: true,
+            guild: interaction.guild
         });
 
         exileMemberToChannel(member, interaction.channel, null, config, true);
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
-            actionTo: await client.users.fetch(interaction.options.getString('user')),
+            actionTo: user,
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration

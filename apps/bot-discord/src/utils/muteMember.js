@@ -3,7 +3,7 @@ import setMuteTimeout from './setMuteTimeout.js';
 
 parse['mo'] = parse['month']
 
-export default async function muteMember(config, member, { duration, reason, supportMute }) {
+export default async function muteMember(config, member, { duration, reason, supportMute, guild }) {
     let expires;
     
     if (supportMute) {
@@ -23,16 +23,16 @@ export default async function muteMember(config, member, { duration, reason, sup
         }
     }
 
-    const existingMute = await member.client.db.collection('muted').findOne({
-        guild_id: member.guild.id,
+    const existingMute = await guild.client.db.collection('muted').findOne({
+        guild_id: guild.id,
         user_id: member.id
     });
 
     if (existingMute) {
         // Update existing mute
 
-        await member.client.db.collection('muted').updateOne({
-            guild_id: member.guild.id,
+        await guild.client.db.collection('muted').updateOne({
+            guild_id: guild.id,
             user_id: member.id
         }, {
             $set: {
@@ -42,13 +42,13 @@ export default async function muteMember(config, member, { duration, reason, sup
             }
         });
 
-        if (member.client.mutes.has(member.id)) {
-            clearTimeout(member.client.mutes.get(member.id))
-            member.client.mutes.delete(member.id);
+        if (guild.client.mutes.has(member.id)) {
+            clearTimeout(guild.client.mutes.get(member.id))
+            guild.client.mutes.delete(member.id);
         }
     } else {
-        await member.client.db.collection('muted').insertOne({
-            guild_id: member.guild.id,
+        await guild.client.db.collection('muted').insertOne({
+            guild_id: guild.id,
             user_id: member.id,
             taken_roles: takenRoles,
             expires,
@@ -75,12 +75,12 @@ export default async function muteMember(config, member, { duration, reason, sup
 
     // Start a timeout.
     setMuteTimeout({
-        guild_id: member.guild.id,
+        guild_id: guild.id,
         user_id: member.id,
         taken_roles: takenRoles,
         expires,
         support_mute: supportMute
-    }, member.client.mutes, member.client, config);
+    }, guild.client, config);
 
     // Return parsed time for the mute command to resolve.
     return expires;

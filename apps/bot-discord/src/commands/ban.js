@@ -37,7 +37,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'banned', null, {
             reason: interaction.options.getString('reason'),
-            actionTo: await client.users.fetch(interaction.options.getUser('user')),
+            actionTo: interaction.options.getUser('user'),
             actionBy: interaction.member,
             channel: interaction.channel
         }, interaction);

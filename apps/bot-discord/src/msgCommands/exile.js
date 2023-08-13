@@ -10,7 +10,7 @@ export default {
         if (!msg.reference) return msg.reply('You did not reply to anyone!');
         const referencedMsg = await msg.channel.messages.fetch(msg.reference.messageId);
         let message = referencedMsg.content;
-        if (args[0]) {
+        if (args && args[0]) {
             if (isNaN(args[0])) return msg.reply('The argument you entered is not a number!');
 
             const msgsByAuthor = (await msg.channels.fetch({ limit: 50 })).filter(
@@ -19,8 +19,9 @@ export default {
             message = msgsByAuthor.slice(Number(`-${args[0]}`));
         }
 
-        await muteMember(config, referencedMsg.author, {
-            supportMute: true
+        await muteMember(config, referencedMsg.member, {
+            supportMute: true,
+            guild: msg.guild
         });
 
         exileMemberToChannel(referencedMsg.author, msg.channel, message, config, false);

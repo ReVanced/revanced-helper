@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { checkForPerms } from '../utils/checkModPerms.js';
+import { checkForPerms } from '../utils/checkSupporterPerms.js';
 import reportToLogs from '../utils/reportToLogs.js';
 import unmuteMember from '../utils/unmuteMember.js';
 
@@ -23,7 +23,6 @@ export default {
         await interaction.deferReply();
 
         const member = interaction.options.getUser('user');
-
         const isExiled = await unmuteMember(config, member, true);
 
         if (!isExiled) {
@@ -36,7 +35,7 @@ export default {
 
         reportToLogs(config, interaction.client, 'unmuted', null, {
             reason: null,
-            actionTo: await client.users.fetch(interaction.options.getString('user')),
+            actionTo: member,
             actionBy: interaction.member,
             channel: interaction.channel,
         }, interaction);

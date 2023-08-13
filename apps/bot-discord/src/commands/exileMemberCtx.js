@@ -17,10 +17,13 @@ export default {
             });
         
         const targetMsg = interaction.targetMessage;
-        muteMember(config, targetMsg.author, {
+
+        const member = await interaction.guild.members.fetch(targetMsg.author.id);
+        muteMember(config, member, {
             channel: interaction.channel,
             reason: null,
-            supportMute: true
+            supportMute: true,
+            guild: interaction.guild
         });
 
         exileMemberToChannel(targetMsg.author, interaction.channel, targetMsg.content, config, true);

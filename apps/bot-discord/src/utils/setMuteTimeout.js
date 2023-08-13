@@ -1,6 +1,6 @@
-export default async function setMuteTimeout(mute, mutes, client, config) {
+export default async function setMuteTimeout(mute, client, config) {
     const duration = (mute.expires - Math.floor(new Date() / 1000)) * 1000;
-    mutes.set(mute.user_id, setTimeout(async() => {
+    client.mutes.set(mute.user_id, setTimeout(async() => {
         const guild = await client.guilds.fetch(mute.guild_id);
         let member;
         try {

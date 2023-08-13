@@ -34,18 +34,20 @@ export default {
 
         await interaction.deferReply();
 
-        const member = interaction.options.getUser('user');
+        const user = interaction.options.getUser('user');
 
+        const member = await interaction.guild.members.fetch(user);
         const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {
             duration: interaction.options.getString('duration'),
             reason,
-            supportMute: false
+            supportMute: false,
+            guild: interaction.guild
         });
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
-            actionTo: member,
+            actionTo: user,
             actionBy: interaction.member,
             channel: interaction.channel,
             expire: parsedDuration
