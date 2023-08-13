@@ -4,14 +4,21 @@ export default {
 	name: Events.MessageCreate,
 	once: false,
 	execute(helper, config, msg) {
-		if (!msg.guild || msg.system || msg.webhookId) return;
+		if (!msg.guild || msg.system || msg.webhookId || msg.author.bot) return;
+		if (msg.content.startsWith('?')) {
+			const [cmd, args] = msg.content.replace('?', '').split(/\s/g);
+			const command = msg.client.msgCommands.get(cmd);
+			if (command) {
+				await command.execute(msg, args, config);
+			}
+		}
 		if (msg.member.roles.cache.some(role => role.id === config.discord.ignoreRole)) return;
 		if (config.discord.ignoreChannels.includes(msg.channelId)) return;
 		if (msg.attachments.first() && msg.attachments.first().contentType.startsWith('image')) {
 			helper.scanImage(msg.attachments.first().url, `${msg.channelId}/${msg.id}`);
 		}
 
-		if (!msg.content || msg.author.bot) return;
+		if (!msg.content) return;
 		helper.scanText(
 			msg.content.toLowerCase().replace(/<.*?>/g, ''),
 			`${msg.channelId}/${msg.id}`

@@ -15,7 +15,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(_, config, interaction) {
-        if (checkForPerms(config, interaction.member)) return interaction.reply({
+        if (!checkForPerms(config, interaction.member)) return interaction.reply({
             epheremal: true,
             content: 'You don\'t have the required permissions.'
         });
@@ -24,7 +24,7 @@ export default {
 
         const member = interaction.options.getUser('user');
 
-        const isMuted = await unmuteMember(config, member, false);
+        const isMuted = await unmuteMember(config, member);
 
         if (!isMuted) {
             await interaction.editReply({

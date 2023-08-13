@@ -1,6 +1,6 @@
 export function checkForPerms(config, member) {
-	for (const role in config.discord.modRoles) {
-		if (member.roles.cache.get(role)) {
+	for (const role of config.discord.modRoles) {
+		if (member.roles.cache.has(role)) {
 			return true;
 		}
 	}

@@ -24,6 +24,7 @@ const client = new Client({
 });
 
 client.commands = new Collection();
+client.msgCommands = new Collection();
 client.trainingVotes = new Collection();
 client.stickiedMessage = null;
 client.stickiedMessageTimeout = null;
@@ -43,6 +44,23 @@ for (const file of commandFiles) {
     } else {
         console.log(
             `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+        );
+    }
+}
+
+const msgCommandsPath = join(__dirname, 'msgCommands');
+const msgCommandFiles = readdirSync(msgCommandsPath).filter((file) =>
+    file.endsWith('.js')
+);
+
+for (const file of msgCommandFiles) {
+    const filePath = join(msgCommandsPath, file);
+    const command = (await import(`file://${filePath}`)).default;
+    if ('name' in command && 'execute' in command) {
+        client.msgCommands.set(command.name, command);
+    } else {
+        console.log(
+            `[WARNING] The command at ${filePath} is missing a required "name" or "execute" property.`
         );
     }
 }

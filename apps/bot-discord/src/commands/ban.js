@@ -24,7 +24,7 @@ export default {
                 .setDescription('Reason for the ban')
         ),
     async execute(_, config, interaction) {
-        if (checkForPerms(config, interaction.member)) return interaction.reply({
+        if (!checkForPerms(config, interaction.member)) return interaction.reply({
             epheremal: true,
             content: 'You don\'t have the required permissions.'
         });

@@ -6,7 +6,7 @@ export default {
 	},
 	async execute(helper, config, interaction) {
 		if (
-			checkForPerms(config, interaction.member)
+			!checkForPerms(config, interaction.member)
 		)
 			return interaction.reply({
 				content: 'You don\'t have the permission to do this.',

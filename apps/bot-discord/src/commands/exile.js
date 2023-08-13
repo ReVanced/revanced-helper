@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { checkForPerms } from '../utils/checkSupporterPerms.js'
 import reportToLogs from '../utils/reportToLogs.js';
 import muteMember from '../utils/muteMember.js';
+import exileMemberToChannel from '../utils/exileMemberToChannel.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -21,7 +22,7 @@ export default {
                 .setRequired(true)
         ),
     async execute(_, config, interaction) {
-        if (checkForPerms(config, interaction.member)) return interaction.reply({
+        if (!checkForPerms(config, interaction.member)) return interaction.reply({
             epheremal: true,
             content: 'You don\'t have the required permissions.'
         });
@@ -32,10 +33,11 @@ export default {
 
         const reason = interaction.options.getString('reason');
         const parsedDuration = await muteMember(config, member, {
-            duration: config.discord.mute.supportMuteDuration,
             reason,
             supportMute: true
         });
+
+        exileMemberToChannel(member, interaction.channel, null, config, true);
 
         reportToLogs(config, interaction.client, 'muted', null, {
             reason,
