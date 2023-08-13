@@ -3,7 +3,7 @@ import { Events } from 'discord.js';
 export default {
 	name: Events.MessageCreate,
 	once: false,
-	execute(helper, config, msg) {
+	async execute(helper, config, msg) {
 		if (!msg.guild || msg.system || msg.webhookId || msg.author.bot) return;
 		if (msg.content.startsWith('?')) {
 			const [cmd, args] = msg.content.replace('?', '').split(/\s/g);
