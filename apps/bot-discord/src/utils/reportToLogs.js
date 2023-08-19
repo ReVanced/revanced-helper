@@ -1,6 +1,6 @@
 import { EmbedBuilder, messageLink } from 'discord.js';
 
-export default async function reportToLogs(config, client, action, message, { reason, expire, actionTo, actionBy }, interaction) {
+export default async function reportToLogs(config, client, action, message, { reason, expire, actionTo, actionBy }, interaction, commandMsg) {
     const actionUpper = action.charAt(0).toUpperCase() + action.slice(1);
     const actionTitle = `${actionUpper} ${actionTo.tag}`;
     const actionEmbed = new EmbedBuilder()
@@ -33,6 +33,9 @@ export default async function reportToLogs(config, client, action, message, { re
     if (interaction) {
         await interaction.editReply({ embeds: [actionEmbed] });
         const msg = await interaction.fetchReply();
+        reportToLogs(config, client, action, msg, { reason, expire, actionTo, actionBy });
+    } else if (commandMsg) {
+        const msg = await commandMsg.reply({ embeds: [actionEmbed] });
         reportToLogs(config, client, action, msg, { reason, expire, actionTo, actionBy });
     } else {
         const channel = await client.channels.fetch(config.logs.channelId);

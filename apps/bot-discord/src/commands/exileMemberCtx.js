@@ -2,6 +2,7 @@ import { ContextMenuCommandBuilder, ApplicationCommandType } from 'discord.js';
 import { checkForPerms } from '../utils/checkSupporterPerms.js'
 import muteMember from '../utils/muteMember.js';
 import exileMemberToChannel from '../utils/exileMemberToChannel.js';
+import reportToLogs from '../utils/reportToLogs.js';
 
 export default {
     data: new ContextMenuCommandBuilder()
@@ -27,6 +28,14 @@ export default {
         });
 
         exileMemberToChannel(targetMsg.author, interaction.channel, targetMsg.content, null, config);
+
+        reportToLogs(config, interaction.client, 'exiled', null, {
+            reason,
+            actionTo: targetMsg.author,
+            actionBy: interaction.member,
+            channel: interaction.channel,
+            expire: parsedDuration
+        }, interaction);
 
         await targetMsg.delete();
     }

@@ -1,6 +1,7 @@
 import exileMemberToChannel from '../utils/exileMemberToChannel.js';
 import { checkForPerms } from '../utils/checkSupporterPerms.js'
 import muteMember from '../utils/muteMember.js';
+import reportToLogs from '../utils/reportToLogs.js';
 
 export default {
     name: 'exile',
@@ -19,12 +20,20 @@ export default {
             message = msgsByAuthor.slice(Number(`-${args[0]}`));
         }
 
-        await muteMember(config, referencedMsg.member, {
+        const parsedDuration = await muteMember(config, referencedMsg.member, {
             supportMute: true,
             guild: msg.guild
         });
 
         exileMemberToChannel(referencedMsg.author, msg.channel, message, null, config, false);
+
+        reportToLogs(config, interaction.client, 'exiled', null, {
+            reason,
+            actionTo: referencedMsg.author,
+            actionBy: msg.member,
+            channel: msg.channel,
+            expire: parsedDuration
+        }, null, msg);
 
         await referencedMsg.delete();
     }
