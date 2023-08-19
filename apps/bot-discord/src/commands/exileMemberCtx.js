@@ -17,10 +17,11 @@ export default {
                 ephemeral: true
             });
         
+        await interaction.deferReply();
         const targetMsg = interaction.targetMessage;
 
         const member = await interaction.guild.members.fetch(targetMsg.author.id);
-        muteMember(config, member, {
+        const parsedDuration = await muteMember(config, member, {
             channel: interaction.channel,
             reason: null,
             supportMute: true,
