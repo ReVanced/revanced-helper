@@ -5,7 +5,9 @@ export default async function reportToLogs(config, client, action, message, { re
     const actionTitle = `${actionUpper} ${actionTo.tag}`;
     const actionEmbed = new EmbedBuilder()
         .setThumbnail(actionTo.avatarURL())
-        .setTitle(actionTitle);
+        .setTitle(actionTitle)
+        .setColor(5150960)
+        .setFooter({ text: 'ReVanced', iconURL: client.user.avatarURL() });
 
     const fields = [
         { name: 'Action', value: `${actionTo.toString()} was ${action} by ${actionBy.toString()}` }
