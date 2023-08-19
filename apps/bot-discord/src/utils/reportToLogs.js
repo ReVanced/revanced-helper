@@ -13,7 +13,7 @@ export default async function reportToLogs(config, client, action, message, { re
         { name: 'Action', value: `${actionTo.toString()} was ${action} by ${actionBy.toString()}` }
     ];
 
-    if (action === 'banned' || action === 'muted') fields.push({
+    if (action === 'banned' || action === 'muted' || action === 'exiled') fields.push({
         name: 'Reason',
         value: reason ? reason : 'No reason provided',
         inline: true

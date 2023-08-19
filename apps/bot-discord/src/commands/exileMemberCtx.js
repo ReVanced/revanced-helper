@@ -26,6 +26,6 @@ export default {
             guild: interaction.guild
         });
 
-        exileMemberToChannel(targetMsg.author, interaction.channel, targetMsg.content, config, true);
+        exileMemberToChannel(targetMsg.author, interaction.channel, targetMsg.content, null, config);
     }
 };

@@ -39,9 +39,9 @@ export default {
             guild: interaction.guild
         });
 
-        exileMemberToChannel(member, interaction.channel, null, config, true);
+        exileMemberToChannel(member, interaction.channel, null, reason, config);
 
-        reportToLogs(config, interaction.client, 'muted', null, {
+        reportToLogs(config, interaction.client, 'exiled', null, {
             reason,
             actionTo: user,
             actionBy: interaction.member,

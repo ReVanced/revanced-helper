@@ -35,7 +35,7 @@ export default {
             return;
         }
 
-        reportToLogs(config, interaction.client, 'unmuted', null, {
+        reportToLogs(config, interaction.client, 'unexiled', null, {
             reason: null,
             actionTo: user,
             actionBy: interaction.member,

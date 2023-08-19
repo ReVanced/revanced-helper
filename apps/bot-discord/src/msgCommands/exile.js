@@ -24,6 +24,6 @@ export default {
             guild: msg.guild
         });
 
-        exileMemberToChannel(referencedMsg.author, msg.channel, message, config, false);
+        exileMemberToChannel(referencedMsg.author, msg.channel, message, null, config, false);
     }
 }
