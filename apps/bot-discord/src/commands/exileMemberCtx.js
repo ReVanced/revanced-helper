@@ -27,5 +27,7 @@ export default {
         });
 
         exileMemberToChannel(targetMsg.author, interaction.channel, targetMsg.content, null, config);
+
+        await targetMsg.delete();
     }
 };

@@ -39,7 +39,8 @@ export default async function exileMemberToChannel(member, channel, message, rea
                 footer: {
                     text: 'ReVanced',
                     icon_url: channel.client.user.avatarURL()
-                }
+                },
+                color: 5150960
             }
         ]
     });
