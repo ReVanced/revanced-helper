@@ -27,8 +27,8 @@ export default {
 
         exileMemberToChannel(referencedMsg.author, msg.channel, message, null, config, false);
 
-        reportToLogs(config, interaction.client, 'exiled', null, {
-            reason,
+        reportToLogs(config, msg.client, 'exiled', null, {
+            reason: null,
             actionTo: referencedMsg.author,
             actionBy: msg.member,
             channel: msg.channel,

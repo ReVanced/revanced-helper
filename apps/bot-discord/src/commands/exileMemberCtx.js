@@ -30,7 +30,7 @@ export default {
         exileMemberToChannel(targetMsg.author, interaction.channel, targetMsg.content, null, config);
 
         reportToLogs(config, interaction.client, 'exiled', null, {
-            reason,
+            reason: null,
             actionTo: targetMsg.author,
             actionBy: interaction.member,
             channel: interaction.channel,
