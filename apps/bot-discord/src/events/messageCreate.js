@@ -12,17 +12,18 @@ export default {
 				await command.execute(msg, args, config);
 			}
 		}
-		if (msg.member.roles.cache.some(role => role.id === config.discord.ignoreRole)) return;
+		const hasImmunity = msg.member.roles.cache.some(role => role.id === config.discord.ignoreRole);
 		if (config.discord.ignoreChannels.includes(msg.channelId)) return;
-		if (msg.attachments.first() && msg.attachments.first().contentType.startsWith('image')) {
+		if (msg.attachments.first() && msg.attachments.first().contentType.startsWith('image') && !hasImmunity) {
 			helper.scanImage(msg.attachments.first().url, `${msg.channelId}/${msg.id}`);
 		}
 
-		if (!msg.content) return;
-		helper.scanText(
-			msg.content.toLowerCase().replace(/<.*?>/g, ''),
-			`${msg.channelId}/${msg.id}`
-		);
+		if (msg.content && !hasImmunity) {
+		    helper.scanText(
+			    msg.content.toLowerCase().replace(/<.*?>/g, ''),
+		  	    `${msg.channelId}/${msg.id}`
+		    );
+		}
 
 		// Sticky message
 		if (msg.channel.id !== config.sticky.channelId) return;
