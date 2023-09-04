@@ -27,8 +27,6 @@ export default {
 			if (!response.reply) return;
 
 			const embed = response.reply;
-			embed.footer = { text: `Confidence: ${intent.confidence}` };
-
 			const feedbackRow = new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
 					.setCustomId('fb-like')

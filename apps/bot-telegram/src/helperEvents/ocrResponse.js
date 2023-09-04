@@ -10,7 +10,7 @@ export default {
                 // there won't be markdown support for now.
                 bot.sendMessage(
                     ids[0],
-                    `## ${ocrReply.reply.title}\n\n${ocrReply.reply.description}\n\nThis bot is currently being tested in production. Ignore it, if it's wrong.`,
+                    `## ${ocrReply.reply.title}\n\n${ocrReply.reply.description}`,
                     {
                         message_thread_id: ids[1],
                         reply_to_message_id: ids[2]
