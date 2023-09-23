@@ -1,7 +1,7 @@
 import decancer from 'decancer';
 
 export default async function cureUsername(member) {
-    let toCure = member.user.username;
+    let toCure = member.user.displayName;
     if (member.nickname) toCure = member.nickname;
 
     if (!/^[\x20-\x7D]+$/.test(toCure)) {
