@@ -70,6 +70,17 @@
   },
   "responses": [
     {
+      "label": "suggested_version",
+      "threshold": 0.85,
+      "reply": {
+        "title": "Which version is suggested?",
+        "description": "The suggested version can be seen in ReVanced Manager in the app selector screen. Refer to the ReVanced Manager documentation in <#953993848374325269> `3`",
+        "color": 5150960
+      },
+      "closeThread": false,
+      "lockThread": false
+    },
+    {
       "label": "revanced_crash",
       "threshold": 0.85,
       "reply": {
