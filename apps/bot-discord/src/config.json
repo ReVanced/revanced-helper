@@ -71,146 +71,287 @@
       "label": "suggested_version",
       "threshold": 0.85,
       "reply": {
-        "title": "Which version is suggested?",
-        "description": "The suggested version can be seen in ReVanced Manager in the app selector screen. Refer to the ReVanced Manager documentation in <#953993848374325269> `3`",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Which version is suggested ❓",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "The suggested version can be seen in ReVanced Manager in the app selector screen. Refer to the ReVanced Manager documentation in <#953993848374325269> `3`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "revanced_crash",
       "threshold": 0.85,
       "reply": {
-        "title": "Why is my patched app crashing?",
-        "description": "It seems like your patched application is crashing, these might be the reason why:\n  * You patched a non-suggested version.\n  * Patches failed to apply.\n   * Non-default patches were used.\n  * Split APK was used.",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Why am I experiencing crashes ❓",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "You may have patched an unsuggested version of the app, changed the selection of patches or used a faulty APK. Refer to the documentation in <#953993848374325269> `3` in order to correctly patch your app correctly using ReVanced CLI or ReVanced Manager."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "rvmanager_abort",
       "threshold": 0.85,
       "reply": {
-        "title": "Why is ReVanced Manager aborting?",
-        "description": "It seems like your Manager is aborting. If you see the text \"exit code = 135\" or \"exit code = 139\", then your device's architecture is not supported. Please patch on another device or on your PC.",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Why is ReVanced Manager aborting ❓",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "Your device may be unsupported by ReVanced Manager. Refer to the documentation in <#953993848374325269> `3` in order to use ReVanced CLI or check if your device is supported by ReVanced Manager."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "revanced_download",
       "threshold": 0.85,
       "reply": {
-        "title": "How to download ReVanced?",
-        "description": "ReVanced is a patcher. You can use the [ReVanced Manager](https://github.com/revanced/revanced-manager/releases/latest) or the [ReVanced CLI](https://github.com/revanced/revanced-cli) to patch the app you want to modify.\n* [ReVanced Manager docs](https://github.com/revanced/revanced-manager/tree/main/docs#-revanced-manager)\n* [ReVanced CLI docs](https://github.com/revanced/revanced-cli/tree/main/docs#-documentation-and-guides-of-revanced-cli)",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Where or how to get ReVanced ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "You can use ReVanced CLI or ReVanced Manager to get ReVanced. Refer to the documentation in <#953993848374325269> `3`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "androidtv_support",
       "threshold": 0.85,
       "reply": {
-        "title": "Will YT ReVanced support Android TVs?",
-        "description": "YouTube ReVanced for Android/Google TVs won't be made. There are alternatives, such as [SmartTubeNext](https://github.com/yuliskov/SmartTubeNext#smarttube).",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Does ReVanced support YouTube for Android TVs ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "Please refer to <#953993848374325269> `5`. Alternative, there is [SmartTubeNext](https://github.com/yuliskov/SmartTubeNext#smarttube)."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "revanced_nodownloader",
       "threshold": 0.85,
       "reply": {
-        "title": "Why can't I download videos?",
-        "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and it can be downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "How do I download videos on YouTube ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "In order to be able to download videos on YouTube without YouTube Premium, you can patch YouTube with the `External downloads` patch. You can configure the downloader in the settings of the patched app. NewPipe is the default downloader. Please refer to <#953993848374325269> `24`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "revanced_casting",
       "threshold": 0.85,
       "reply": {
-        "title": "Why can't I cast?",
-        "description": "Because of devices like Chromecast, Android/Google TVs using the Cast v2 API, casting to those devices won't work.",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Why can I not cast videos on YouTube ❓",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "You may have patched YouTube with the `Vanced MicroG support` patch which makes YouTube use Vanced MicroG instead of Google Services, but Vanced MicroG does not reliably support casting. In order to be able to cast videos on the patched app, you should not patch the app with the `Vanced MicroG support` patch, but then you are forced to mount the patched app with root permissions, because you will not be able to install the app in normal circumstances and Google Services will reject the patched app."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "microg_download",
       "threshold": 0.85,
       "reply": {
-        "title": "From where can I download Vanced MicroG?",
-        "description": "You can download Vanced MicroG from [here](https://github.com/TeamVanced/VancedMicroG/releases/latest).",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Where can I get Vanced MicroG ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "If you patched YouTube using the `Vanced MicroG support` patch, the patched app will redirect you to the download link of Vanced MicroG if you open it. In case it does not, please refer to <#953993848374325269> `17`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "microg_nointernet",
       "threshold": 0.85,
       "reply": {
-        "title": "Why does YT ReVanced say I'm offline?",
-        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in.",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Why does YouTube say, I am offline ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "Please refer to <#953993848374325269> `15`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "rvdownload_unofficial",
       "threshold": 0.85,
       "reply": {
-        "title": "What are the official ReVanced sites?",
-        "description": "The official sites for ReVanced are [revanced.app](https://revanced.app) and [github.com/revanced](https://github.com/revanced).",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "What are the official links of ReVanced ❓",
+        "description": "A list of official links can be found in <#954066838856273960>.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "ReVanced is always available at [revanced.app](https://revanced.app)."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "yt_buffering",
       "threshold": 0.85,
       "reply": {
-        "title": "Why do videos fail to play?",
-        "description": "Check [this](https://discord.com/channels/952946952348270622/954833032114733086/1121235521801310229) announcement.",
-        "color": 5150960
-      },
-      "closeThread": false,
-      "lockThread": false
+        "title": "Why do videos fail to play❓",
+        "description": "You might have asked a question that has been answered in the <#953993848374325269> channel already. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "Please refer to <#953993848374325269> `32`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
+      }
     },
     {
       "label": "false",
       "threshold": 0,
-      "reply": null,
-      "closeThread": false,
-      "lockThread": false
+      "reply": null
     }
   ],
   "ocrResponses": [
     {
       "regex": "is not installed",
       "reply": {
-        "title": "Why can't I download videos?",
-        "description": "You need to install a downloader to download videos. NewPipe is the default downloader, and it can be downloaded from [here](https://github.com/TeamNewPipe/NewPipe/releases/latest).",
-        "color": 5150960
+        "title": "How do I download videos on YouTube ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "In order to be able to download videos on YouTube without YouTube Premium, you can patch YouTube with the `External downloads` patch. You can configure the downloader in the settings of the patched app. NewPipe is the default downloader. Please refer to <#953993848374325269> `24`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
       }
     },
     {
       "regex": "You're offline|Please check your",
       "reply": {
-        "title": "Why does YT ReVanced say I'm offline?",
-        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in.",
-        "color": 5150960
+        "title": "Why does YouTube say, I am offline ❓",
+        "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
+        "color": 5150960,
+        "fields": [
+          {
+            "name": "🔸 Regarding your question",
+            "value": "Please refer to <#953993848374325269> `15`."
+          }
+        ],
+        "footer": {
+          "text": "ReVanced",
+          "icon_url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        },
+        "thumbnail": {
+          "url": "https://cdn.discordapp.com/attachments/1095487869923119144/1115436493050224660/revanced-logo.png"
+        }
       }
     }
   ]
