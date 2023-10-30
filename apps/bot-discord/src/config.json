@@ -20,16 +20,14 @@
     "mute": {
       "takeRoles": [
         "996121272897519687",
-				"965267139902705744",
-				"995126555867086938"
+        "965267139902705744",
+        "995126555867086938"
       ],
       "giveRoles": [
         "953984696491061289"
       ],
-      "supportTakeRoles" : [
-
-      ],
-      "supportGiveRoles" : [
+      "supportTakeRoles": [],
+      "supportGiveRoles": [
         "1140310515730632814"
       ],
       "supportMuteDuration": 600000
@@ -45,10 +43,10 @@
       "title": "Sticky notice",
       "color": 5150960,
       "fields": [
-         {
+        {
           "name": "🔸 Before you ask",
           "value": "Check the pinned messages and <#953993848374325269> for existing answers."
-	 },
+        },
         {
           "name": "🔸 How to ask",
           "value": "Include the following information:\n* Version of ReVanced Manager\n* Name of the app you are patching\n* Version of the app you are patching"
