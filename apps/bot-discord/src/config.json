@@ -287,7 +287,7 @@
       "label": "yt_buffering",
       "threshold": 0.85,
       "reply": {
-        "title": "Why do videos fail to play❓",
+        "title": "Why do videos fail to play ❓",
         "description": "You might have asked a question that has been answered in the <#953993848374325269> channel already. Make sure to read it as it will answer a lot of your questions, guaranteed.",
         "color": 5150960,
         "fields": [
