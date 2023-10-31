@@ -97,7 +97,7 @@
         "fields": [
           {
             "name": "🔸 Regarding your question",
-            "value": "You may have patched an unsuggested version of the app, changed the selection of patches or used a faulty APK. Refer to the documentation in <#953993848374325269> `3` in order to correctly patch your app correctly using ReVanced CLI or ReVanced Manager."
+            "value": "You may have patched an unsuggested version of the app, changed the selection of patches, or used a faulty APK. Refer to the documentation in <#953993848374325269> `3` in order to correctly patch your app using ReVanced CLI or ReVanced Manager."
           }
         ],
         "footer": {
