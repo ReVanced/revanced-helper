@@ -334,9 +334,9 @@
       }
     },
     {
-      "regex": "You're offline|Please check your",
+      "regex": "You're offline|Please check your|Couldn't sign in",
       "reply": {
-        "title": "Why does YouTube say, I am offline ❓",
+        "title": "Why does YT ReVanced say I am offline ❓",
         "description": "You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.",
         "color": 5150960,
         "fields": [
