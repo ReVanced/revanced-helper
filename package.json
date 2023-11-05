@@ -14,8 +14,7 @@
   "homepage": "https://github.com/reisxd/revanced-helper#readme",
   "scripts": {
     "lint": "prettier --write . && eslint --fix .",
-    "installPackages": "cd bots && npm i && cd ../client && npm i && cd ../server && npm i",
-    "start": "cd bots && node . & cd ../server && node ."
+    "start": "cd apps/server/src && (node . &) && cd ../../bot-discord/src && (node .)"
   },
   "devDependencies": {
     "eslint": "^8.27.0",
