@@ -32,7 +32,7 @@
       "label": "androidtv_support",
       "threshold": 0.85,
       "reply": {
-        "title": "Will YT ReVanced support Android TVs?",
+        "title": "Will ReVanced support Android TVs?",
         "description": "YouTube ReVanced for Android/Google TVs won't be made. There are alternatives, such as [SmartTubeNext](https://github.com/yuliskov/SmartTubeNext#smarttube)."
       }
     },
@@ -64,8 +64,8 @@
       "label": "microg_nointernet",
       "threshold": 0.85,
       "reply": {
-        "title": "Why does YT ReVanced say I'm offline?",
-        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in."
+        "title": "Why does patched YouTube say I'm offline?",
+        "description": "Log out of the Vanced MicroG account within your device settings and log back in. Alternatively, reinstall Vanced MicroG."
       }
     },
     {
@@ -101,8 +101,8 @@
     {
       "regex": "You're offline|Please check your|Couldn't sign in",
       "reply": {
-        "title": "Why does YT ReVanced say I'm offline?",
-        "description": "If your YT ReVanced appears to not have internet and you recently changed your Google password, remove the Vanced MicroG account from within your device settings and then log back in."
+        "title": "Why does patched YouTube say I'm offline?",
+        "description": "Log out of the Vanced MicroG account within your device settings and log back in. Alternatively, reinstall Vanced MicroG."
       }
     }
   ]
