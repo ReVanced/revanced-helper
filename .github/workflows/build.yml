@@ -39,7 +39,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GH_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -54,10 +54,9 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          build-args: GH_TOKEN=${{ secrets.GH_TOKEN }}
           context: .
           file: ./Dockerfile
-          platforms: linux/arm64/v8
+          platforms: linux/amd64,linux/arm64/v8
           cache-to: type=gha,mode=max,ignore-error=true
           cache-from: type=gha
           push: true
