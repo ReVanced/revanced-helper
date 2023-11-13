@@ -34,7 +34,8 @@ export default {
 
 			const message = await channel.send({ embeds: [config.sticky.stickyMessage] });
 
-			if (msg.client.stickiedMessage) channel.messages.delete(msg.client.stickiedMessage);
+			if (msg.client.stickiedMessage && msg.client.stickiedMessage.deletable)
+				channel.messages.delete(msg.client.stickiedMessage).catch(() => {});
 
 			msg.client.stickiedMessage = message.id;
 		}, config.sticky.timeout);
