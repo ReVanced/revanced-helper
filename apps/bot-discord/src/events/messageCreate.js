@@ -14,7 +14,7 @@ export default {
 		}
 		const hasImmunity = msg.member.roles.cache.some(role => role.id === config.discord.ignoreRole);
 		if (config.discord.ignoreChannels.includes(msg.channelId)) return;
-		if (msg.attachments.first() && msg.attachments.first().contentType.startsWith('image') && !hasImmunity) {
+		if (msg.attachments.first()?.contentType?.startsWith('image') && !hasImmunity) {
 			helper.scanImage(msg.attachments.first().url, `${msg.channelId}/${msg.id}`);
 		}
 
