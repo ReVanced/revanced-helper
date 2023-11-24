@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "address": {
+            "description": "Address to listen on",
+            "type": "string",
+            "default": "127.0.0.1"
+        },
+        "port": {
+            "description": "Port to listen on",
+            "type": "integer",
+            "default": 80
+        },
+        "ocrConcurrentQueues": {
+            "description": "Number of concurrent queues for OCR",
+            "type": "integer",
+            "default": 1
+        },
+        "clientHeartbeatInterval": {
+            "description": "Time in milliseconds to wait for a client to send a heartbeat packet, if no packet is received, the server will wait for `clientHeartbeatExtraTime` milliseconds before disconnecting the client",
+            "type": "integer",
+            "default": 60000
+        },
+        "debugLogsInProduction": {
+            "description": "Whether to print debug logs in production",
+            "type": "boolean",
+            "default": false
+        }
+    }
+}

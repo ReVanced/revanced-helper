@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.apis.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "dist",
+        "module": "ESNext",
+        "composite": false,
+    },
+    "exclude": ["node_modules", "dist"],
+    "include": ["./*.json", "src/**/*.ts"]
+}
