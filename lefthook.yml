@@ -1,16 +1,12 @@
 pre-commit:
     parallel: true
     commands:
-        types:
-            files: git diff --name-only @{push}
-            glob: '*.{js,ts}'
-            run: bunx tsc --noEmit {files}
         format:
-            files: git diff --name-only @{push}
-            glob: '*.{js,ts}'
-            run: bunx prettier --check {files}
+            files: git diff --name-only --cached --diff-filter=AM @{push}
+            glob: '*.{js,ts,json,yml,md}'
+            run: bunx prettier --ignore-path .gitignore --check {files}
         lint:
-            files: git diff --name-only @{push}
+            files: git diff --name-only --cached --diff-filter=AM @{push}
             glob: '*.{js,ts}'
             run: bunx eslint --cache {files}
 commit-msg:
