@@ -17,6 +17,7 @@ const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (
 
     try {
         const { intents } = await witClient.message(text, {})
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const intentsWithoutIds = intents.map(({ id, ...rest }) => rest)
 
         await client.send({
