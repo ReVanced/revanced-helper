@@ -1,9 +1,10 @@
 import type { Logger } from './logger.js'
 
 export default function checkEnv(logger: Logger) {
-    if (!process.env['NODE_ENV']) logger.warn('NODE_ENV not set, defaulting to `development`')
+    if (!process.env['NODE_ENV'])
+        logger.warn('NODE_ENV not set, defaulting to `development`')
     const environment = (process.env['NODE_ENV'] ??
-    'development') as NodeEnvironment
+        'development') as NodeEnvironment
 
     if (!['development', 'production'].includes(environment)) {
         logger.error(
@@ -16,7 +17,9 @@ export default function checkEnv(logger: Logger) {
     logger.info(`Running in ${environment} mode...`)
 
     if (environment === 'production' && process.env['IS_USING_DOT_ENV']) {
-        logger.warn('You seem to be using .env files, this is generally not a good idea in production...')
+        logger.warn(
+            'You seem to be using .env files, this is generally not a good idea in production...'
+        )
     }
 
     if (!process.env['WIT_AI_TOKEN']) {

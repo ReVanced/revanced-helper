@@ -50,8 +50,8 @@ export enum ServerOperation {
     /**
      * Server's disconnect message
      */
-    Disconnect = 20
+    Disconnect = 20,
 }
 
 export const Operation = { ...ClientOperation, ...ServerOperation } as const
-export type Operation = (ClientOperation | ServerOperation)
+export type Operation = ClientOperation | ServerOperation

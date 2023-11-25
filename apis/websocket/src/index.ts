@@ -17,16 +17,17 @@ import {
 
 import { getConfig, checkEnv, logger } from './utils/index.js'
 import { WebSocket } from 'ws'
-import { DisconnectReason, HumanizedDisconnectReason } from '@revanced/bot-shared'
+import {
+    DisconnectReason,
+    HumanizedDisconnectReason,
+} from '@revanced/bot-shared'
 
-// Load environment variables and config
-
-(async () => {
-
+// Check environment variables and load config
 const environment = checkEnv(logger)
 const config = getConfig()
 
-if (!config.debugLogsInProduction && environment === 'production') logger.debug = () => {}
+if (!config.debugLogsInProduction && environment === 'production')
+    logger.debug = () => {}
 
 // Workers and API clients
 
@@ -90,9 +91,14 @@ const server = fastify()
                     parseImageEventHandler(packet, eventContext)
                 )
 
-                if (environment === 'development' && !config.debugLogsInProduction) {
-                    logger.debug('Running development mode or debug logs in production is enabled, attaching debug events...')
-                    client.on('packet', ({ client: _, ...rawPacket }) =>
+                if (
+                    environment === 'development' &&
+                    !config.debugLogsInProduction
+                ) {
+                    logger.debug(
+                        'Running development mode or debug logs in production is enabled, attaching debug events...'
+                    )
+                    client.on('packet', ({ client, ...rawPacket }) =>
                         logger.debug(
                             `Packet received from client ${client.id}:`,
                             inspectObject(rawPacket)
@@ -100,7 +106,10 @@ const server = fastify()
                     )
 
                     client.on('heartbeat', () =>
-                        logger.debug('Heartbeat received from client', client.id)
+                        logger.debug(
+                            'Heartbeat received from client',
+                            client.id
+                        )
                     )
                 }
             } catch (e) {
@@ -146,5 +155,3 @@ else
         'Server started at:',
         `${addressInfo.address}:${addressInfo.port}`
     )
-
-})()

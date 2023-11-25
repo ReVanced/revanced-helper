@@ -19,9 +19,9 @@ enum DisconnectReason {
      */
     ServerError,
     /**
-     * The client had never connected to the server (**CLIENT-ONLY**) 
+     * The client had never connected to the server (**CLIENT-ONLY**)
      */
-    NeverConnected
+    NeverConnected,
 }
 
 export default DisconnectReason

@@ -1,1 +1,1 @@
-type RequiredProperty<T> = { [P in keyof T]: Required<NonNullable<T[P]>>; };
+type RequiredProperty<T> = { [P in keyof T]: Required<NonNullable<T[P]>> }

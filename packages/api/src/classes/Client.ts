@@ -49,7 +49,9 @@ export default class Client {
                 rs(packet)
             }
 
-            const parseTextFailedListener = (packet: Packet<ServerOperation.ParseTextFailed>) => {
+            const parseTextFailedListener = (
+                packet: Packet<ServerOperation.ParseTextFailed>
+            ) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseTextFailed', parseTextFailedListener)
                 rj(packet)
@@ -84,7 +86,9 @@ export default class Client {
                 rs(packet)
             }
 
-            const parseImageFailedListener = (packet: Packet<ServerOperation.ParseImageFailed>) => {
+            const parseImageFailedListener = (
+                packet: Packet<ServerOperation.ParseImageFailed>
+            ) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseImageFailed', parseImageFailedListener)
                 rj(packet)
