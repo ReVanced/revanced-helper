@@ -2,7 +2,7 @@
 
 This documentation explains how the server works, how to start developing, and how to configure the server.
 
-# 📖 Table of contents
+## 📖 Table of contents
 
 0. [🏗️ Setting up the development environment](./0_development_environment.md)
 1. [⚙️ Configuration](./1_configuration.md)
