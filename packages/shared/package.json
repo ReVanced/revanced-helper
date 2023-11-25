@@ -19,11 +19,6 @@
     "url": "git+https://github.com/revanced/revanced-helper.git",
     "directory": "packages/shared"
   },
-  "keywords": [
-    "revanced",
-    "bot",
-    "server"
-  ],
   "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
   "contributors": [
     "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",

@@ -2,7 +2,7 @@
   "name": "@revanced/bot-api",
   "type": "module",
   "version": "0.1.0",
-  "description": "🙌🏻 Programmatic API for bots assisting ReVanced to communicate to its server",
+  "description": "🙌🏻 Programmatic API for bots assisting ReVanced to communicate to its API server",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -19,11 +19,6 @@
     "url": "git+https://github.com/revanced/revanced-helper.git",
     "directory": "packages/api"
   },
-  "keywords": [
-    "revanced",
-    "bot",
-    "server"
-  ],
   "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
   "contributors": [
     "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
