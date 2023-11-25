@@ -24,7 +24,7 @@ To start developing, you'll need to set up the development environment first.
 4. Build packages/libraries
 
     ```sh
-    bun build:deps
+    bun build:libs
     ```
 
 5. Change your directory to this project's root

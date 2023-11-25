@@ -9,15 +9,14 @@
         "packages/*"
     ],
     "scripts": {
-        "build": "bun task build",
+        "build": "turbo run build",
+        "watch": "turbo run watch",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint .",
+        "lint:apply": "eslint --fix .",
         "commitlint": "commitlint --edit",
-        "format": "turbo run format",
-        "format:check": "turbo run format:check",
-        "lint": "turbo run lint",
-        "lint:apply": "turbo run lint:apply",
-        "watch": "bun task watch",
-        "task": "turbo run",
-        "t": "bun task",
+        "t": "turbo run",
         "prepare": "lefthook install"
     },
     "repository": {

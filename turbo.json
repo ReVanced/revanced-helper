@@ -9,18 +9,6 @@
         "watch": {
             "dependsOn": ["^watch"],
             "outputMode": "errors-only"
-        },
-        "format": {
-            "dependsOn": ["^format"],
-            "outputMode": "errors-only"
-        },
-        "lint": {
-            "dependsOn": ["^lint"],
-            "outputMode": "errors-only"
-        },
-        "lint:apply": {
-            "dependsOn": ["^lint:apply"],
-            "outputMode": "errors-only"
         }
     }
 }
