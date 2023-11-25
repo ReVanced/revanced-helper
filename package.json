@@ -11,10 +11,10 @@
     "scripts": {
         "build": "turbo run build",
         "watch": "turbo run watch",
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
-        "lint": "eslint .",
-        "lint:apply": "eslint --fix .",
+        "format": "prettier --ignore-path .gitignore --write .",
+        "format:check": "prettier --ignore-path .gitignore --cache --check .",
+        "lint": "eslint --ignore-path .gitignore --cache .",
+        "lint:apply": "eslint --ignore-path .gitignore --fix .",
         "commitlint": "commitlint --edit",
         "t": "turbo run",
         "prepare": "lefthook install"
@@ -52,5 +52,51 @@
     "overrides": {
         "uuid": ">=9.0.0",
         "isomorphic-fetch": ">=3.0.0"
+    },
+    "eslintConfig": {
+        "root": true,
+        "extends": [
+            "eslint:recommended",
+            "plugin:@typescript-eslint/recommended",
+            "plugin:prettier/recommended"
+        ],
+        "plugins": [
+            "import",
+            "prettier"
+        ],
+        "parser": "@typescript-eslint/parser",
+        "parserOptions": {
+            "sourceType": "module",
+            "ecmaVersion": "latest"
+        },
+        "rules": {
+            "import/no-unresolved": "error"
+        },
+        "settings": {
+            "import/parsers": {
+                "@typescript-eslint/parser": [
+                    ".ts",
+                    ".tsx"
+                ]
+            },
+            "import/resolver": {
+                "typescript": {
+                    "alwaysTryTypes": true,
+                    "project": [
+                        "./tsconfig.base.json"
+                    ]
+                }
+            }
+        }
+    },
+    "prettier": {
+        "arrowParens": "avoid",
+        "quoteProps": "as-needed",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true,
+        "trailingComma": "es5",
+        "endOfLine": "crlf"
     }
 }
+
