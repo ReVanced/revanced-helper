@@ -1,5 +1,8 @@
 import DisconnectReason from './DisconnectReason.js'
 
+/**
+ * Humanized disconnect reasons for logs
+ */
 const HumanizedDisconnectReason = {
     [DisconnectReason.InvalidPacket]: 'has sent invalid packet',
     [DisconnectReason.Generic]: 'has been disconnected for unknown reasons',
