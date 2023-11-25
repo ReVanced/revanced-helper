@@ -19,14 +19,27 @@ export default class Client {
         })
     }
 
+    /**
+     * Connects to the WebSocket API
+     * @returns A promise that resolves when the client is ready
+     */
     connect() {
         return this.gateway.connect()
     }
 
+    /**
+     * Checks whether the client is ready
+     * @returns Whether the client is ready
+     */
     isReady(): this is ReadiedClient {
         return this.ready
     }
 
+    /**
+     * Requests the API to parse the given text
+     * @param text The text to parse
+     * @returns An object containing the ID of the request and the labels
+     */
     async parseText(text: string) {
         this.#throwIfNotReady()
 
@@ -42,11 +55,11 @@ export default class Client {
 
         type CorrectPacket = Packet<ServerOperation.ParsedText>
 
-        const promise = new Promise<CorrectPacket>((rs, rj) => {
+        const promise = new Promise<CorrectPacket['d']>((rs, rj) => {
             const parsedTextListener = (packet: CorrectPacket) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parsedText', parsedTextListener)
-                rs(packet)
+                rs(packet.d)
             }
 
             const parseTextFailedListener = (
@@ -54,7 +67,7 @@ export default class Client {
             ) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseTextFailed', parseTextFailedListener)
-                rj(packet)
+                rj()
             }
 
             this.gateway.on('parsedText', parsedTextListener)
@@ -64,6 +77,11 @@ export default class Client {
         return await promise
     }
 
+    /**
+     * Requests the API to parse the given image and return the text
+     * @param url The URL of the image
+     * @returns An object containing the ID of the request and the parsed text
+     */
     async parseImage(url: string) {
         this.#throwIfNotReady()
 
@@ -79,11 +97,11 @@ export default class Client {
 
         type CorrectPacket = Packet<ServerOperation.ParsedImage>
 
-        const promise = new Promise<CorrectPacket>((rs, rj) => {
+        const promise = new Promise<CorrectPacket['d']>((rs, rj) => {
             const parsedImageListener = (packet: CorrectPacket) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parsedImage', parsedImageListener)
-                rs(packet)
+                rs(packet.d)
             }
 
             const parseImageFailedListener = (
@@ -91,7 +109,7 @@ export default class Client {
             ) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseImageFailed', parseImageFailedListener)
-                rj(packet)
+                rj()
             }
 
             this.gateway.on('parsedImage', parsedImageListener)
@@ -101,25 +119,46 @@ export default class Client {
         return await promise
     }
 
+    /**
+     * Adds an event listener
+     * @param name The event name to listen for
+     * @param handler The event handler
+     * @returns The event handler function
+     */
     on<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name]
+        handler: ClientGatewayEventHandlers[TOpName]
     ) {
         this.gateway.on(name, handler)
+        return handler
     }
 
+    /**
+     * Removes an event listener
+     * @param name The event name to remove a listener from
+     * @param handler The event handler to remove
+     * @returns The removed event handler function
+     */
     off<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name]
+        handler: ClientGatewayEventHandlers[TOpName]
     ) {
         this.gateway.off(name, handler)
+        return handler
     }
 
+    /**
+     * Adds an event listener that will only be called once
+     * @param name The event name to listen for
+     * @param handler The event handler
+     * @returns The event handler function
+     */
     once<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name]
+        handler: ClientGatewayEventHandlers[TOpName]
     ) {
         this.gateway.once(name, handler)
+        return handler
     }
 
     #throwIfNotReady() {

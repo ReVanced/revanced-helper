@@ -44,33 +44,6 @@ export const PacketSchema = special<Packet>(input => {
     return false
 }, 'Invalid packet data')
 
-// merge([
-//     object({
-//         op: nativeEnum(Operation, 'Not a valid operation number'),
-//     }),
-//     object({
-//         d: special<Packet['d']>(input => {
-//             if (
-//                 typeof input === 'object' &&
-//                 input &&
-//                 'op' in input &&
-//                 typeof input.op === 'number' &&
-//                 input.op in Operation &&
-//                 'd' in input &&
-//                 typeof input.d === 'object'
-//             ) {
-//                 try {
-//                     PacketDataSchemas[input.op as Operation].parse(input)
-//                     return true
-//                 } catch {
-//                     return false
-//                 }
-//             }
-//             return false
-//         }, 'Invalid packet data'),
-//     }),
-// ])
-
 /**
  * Schema to validate packet data for each possible operations
  */
@@ -118,6 +91,7 @@ export const PacketDataSchemas = {
     }),
 } as const satisfies Record<
     Operation,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ObjectSchema<any> | AnySchema | NullSchema
 >
 
