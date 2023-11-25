@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "version": "0.1.0",
-  "description": "⚙️ Gateway for bots assisting ReVanced",
+  "description": "🧦 WebSocket API server for bots assisting ReVanced",
   "main": "dist/index.js",
   "scripts": {
     "bundle": "bun build src/index.ts --outdir=dist --target=node --minify --sourcemap=external",
@@ -16,12 +16,6 @@
     "url": "git+https://github.com/revanced/revanced-helper.git",
     "directory": "apis/websocket"
   },
-  "keywords": [
-    "revanced",
-    "bot",
-    "server",
-    "gateway"
-  ],
   "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
   "contributors": [
     "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
@@ -36,6 +30,7 @@
     "@fastify/websocket": "^8.2.0",
     "@revanced/bot-shared": "workspace:*",
     "@sapphire/async-queue": "^1.5.0",
+    "chalk": "^5.3.0",
     "fastify": "^4.24.3",
     "node-wit": "^6.6.0",
     "tesseract.js": "^5.0.3"
@@ -43,7 +38,6 @@
   "devDependencies": {
     "@types/node-wit": "^6.0.3",
     "@types/ws": "^8.5.10",
-    "chalk": "^5.3.0",
     "typed-emitter": "^2.1.0"
   }
 }

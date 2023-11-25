@@ -24,10 +24,6 @@
     "type": "git",
     "url": "git+https://github.com/revanced/revanced-helper.git"
   },
-  "keywords": [
-    "revanced",
-    "bot"
-  ],
   "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
   "contributors": [
     "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
