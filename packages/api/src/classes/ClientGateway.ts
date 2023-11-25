@@ -24,8 +24,7 @@ export default class ClientGateway {
 
     #hbTimeout: NodeJS.Timeout = null!
     #socket: WebSocket = null!
-    #emitter =
-        new EventEmitter() as TypedEmitter<ClientGatewayEventHandlers>
+    #emitter = new EventEmitter() as TypedEmitter<ClientGatewayEventHandlers>
 
     constructor(options: ClientGatewayOptions) {
         this.url = options.url
@@ -110,6 +109,7 @@ export default class ClientGateway {
 
             switch (packet.op) {
                 case ServerOperation.Hello:
+                    // eslint-disable-next-line no-case-declarations
                     const data = Object.freeze(
                         (packet as Packet<ServerOperation.Hello>).d
                     )
@@ -124,9 +124,11 @@ export default class ClientGateway {
                 default:
                     return this.#emitter.emit(
                         uncapitalize(
-                            ServerOperation[packet.op] as ClientGatewayServerEventName
+                            ServerOperation[
+                                packet.op
+                            ] as ClientGatewayServerEventName
                         ),
-                        // @ts-expect-error
+                        // @ts-expect-error TypeScript doesn't know that the lines above negate the type enough
                         packet
                     )
             }

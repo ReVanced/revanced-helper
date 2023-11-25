@@ -1,43 +1,43 @@
 {
-  "name": "@revanced/bot-websocket-api",
-  "type": "module",
-  "private": true,
-  "version": "0.1.0",
-  "description": "🧦 WebSocket API server for bots assisting ReVanced",
-  "main": "dist/index.js",
-  "scripts": {
-    "bundle": "bun build src/index.ts --outdir=dist --target=node --minify --sourcemap=external",
-    "dev": "bun run src/index.ts --watch",
-    "build": "bun bundle",
-    "watch": "bun dev"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/revanced/revanced-helper.git",
-    "directory": "apis/websocket"
-  },
-  "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
-  "contributors": [
-    "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
-    "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
-  ],
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/revanced/revanced-helper/issues"
-  },
-  "homepage": "https://github.com/revanced/revanced-helper#readme",
-  "dependencies": {
-    "@fastify/websocket": "^8.2.0",
-    "@revanced/bot-shared": "workspace:*",
-    "@sapphire/async-queue": "^1.5.0",
-    "chalk": "^5.3.0",
-    "fastify": "^4.24.3",
-    "node-wit": "^6.6.0",
-    "tesseract.js": "^5.0.3"
-  },
-  "devDependencies": {
-    "@types/node-wit": "^6.0.3",
-    "@types/ws": "^8.5.10",
-    "typed-emitter": "^2.1.0"
-  }
+    "name": "@revanced/bot-websocket-api",
+    "type": "module",
+    "private": true,
+    "version": "0.1.0",
+    "description": "🧦 WebSocket API server for bots assisting ReVanced",
+    "main": "dist/index.js",
+    "scripts": {
+        "bundle": "bun build src/index.ts --outdir=dist --target=node --minify --sourcemap=external",
+        "dev": "bun run src/index.ts --watch",
+        "build": "bun bundle",
+        "watch": "bun dev"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/revanced/revanced-helper.git",
+        "directory": "apis/websocket"
+    },
+    "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+    "contributors": [
+        "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+        "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
+    ],
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/revanced/revanced-helper/issues"
+    },
+    "homepage": "https://github.com/revanced/revanced-helper#readme",
+    "dependencies": {
+        "@fastify/websocket": "^8.2.0",
+        "@revanced/bot-shared": "workspace:*",
+        "@sapphire/async-queue": "^1.5.0",
+        "chalk": "^5.3.0",
+        "fastify": "^4.24.3",
+        "node-wit": "^6.6.0",
+        "tesseract.js": "^5.0.3"
+    },
+    "devDependencies": {
+        "@types/node-wit": "^6.0.3",
+        "@types/ws": "^8.5.10",
+        "typed-emitter": "^2.1.0"
+    }
 }

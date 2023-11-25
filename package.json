@@ -1,57 +1,57 @@
 {
-  "name": "revanced-helper",
-  "version": "0.0.0",
-  "description": "🤖 Bots assisting ReVanced on multiple platforms",
-  "private": true,
-  "workspaces": [
-    "apis/*",
-    "bots/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "bun task build",
-    "commitlint": "commitlint --edit",
-    "format": "turbo run format",
-    "format:check": "turbo run format:check",
-    "lint": "turbo run lint",
-    "lint:apply": "turbo run lint:apply",
-    "watch": "bun task watch",
-    "task": "turbo run",
-    "t": "bun task",
-    "prepare": "lefthook install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/revanced/revanced-helper.git"
-  },
-  "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
-  "contributors": [
-    "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
-    "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
-  ],
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/revanced/revanced-helper/issues"
-  },
-  "homepage": "https://github.com/revanced/revanced-helper#readme",
-  "devDependencies": {
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
-    "@tsconfig/strictest": "^2.0.2",
-    "conventional-changelog-conventionalcommits": "^7.0.2",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "lefthook": "^1.5.3",
-    "prettier": "^3.1.0",
-    "semantic-release": "^22.0.8",
-    "turbo": "^1.10.16",
-    "typescript": "^5.3.2"
-  },
-  "overrides": {
-    "uuid": ">=9.0.0",
-    "isomorphic-fetch": ">=3.0.0"
-  }
+    "name": "revanced-helper",
+    "version": "0.0.0",
+    "description": "🤖 Bots assisting ReVanced on multiple platforms",
+    "private": true,
+    "workspaces": [
+        "apis/*",
+        "bots/*",
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "bun task build",
+        "commitlint": "commitlint --edit",
+        "format": "turbo run format",
+        "format:check": "turbo run format:check",
+        "lint": "turbo run lint",
+        "lint:apply": "turbo run lint:apply",
+        "watch": "bun task watch",
+        "task": "turbo run",
+        "t": "bun task",
+        "prepare": "lefthook install"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/revanced/revanced-helper.git"
+    },
+    "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+    "contributors": [
+        "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+        "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
+    ],
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/revanced/revanced-helper/issues"
+    },
+    "homepage": "https://github.com/revanced/revanced-helper#readme",
+    "devDependencies": {
+        "@commitlint/cli": "^18.4.3",
+        "@commitlint/config-conventional": "^18.4.3",
+        "@tsconfig/strictest": "^2.0.2",
+        "conventional-changelog-conventionalcommits": "^7.0.2",
+        "eslint": "^8.54.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-import-resolver-typescript": "^3.6.1",
+        "eslint-plugin-import": "^2.29.0",
+        "eslint-plugin-prettier": "^5.0.1",
+        "lefthook": "^1.5.3",
+        "prettier": "^3.1.0",
+        "semantic-release": "^22.0.8",
+        "turbo": "^1.10.16",
+        "typescript": "^5.3.2"
+    },
+    "overrides": {
+        "uuid": ">=9.0.0",
+        "isomorphic-fetch": ">=3.0.0"
+    }
 }

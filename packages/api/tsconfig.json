@@ -5,7 +5,7 @@
         "rootDir": "./src",
         "outDir": "dist",
         "module": "ESNext",
-        "composite": true,
+        "composite": true
     },
     "exclude": ["node_modules", "dist"]
 }

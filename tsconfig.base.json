@@ -1,6 +1,6 @@
 {
     // `bun-types` will not be added until https://github.com/oven-sh/bun/issues/7247 is fixed
-    "extends": ["@tsconfig/strictest", /* "bun-types" */],
+    "extends": ["@tsconfig/strictest" /* "bun-types" */],
     "compilerOptions": {
         "lib": ["ESNext"],
         "module": "NodeNext",
@@ -12,6 +12,6 @@
         "esModuleInterop": true,
         "declaration": false,
         "allowSyntheticDefaultImports": true,
-        "isolatedModules": true,
-    },
+        "isolatedModules": true
+    }
 }

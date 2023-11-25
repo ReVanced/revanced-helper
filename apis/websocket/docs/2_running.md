@@ -39,4 +39,3 @@ bun bundle
 ```
 
 The files will be placed in the `dist` directory. **Configurations and `.env` files will NOT be copied automatically.**
-

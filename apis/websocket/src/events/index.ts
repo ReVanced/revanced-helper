@@ -8,7 +8,10 @@ import type { Worker as TesseractWorker } from 'tesseract.js'
 export { default as parseTextEventHandler } from './parseText.js'
 export { default as parseImageEventHandler } from './parseImage.js'
 
-export type EventHandler<POp extends ClientOperation> = (packet: ClientPacketObject<POp>, context: EventContext) => void | Promise<void>
+export type EventHandler<POp extends ClientOperation> = (
+    packet: ClientPacketObject<POp>,
+    context: EventContext
+) => void | Promise<void>
 export type EventContext = {
     witClient: Wit
     tesseractWorker: TesseractWorker

@@ -141,7 +141,7 @@ export default class Client {
                 this.#emitter.emit('packet', packet)
                 this.#emitter.emit(
                     uncapitalize(ClientOperation[packet.op] as ClientEventName),
-                    // @ts-expect-error
+                    // @ts-expect-error TypeScript doesn't know that the above line will negate the type enough
                     packet
                 )
             } catch (e) {
@@ -181,7 +181,7 @@ export default class Client {
                 this.once('heartbeat', () => clearTimeout(interval))
                 // This should never happen but it did in my testing so I'm adding this just in case
                 this.once('disconnect', () => clearTimeout(interval))
-            // Technically we don't have to do this, but JUST IN CASE!
+                // Technically we don't have to do this, but JUST IN CASE!
             } else this.#hbTimeout.refresh()
         }, this.heartbeatInterval)
     }
