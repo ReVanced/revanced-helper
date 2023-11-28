@@ -15,6 +15,9 @@
       "style": {
         "noNonNullAssertion": {
           "level": "off"
+        },
+        "useEnumInitializers": {
+          "level": "off"
         }
       }
     }
@@ -32,6 +35,7 @@
       "arrowParentheses": "asNeeded",
       "indentStyle": "space",
       "indentWidth": 4,
+      "lineWidth": 120,
       "quoteProperties": "asNeeded",
       "quoteStyle": "single",
       "semicolons": "asNeeded",
