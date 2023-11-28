@@ -22,17 +22,14 @@ type BaseTypeOf<T> = T extends (infer U)[]
     ? { [K in keyof T]: T[K] }
     : T
 
-export type Config = Omit<
-    BaseTypeOf<typeof import('../../config.json')>,
-    '$schema'
->
+export type Config = Omit<BaseTypeOf<typeof import('../../config.json')>, '$schema'>
 
 export const defaultConfig: Config = {
     address: '127.0.0.1',
     port: 80,
     ocrConcurrentQueues: 1,
     clientHeartbeatInterval: 60000,
-    debugLogsInProduction: false,
+    consoleLogLevel: 'info',
 }
 
 export default function getConfig() {

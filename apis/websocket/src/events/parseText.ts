@@ -4,10 +4,7 @@ import { inspect as inspectObject } from 'node:util'
 
 import type { EventHandler } from './index.js'
 
-const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (
-    packet,
-    { witClient, logger },
-) => {
+const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (packet, { witClient, logger }) => {
     const {
         client,
         d: { text, id },

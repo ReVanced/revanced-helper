@@ -9,25 +9,21 @@ import { inspect as inspectObject } from 'node:util'
 
 import Client from './classes/Client.js'
 
-import {
-    EventContext,
-    parseImageEventHandler,
-    parseTextEventHandler,
-} from './events/index.js'
+import { EventContext, parseImageEventHandler, parseTextEventHandler } from './events/index.js'
 
-import {
-    DisconnectReason,
-    HumanizedDisconnectReason,
-} from '@revanced/bot-shared'
+import { DisconnectReason, HumanizedDisconnectReason, createLogger } from '@revanced/bot-shared'
 import { WebSocket } from 'ws'
-import { checkEnv, getConfig, logger } from './utils/index.js'
+import { checkEnvironment, getConfig } from './utils/index.js'
 
-// Check environment variables and load config
-const environment = checkEnv(logger)
+// Load config, init logger, check environment
+
 const config = getConfig()
+const logger = createLogger('websocket-api', {
+    level: config.consoleLogLevel === 'none' ? 'error' : config.consoleLogLevel,
+    silent: config.consoleLogLevel === 'none',
+})
 
-if (!config.debugLogsInProduction && environment === 'production')
-    logger.debug = () => {}
+checkEnvironment(logger)
 
 // Workers and API clients
 
@@ -71,46 +67,25 @@ const server = fastify()
                 clients.add(client)
 
                 logger.debug(`Client ${client.id}'s instance has been added`)
-                logger.info(
-                    `New client connected (now ${clients.size} clients) with ID:`,
-                    client.id,
-                )
+                logger.info(`New client connected (now ${clients.size} clients) with ID:`, client.id)
 
                 client.on('disconnect', reason => {
                     clients.delete(client)
-                    logger.info(
-                        `Client ${client.id} disconnected because client ${HumanizedDisconnectReason[reason]}`,
-                    )
+                    logger.info(`Client ${client.id} disconnected because client ${HumanizedDisconnectReason[reason]}`)
                 })
 
-                client.on('parseText', async packet =>
-                    parseTextEventHandler(packet, eventContext),
-                )
+                client.on('parseText', async packet => parseTextEventHandler(packet, eventContext))
 
-                client.on('parseImage', async packet =>
-                    parseImageEventHandler(packet, eventContext),
-                )
+                client.on('parseImage', async packet => parseImageEventHandler(packet, eventContext))
 
-                if (
-                    environment === 'development' &&
-                    !config.debugLogsInProduction
-                ) {
-                    logger.debug(
-                        'Running development mode or debug logs in production is enabled, attaching debug events...',
-                    )
+                if (['debug', 'silly'].includes(config.consoleLogLevel)) {
+                    logger.debug('Debug logs enabled, attaching debug events...')
+
                     client.on('packet', ({ client, ...rawPacket }) =>
-                        logger.debug(
-                            `Packet received from client ${client.id}:`,
-                            inspectObject(rawPacket),
-                        ),
+                        logger.debug(`Packet received from client ${client.id}: ${inspectObject(rawPacket)}`),
                     )
 
-                    client.on('heartbeat', () =>
-                        logger.debug(
-                            'Heartbeat received from client',
-                            client.id,
-                        ),
-                    )
+                    client.on('heartbeat', () => logger.debug('Heartbeat received from client', client.id))
                 }
             } catch (e) {
                 if (e instanceof Error) logger.error(e.stack ?? e.message)
@@ -125,22 +100,19 @@ const server = fastify()
                     return connection.socket.terminate()
                 }
 
-                if (client.disconnected === false)
-                    client.disconnect(DisconnectReason.ServerError)
+                if (client.disconnected === false) client.disconnect(DisconnectReason.ServerError)
                 else client.forceDisconnect()
 
                 clients.delete(client)
 
-                logger.debug(
-                    `Client ${client.id} disconnected because of an internal error`,
-                )
+                logger.debug(`Client ${client.id} disconnected because of an internal error`)
             }
         })
     })
 
 // Start the server
 
-logger.debug('Starting with these configurations:', inspectObject(config))
+logger.debug(`Starting with these configurations: ${inspectObject(config)}`, )
 
 await server.listen({
     host: config.address ?? '0.0.0.0',
@@ -150,8 +122,4 @@ await server.listen({
 const addressInfo = server.server.address()
 if (!addressInfo || typeof addressInfo !== 'object')
     logger.debug('Server started, but cannot determine address information')
-else
-    logger.info(
-        'Server started at:',
-        `${addressInfo.address}:${addressInfo.port}`,
-    )
+else logger.info(`Server started at: ${addressInfo.address}:${addressInfo.port}`)

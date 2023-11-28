@@ -15,11 +15,7 @@ import {
     // merge
 } from 'valibot'
 import DisconnectReason from '../constants/DisconnectReason.js'
-import {
-    ClientOperation,
-    Operation,
-    ServerOperation,
-} from '../constants/Operation.js'
+import { ClientOperation, Operation, ServerOperation } from '../constants/Operation.js'
 
 /**
  * Schema to validate packets
@@ -59,10 +55,7 @@ export const PacketDataSchemas = {
         labels: array(
             object({
                 name: string(),
-                confidence: special<number>(
-                    input =>
-                        typeof input === 'number' && input >= 0 && input <= 1,
-                ),
+                confidence: special<number>(input => typeof input === 'number' && input >= 0 && input <= 1),
             }),
         ),
     }),
