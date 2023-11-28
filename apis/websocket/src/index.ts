@@ -1,8 +1,8 @@
-import { fastify } from 'fastify'
 import fastifyWebsocket from '@fastify/websocket'
+import { fastify } from 'fastify'
 
-import { createWorker as createTesseractWorker } from 'tesseract.js'
 import witPkg from 'node-wit'
+import { createWorker as createTesseractWorker } from 'tesseract.js'
 const { Wit } = witPkg
 
 import { inspect as inspectObject } from 'node:util'
@@ -15,12 +15,12 @@ import {
     parseTextEventHandler,
 } from './events/index.js'
 
-import { getConfig, checkEnv, logger } from './utils/index.js'
-import { WebSocket } from 'ws'
 import {
     DisconnectReason,
     HumanizedDisconnectReason,
 } from '@revanced/bot-shared'
+import { WebSocket } from 'ws'
+import { checkEnv, getConfig, logger } from './utils/index.js'
 
 // Check environment variables and load config
 const environment = checkEnv(logger)
@@ -73,22 +73,22 @@ const server = fastify()
                 logger.debug(`Client ${client.id}'s instance has been added`)
                 logger.info(
                     `New client connected (now ${clients.size} clients) with ID:`,
-                    client.id
+                    client.id,
                 )
 
                 client.on('disconnect', reason => {
                     clients.delete(client)
                     logger.info(
-                        `Client ${client.id} disconnected because client ${HumanizedDisconnectReason[reason]}`
+                        `Client ${client.id} disconnected because client ${HumanizedDisconnectReason[reason]}`,
                     )
                 })
 
                 client.on('parseText', async packet =>
-                    parseTextEventHandler(packet, eventContext)
+                    parseTextEventHandler(packet, eventContext),
                 )
 
                 client.on('parseImage', async packet =>
-                    parseImageEventHandler(packet, eventContext)
+                    parseImageEventHandler(packet, eventContext),
                 )
 
                 if (
@@ -96,20 +96,20 @@ const server = fastify()
                     !config.debugLogsInProduction
                 ) {
                     logger.debug(
-                        'Running development mode or debug logs in production is enabled, attaching debug events...'
+                        'Running development mode or debug logs in production is enabled, attaching debug events...',
                     )
                     client.on('packet', ({ client, ...rawPacket }) =>
                         logger.debug(
                             `Packet received from client ${client.id}:`,
-                            inspectObject(rawPacket)
-                        )
+                            inspectObject(rawPacket),
+                        ),
                     )
 
                     client.on('heartbeat', () =>
                         logger.debug(
                             'Heartbeat received from client',
-                            client.id
-                        )
+                            client.id,
+                        ),
                     )
                 }
             } catch (e) {
@@ -120,7 +120,7 @@ const server = fastify()
 
                 if (!client) {
                     logger.error(
-                        'Missing client instance when encountering an error. If the instance still exists in memory, it will NOT be removed!'
+                        'Missing client instance when encountering an error. If the instance still exists in memory, it will NOT be removed!',
                     )
                     return connection.socket.terminate()
                 }
@@ -132,7 +132,7 @@ const server = fastify()
                 clients.delete(client)
 
                 logger.debug(
-                    `Client ${client.id} disconnected because of an internal error`
+                    `Client ${client.id} disconnected because of an internal error`,
                 )
             }
         })
@@ -153,5 +153,5 @@ if (!addressInfo || typeof addressInfo !== 'object')
 else
     logger.info(
         'Server started at:',
-        `${addressInfo.address}:${addressInfo.port}`
+        `${addressInfo.address}:${addressInfo.port}`,
     )

@@ -7,7 +7,7 @@ const queue = new AsyncQueue()
 
 const parseImageEventHandler: EventHandler<ClientOperation.ParseImage> = async (
     packet,
-    { tesseractWorker, logger, config }
+    { tesseractWorker, logger, config },
 ) => {
     const {
         client,
@@ -16,10 +16,10 @@ const parseImageEventHandler: EventHandler<ClientOperation.ParseImage> = async (
 
     logger.debug(
         `Client ${client.id} requested to parse image from URL:`,
-        imageUrl
+        imageUrl,
     )
     logger.debug(
-        `Queue currently has ${queue.remaining}/${config.ocrConcurrentQueues} items in it`
+        `Queue currently has ${queue.remaining}/${config.ocrConcurrentQueues} items in it`,
     )
 
     if (queue.remaining < config.ocrConcurrentQueues) queue.shift()
@@ -32,7 +32,7 @@ const parseImageEventHandler: EventHandler<ClientOperation.ParseImage> = async (
 
         logger.debug(
             `Recognized image from URL for client ${client.id} (job ${jobId}):`,
-            data.text
+            data.text,
         )
         await client.send({
             op: ServerOperation.ParsedImage,
@@ -44,7 +44,7 @@ const parseImageEventHandler: EventHandler<ClientOperation.ParseImage> = async (
     } catch {
         logger.error(
             `Failed to parse image from URL for client ${client.id}:`,
-            imageUrl
+            imageUrl,
         )
         await client.send({
             op: ServerOperation.ParseImageFailed,
@@ -55,7 +55,7 @@ const parseImageEventHandler: EventHandler<ClientOperation.ParseImage> = async (
     } finally {
         queue.shift()
         logger.debug(
-            `Finished processing image from URL for client ${client.id}, queue has ${queue.remaining}/${config.ocrConcurrentQueues} remaining items in it`
+            `Finished processing image from URL for client ${client.id}, queue has ${queue.remaining}/${config.ocrConcurrentQueues} remaining items in it`,
         )
     }
 }

@@ -1,9 +1,9 @@
-import { Packet } from '../schemas/Packet.js'
 import {
     ClientOperation,
     Operation,
     ServerOperation,
 } from '../constants/Operation.js'
+import { Packet } from '../schemas/Packet.js'
 
 /**
  * Checks whether a packet is trying to do the given operation
@@ -13,7 +13,7 @@ import {
  */
 export function packetMatchesOperation<TOp extends Operation>(
     op: TOp,
-    packet: Packet
+    packet: Packet,
 ): packet is Packet<TOp> {
     return packet.op === op
 }
@@ -24,7 +24,7 @@ export function packetMatchesOperation<TOp extends Operation>(
  * @returns Whether this packet is a client packet
  */
 export function isClientPacket(
-    packet: Packet
+    packet: Packet,
 ): packet is Packet<ClientOperation> {
     return packet.op in ClientOperation
 }
@@ -35,7 +35,7 @@ export function isClientPacket(
  * @returns Whether this packet is a server packet
  */
 export function isServerPacket(
-    packet: Packet
+    packet: Packet,
 ): packet is Packet<ServerOperation> {
     return packet.op in ServerOperation
 }

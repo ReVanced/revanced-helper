@@ -5,9 +5,9 @@ import ClientGateway, { ClientGatewayEventHandlers } from './ClientGateway.js'
  * The client that connects to the API.
  */
 export default class Client {
-    ready: boolean = false
+    ready = false
     gateway: ClientGateway
-    #parseId: number = 0
+    #parseId = 0
 
     constructor(options: ClientOptions) {
         this.gateway = new ClientGateway({
@@ -63,7 +63,7 @@ export default class Client {
             }
 
             const parseTextFailedListener = (
-                packet: Packet<ServerOperation.ParseTextFailed>
+                packet: Packet<ServerOperation.ParseTextFailed>,
             ) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseTextFailed', parseTextFailedListener)
@@ -105,7 +105,7 @@ export default class Client {
             }
 
             const parseImageFailedListener = (
-                packet: Packet<ServerOperation.ParseImageFailed>
+                packet: Packet<ServerOperation.ParseImageFailed>,
             ) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseImageFailed', parseImageFailedListener)
@@ -127,7 +127,7 @@ export default class Client {
      */
     on<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[TOpName]
+        handler: ClientGatewayEventHandlers[TOpName],
     ) {
         this.gateway.on(name, handler)
         return handler
@@ -141,7 +141,7 @@ export default class Client {
      */
     off<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[TOpName]
+        handler: ClientGatewayEventHandlers[TOpName],
     ) {
         this.gateway.off(name, handler)
         return handler
@@ -155,7 +155,7 @@ export default class Client {
      */
     once<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[TOpName]
+        handler: ClientGatewayEventHandlers[TOpName],
     ) {
         this.gateway.once(name, handler)
         return handler

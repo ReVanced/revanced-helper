@@ -8,7 +8,7 @@ export default function checkEnv(logger: Logger) {
 
     if (!['development', 'production'].includes(environment)) {
         logger.error(
-            'NODE_ENV is neither `development` nor `production`, unable to determine environment'
+            'NODE_ENV is neither `development` nor `production`, unable to determine environment',
         )
         logger.info('Set NODE_ENV to blank to use `development` mode')
         process.exit(1)
@@ -18,7 +18,7 @@ export default function checkEnv(logger: Logger) {
 
     if (environment === 'production' && process.env['IS_USING_DOT_ENV']) {
         logger.warn(
-            'You seem to be using .env files, this is generally not a good idea in production...'
+            'You seem to be using .env files, this is generally not a good idea in production...',
         )
     }
 

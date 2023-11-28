@@ -17,10 +17,10 @@ const userConfig: Partial<Config> = existsSync(configPath)
 type BaseTypeOf<T> = T extends (infer U)[]
     ? U[]
     : T extends (...args: unknown[]) => infer U
-      ? (...args: unknown[]) => U
-      : T extends object
-        ? { [K in keyof T]: T[K] }
-        : T
+    ? (...args: unknown[]) => U
+    : T extends object
+    ? { [K in keyof T]: T[K] }
+    : T
 
 export type Config = Omit<
     BaseTypeOf<typeof import('../../config.json')>,

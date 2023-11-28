@@ -14,7 +14,7 @@ export enum ClientOperation {
     /**
      * Client's request to parse image
      */
-    ParseImage,
+    ParseImage = 111,
 }
 
 /**
@@ -28,7 +28,7 @@ export enum ServerOperation {
     /**
      * Server's initial response to a client's connection
      */
-    Hello,
+    Hello = 2,
 
     /**
      * Server's response to client's request to parse text
@@ -37,15 +37,15 @@ export enum ServerOperation {
     /**
      * Server's response to client's request to parse image
      */
-    ParsedImage,
+    ParsedImage = 11,
     /**
      * Server's failure response to client's request to parse text
      */
-    ParseTextFailed,
+    ParseTextFailed = 12,
     /**
      * Server's failure response to client's request to parse image
      */
-    ParseImageFailed,
+    ParseImageFailed = 13,
 
     /**
      * Server's disconnect message

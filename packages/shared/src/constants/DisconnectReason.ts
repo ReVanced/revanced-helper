@@ -9,19 +9,19 @@ enum DisconnectReason {
     /**
      * The client did not respond in time
      */
-    TimedOut,
+    TimedOut = 2,
     /**
      * The client sent an invalid packet (unserializable or invalid JSON)
      */
-    InvalidPacket,
+    InvalidPacket = 3,
     /**
      * The server has encountered an internal error
      */
-    ServerError,
+    ServerError = 4,
     /**
      * The client had never connected to the server (**CLIENT-ONLY**)
      */
-    NeverConnected,
+    NeverConnected = 5,
 }
 
 export default DisconnectReason
