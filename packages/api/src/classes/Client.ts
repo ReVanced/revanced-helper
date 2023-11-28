@@ -62,9 +62,7 @@ export default class Client {
                 rs(packet.d)
             }
 
-            const parseTextFailedListener = (
-                packet: Packet<ServerOperation.ParseTextFailed>,
-            ) => {
+            const parseTextFailedListener = (packet: Packet<ServerOperation.ParseTextFailed>) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseTextFailed', parseTextFailedListener)
                 rj()
@@ -104,9 +102,7 @@ export default class Client {
                 rs(packet.d)
             }
 
-            const parseImageFailedListener = (
-                packet: Packet<ServerOperation.ParseImageFailed>,
-            ) => {
+            const parseImageFailedListener = (packet: Packet<ServerOperation.ParseImageFailed>) => {
                 if (packet.d.id !== currentId) return
                 this.gateway.off('parseImageFailed', parseImageFailedListener)
                 rj()
@@ -125,10 +121,7 @@ export default class Client {
      * @param handler The event handler
      * @returns The event handler function
      */
-    on<TOpName extends keyof ClientGatewayEventHandlers>(
-        name: TOpName,
-        handler: ClientGatewayEventHandlers[TOpName],
-    ) {
+    on<TOpName extends keyof ClientGatewayEventHandlers>(name: TOpName, handler: ClientGatewayEventHandlers[TOpName]) {
         this.gateway.on(name, handler)
         return handler
     }
@@ -139,10 +132,7 @@ export default class Client {
      * @param handler The event handler to remove
      * @returns The removed event handler function
      */
-    off<TOpName extends keyof ClientGatewayEventHandlers>(
-        name: TOpName,
-        handler: ClientGatewayEventHandlers[TOpName],
-    ) {
+    off<TOpName extends keyof ClientGatewayEventHandlers>(name: TOpName, handler: ClientGatewayEventHandlers[TOpName]) {
         this.gateway.off(name, handler)
         return handler
     }
