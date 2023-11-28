@@ -47,43 +47,29 @@ export default class Client {
                 this.#emitter.emit('ready')
             })
             .catch(() => {
-                if (this.disconnected === false)
-                    this.disconnect(DisconnectReason.ServerError)
+                if (this.disconnected === false) this.disconnect(DisconnectReason.ServerError)
                 else this.forceDisconnect(DisconnectReason.ServerError)
             })
     }
 
-    on<TOpName extends keyof ClientEventHandlers>(
-        name: TOpName,
-        handler: ClientEventHandlers[typeof name],
-    ) {
+    on<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
         this.#emitter.on(name, handler)
     }
 
-    once<TOpName extends keyof ClientEventHandlers>(
-        name: TOpName,
-        handler: ClientEventHandlers[typeof name],
-    ) {
+    once<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
         this.#emitter.once(name, handler)
     }
 
-    off<TOpName extends keyof ClientEventHandlers>(
-        name: TOpName,
-        handler: ClientEventHandlers[typeof name],
-    ) {
+    off<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
         this.#emitter.off(name, handler)
     }
 
     send<TOp extends ServerOperation>(packet: Packet<TOp>) {
         return new Promise<void>((resolve, reject) => {
             try {
-                this.#throwIfDisconnected(
-                    'Cannot send packet to client that has already disconnected',
-                )
+                this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
 
-                this.#socket.send(serializePacket(packet), err =>
-                    err ? reject(err) : resolve(),
-                )
+                this.#socket.send(serializePacket(packet), err => (err ? reject(err) : resolve()))
             } catch (e) {
                 reject(e)
             }
@@ -91,16 +77,12 @@ export default class Client {
     }
 
     async disconnect(reason: DisconnectReason = DisconnectReason.Generic) {
-        this.#throwIfDisconnected(
-            'Cannot disconnect client that has already disconnected',
-        )
+        this.#throwIfDisconnected('Cannot disconnect client that has already disconnected')
 
         try {
             await this.send({ op: ServerOperation.Disconnect, d: { reason } })
         } catch (err) {
-            throw new Error(
-                `Cannot send disconnect reason to client ${this.id}: ${err}`,
-            )
+            throw new Error(`Cannot send disconnect reason to client ${this.id}: ${err}`)
         } finally {
             this.forceDisconnect(reason)
         }
@@ -173,10 +155,7 @@ export default class Client {
             if (Date.now() - this.lastHeartbeat > 0) {
                 // TODO: put into config
                 // 5000 is extra time to account for latency
-                const interval = setTimeout(
-                    () => this.disconnect(DisconnectReason.TimedOut),
-                    5000,
-                )
+                const interval = setTimeout(() => this.disconnect(DisconnectReason.TimedOut), 5000)
 
                 this.once('heartbeat', () => clearTimeout(interval))
                 // This should never happen but it did in my testing so I'm adding this just in case
@@ -208,11 +187,9 @@ export type ClientEventName = keyof typeof ClientOperation
 export type ClientEventHandlers = {
     [K in Uncapitalize<ClientEventName>]: (
         packet: ClientPacketObject<typeof ClientOperation[Capitalize<K>]>,
-    ) => Promise<void> | void
+    ) => Promise<unknown> | unknown
 } & {
-    ready: () => Promise<void> | void
-    packet: (
-        packet: ClientPacketObject<ClientOperation>,
-    ) => Promise<void> | void
-    disconnect: (reason: DisconnectReason) => Promise<void> | void
+    ready: () => Promise<unknown> | unknown
+    packet: (packet: ClientPacketObject<ClientOperation>) => Promise<unknown> | unknown
+    disconnect: (reason: DisconnectReason) => Promise<unknown> | unknown
 }

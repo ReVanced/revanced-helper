@@ -3,7 +3,7 @@ import type { Wit } from 'node-wit'
 import type { Worker as TesseractWorker } from 'tesseract.js'
 import { ClientPacketObject } from '../classes/Client.js'
 import type { Config } from '../utils/getConfig.js'
-import type { Logger } from '../utils/logger.js'
+import type { Logger } from '@revanced/bot-shared'
 
 export { default as parseTextEventHandler } from './parseText.js'
 export { default as parseImageEventHandler } from './parseImage.js'

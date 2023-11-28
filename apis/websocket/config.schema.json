@@ -22,10 +22,11 @@
       "type": "integer",
       "default": 60000
     },
-    "debugLogsInProduction": {
-      "description": "Whether to print debug logs in production",
-      "type": "boolean",
-      "default": false
+    "consoleLogLevel": {
+      "description": "The log level to print to console",
+      "type": "string",
+      "enum": ["error", "warn", "info", "verbose", "debug", "silly", "none"],
+      "default": "info"
     }
   }
 }
