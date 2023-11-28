@@ -1,5 +1,4 @@
-import { type RawData, WebSocket } from 'ws'
-import type TypedEmitter from 'typed-emitter'
+import { EventEmitter } from 'events'
 import {
     ClientOperation,
     DisconnectReason,
@@ -10,7 +9,8 @@ import {
     serializePacket,
     uncapitalize,
 } from '@revanced/bot-shared'
-import { EventEmitter } from 'events'
+import type TypedEmitter from 'typed-emitter'
+import { type RawData, WebSocket } from 'ws'
 
 /**
  * The class that handles the WebSocket connection to the server.
@@ -18,7 +18,7 @@ import { EventEmitter } from 'events'
  */
 export default class ClientGateway {
     readonly url: string
-    ready: boolean = false
+    ready = false
     disconnected: boolean | DisconnectReason = DisconnectReason.NeverConnected
     config: Readonly<Packet<ServerOperation.Hello>['d']> | null = null!
 
@@ -45,7 +45,7 @@ export default class ClientGateway {
                 })
 
                 this.#socket.on('close', () =>
-                    this.#handleDisconnect(DisconnectReason.Generic)
+                    this.#handleDisconnect(DisconnectReason.Generic),
                 )
 
                 this.#listen()
@@ -65,7 +65,7 @@ export default class ClientGateway {
      */
     on<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name]
+        handler: ClientGatewayEventHandlers[typeof name],
     ) {
         this.#emitter.on(name, handler)
     }
@@ -78,7 +78,7 @@ export default class ClientGateway {
      */
     off<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name]
+        handler: ClientGatewayEventHandlers[typeof name],
     ) {
         this.#emitter.off(name, handler)
     }
@@ -91,7 +91,7 @@ export default class ClientGateway {
      */
     once<TOpName extends keyof ClientGatewayEventHandlers>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name]
+        handler: ClientGatewayEventHandlers[typeof name],
     ) {
         this.#emitter.once(name, handler)
     }
@@ -103,13 +103,13 @@ export default class ClientGateway {
      */
     send<TOp extends ClientOperation>(packet: Packet<TOp>) {
         this.#throwIfDisconnected(
-            'Cannot send a packet when already disconnected from the server'
+            'Cannot send a packet when already disconnected from the server',
         )
 
         return new Promise<void>((resolve, reject) =>
             this.#socket.send(serializePacket(packet), err =>
-                err ? reject(err) : resolve()
-            )
+                err ? reject(err) : resolve(),
+            ),
         )
     }
 
@@ -118,7 +118,7 @@ export default class ClientGateway {
      */
     disconnect() {
         this.#throwIfDisconnected(
-            'Cannot disconnect when already disconnected from the server'
+            'Cannot disconnect when already disconnected from the server',
         )
 
         this.#handleDisconnect(DisconnectReason.Generic)
@@ -142,28 +142,29 @@ export default class ClientGateway {
             this.#emitter.emit('packet', packet)
 
             switch (packet.op) {
-                case ServerOperation.Hello:
+                case ServerOperation.Hello: {
                     // eslint-disable-next-line no-case-declarations
                     const data = Object.freeze(
-                        (packet as Packet<ServerOperation.Hello>).d
+                        (packet as Packet<ServerOperation.Hello>).d,
                     )
                     this.config = data
                     this.#emitter.emit('hello', data)
                     this.#startHeartbeating()
                     break
+                }
                 case ServerOperation.Disconnect:
                     return this.#handleDisconnect(
-                        (packet as Packet<ServerOperation.Disconnect>).d.reason
+                        (packet as Packet<ServerOperation.Disconnect>).d.reason,
                     )
                 default:
                     return this.#emitter.emit(
                         uncapitalize(
                             ServerOperation[
                                 packet.op
-                            ] as ClientGatewayServerEventName
+                            ] as ClientGatewayServerEventName,
                         ),
                         // @ts-expect-error TypeScript doesn't know that the lines above negate the type enough
-                        packet
+                        packet,
                     )
             }
         })
@@ -218,11 +219,11 @@ export type ClientGatewayServerEventName = keyof typeof ServerOperation
 
 export type ClientGatewayEventHandlers = {
     [K in Uncapitalize<ClientGatewayServerEventName>]: (
-        packet: Packet<(typeof ServerOperation)[Capitalize<K>]>
+        packet: Packet<typeof ServerOperation[Capitalize<K>]>,
     ) => Promise<void> | void
 } & {
     hello: (
-        config: NonNullable<ClientGateway['config']>
+        config: NonNullable<ClientGateway['config']>,
     ) => Promise<void> | void
     ready: () => Promise<void> | void
     packet: (packet: Packet<ServerOperation>) => Promise<void> | void

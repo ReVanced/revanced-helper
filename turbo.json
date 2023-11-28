@@ -1,14 +1,14 @@
 {
-    "$schema": "https://turbo.build/schema.json",
-    "pipeline": {
-        "build": {
-            "dependsOn": ["^build"],
-            "outputs": ["dist/**"],
-            "outputMode": "errors-only"
-        },
-        "watch": {
-            "dependsOn": ["^watch"],
-            "outputMode": "errors-only"
-        }
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "outputMode": "errors-only"
+    },
+    "watch": {
+      "dependsOn": ["^watch"],
+      "outputMode": "errors-only"
     }
+  }
 }

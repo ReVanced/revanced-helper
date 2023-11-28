@@ -1,3 +1,4 @@
+import { EventEmitter } from 'node:events'
 import {
     ClientOperation,
     DisconnectReason,
@@ -8,7 +9,6 @@ import {
     serializePacket,
     uncapitalize,
 } from '@revanced/bot-shared'
-import { EventEmitter } from 'node:events'
 
 import type TypedEmitter from 'typed-emitter'
 import type { RawData, WebSocket } from 'ws'
@@ -16,7 +16,7 @@ import type { RawData, WebSocket } from 'ws'
 export default class Client {
     id: string
     disconnected: DisconnectReason | false = false
-    ready: boolean = false
+    ready = false
 
     lastHeartbeat: number = null!
     heartbeatInterval: number
@@ -55,21 +55,21 @@ export default class Client {
 
     on<TOpName extends keyof ClientEventHandlers>(
         name: TOpName,
-        handler: ClientEventHandlers[typeof name]
+        handler: ClientEventHandlers[typeof name],
     ) {
         this.#emitter.on(name, handler)
     }
 
     once<TOpName extends keyof ClientEventHandlers>(
         name: TOpName,
-        handler: ClientEventHandlers[typeof name]
+        handler: ClientEventHandlers[typeof name],
     ) {
         this.#emitter.once(name, handler)
     }
 
     off<TOpName extends keyof ClientEventHandlers>(
         name: TOpName,
-        handler: ClientEventHandlers[typeof name]
+        handler: ClientEventHandlers[typeof name],
     ) {
         this.#emitter.off(name, handler)
     }
@@ -78,11 +78,11 @@ export default class Client {
         return new Promise<void>((resolve, reject) => {
             try {
                 this.#throwIfDisconnected(
-                    'Cannot send packet to client that has already disconnected'
+                    'Cannot send packet to client that has already disconnected',
                 )
 
                 this.#socket.send(serializePacket(packet), err =>
-                    err ? reject(err) : resolve()
+                    err ? reject(err) : resolve(),
                 )
             } catch (e) {
                 reject(e)
@@ -92,14 +92,14 @@ export default class Client {
 
     async disconnect(reason: DisconnectReason = DisconnectReason.Generic) {
         this.#throwIfDisconnected(
-            'Cannot disconnect client that has already disconnected'
+            'Cannot disconnect client that has already disconnected',
         )
 
         try {
             await this.send({ op: ServerOperation.Disconnect, d: { reason } })
         } catch (err) {
             throw new Error(
-                `Cannot send disconnect reason to client ${this.id}: ${err}`
+                `Cannot send disconnect reason to client ${this.id}: ${err}`,
             )
         } finally {
             this.forceDisconnect(reason)
@@ -142,7 +142,7 @@ export default class Client {
                 this.#emitter.emit(
                     uncapitalize(ClientOperation[packet.op] as ClientEventName),
                     // @ts-expect-error TypeScript doesn't know that the above line will negate the type enough
-                    packet
+                    packet,
                 )
             } catch (e) {
                 // TODO: add error fields to sent packet so we can log what went wrong
@@ -175,7 +175,7 @@ export default class Client {
                 // 5000 is extra time to account for latency
                 const interval = setTimeout(
                     () => this.disconnect(DisconnectReason.TimedOut),
-                    5000
+                    5000,
                 )
 
                 this.once('heartbeat', () => clearTimeout(interval))
@@ -207,12 +207,12 @@ export type ClientEventName = keyof typeof ClientOperation
 
 export type ClientEventHandlers = {
     [K in Uncapitalize<ClientEventName>]: (
-        packet: ClientPacketObject<(typeof ClientOperation)[Capitalize<K>]>
+        packet: ClientPacketObject<typeof ClientOperation[Capitalize<K>]>,
     ) => Promise<void> | void
 } & {
     ready: () => Promise<void> | void
     packet: (
-        packet: ClientPacketObject<ClientOperation>
+        packet: ClientPacketObject<ClientOperation>,
     ) => Promise<void> | void
     disconnect: (reason: DisconnectReason) => Promise<void> | void
 }

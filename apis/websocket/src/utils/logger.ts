@@ -8,12 +8,12 @@ const logger = {
     warn: (...args) =>
         console.warn(
             chalk.bgYellow.blackBright.bold(' WARN '),
-            chalk.yellowBright(...args)
+            chalk.yellowBright(...args),
         ),
     error: (...args) =>
         console.error(
             chalk.bgRed.whiteBright.bold(' ERROR '),
-            chalk.redBright(...args)
+            chalk.redBright(...args),
         ),
     log: console.log,
 } satisfies Logger

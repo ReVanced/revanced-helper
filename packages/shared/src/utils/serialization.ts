@@ -1,7 +1,7 @@
 import * as BSON from 'bson'
-import { Packet, PacketSchema } from '../schemas/index.js'
-import { Operation } from '../constants/index.js'
 import { parse } from 'valibot'
+import { Operation } from '../constants/index.js'
+import { Packet, PacketSchema } from '../schemas/index.js'
 
 /**
  * Compresses a packet into a buffer

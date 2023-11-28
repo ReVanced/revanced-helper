@@ -1,25 +1,25 @@
+import {
+    url,
+    AnySchema,
+    NullSchema,
+    ObjectSchema,
+    Output,
+    array,
+    enum_,
+    null_,
+    number,
+    object,
+    parse,
+    special,
+    string,
+    // merge
+} from 'valibot'
 import DisconnectReason from '../constants/DisconnectReason.js'
 import {
     ClientOperation,
     Operation,
     ServerOperation,
 } from '../constants/Operation.js'
-import {
-    object,
-    enum_,
-    special,
-    ObjectSchema,
-    number,
-    string,
-    Output,
-    AnySchema,
-    null_,
-    NullSchema,
-    array,
-    url,
-    parse,
-    // merge
-} from 'valibot'
 
 /**
  * Schema to validate packets
@@ -61,9 +61,9 @@ export const PacketDataSchemas = {
                 name: string(),
                 confidence: special<number>(
                     input =>
-                        typeof input === 'number' && input >= 0 && input <= 1
+                        typeof input === 'number' && input >= 0 && input <= 1,
                 ),
-            })
+            }),
         ),
     }),
     [ServerOperation.ParsedImage]: object({
@@ -91,11 +91,11 @@ export const PacketDataSchemas = {
     }),
 } as const satisfies Record<
     Operation,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: This is a schema, it's not possible to type it
     ObjectSchema<any> | AnySchema | NullSchema
 >
 
 export type Packet<TOp extends Operation = Operation> = {
     op: TOp
-    d: Output<(typeof PacketDataSchemas)[TOp]>
+    d: Output<typeof PacketDataSchemas[TOp]>
 }
