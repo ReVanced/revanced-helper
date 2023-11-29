@@ -18,9 +18,8 @@ import { checkEnvironment, getConfig } from './utils/index.js'
 // Load config, init logger, check environment
 
 const config = getConfig()
-const logger = createLogger('websocket-api', {
-    level: config.consoleLogLevel === 'none' ? 'error' : config.consoleLogLevel,
-    silent: config.consoleLogLevel === 'none',
+const logger = createLogger({
+    level: config.consoleLogLevel === 'none' ? Infinity : config.consoleLogLevel,
 })
 
 checkEnvironment(logger)
@@ -32,7 +31,8 @@ const witClient = new Wit({
     accessToken: process.env['WIT_AI_TOKEN']!,
 })
 
-process.on('beforeExit', () => tesseractWorker.terminate())
+logger.fatal('test')
+logger.error('test')
 
 // Server logic
 
@@ -112,7 +112,7 @@ const server = fastify()
 
 // Start the server
 
-logger.debug(`Starting with these configurations: ${inspectObject(config)}`, )
+logger.debug(`Starting with these configurations: ${inspectObject(config)}`)
 
 await server.listen({
     host: config.address ?? '0.0.0.0',

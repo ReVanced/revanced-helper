@@ -1,66 +1,43 @@
-import { createLogger as createWinstonLogger, LoggerOptions, transports, format } from 'winston'
-import { Chalk, ChalkInstance } from 'chalk'
+import { colorConsole, console as uncoloredConsole, Tracer } from 'tracer'
+import { Chalk, supportsColor, supportsColorStderr } from 'chalk'
 
 const chalk = new Chalk()
+const DefaultConfig = {
+    dateformat: 'DD/MM/YYYY HH:mm:ss.sss Z',
+    format: [
+        '{{message}}',
+        {
+            error: `${chalk.bgRedBright.whiteBright(' ERROR ')} {{message}}\n${chalk.gray(
+                '{{stack}}',
+            )}`,
+            debug: chalk.gray('DEBUG: {{message}}\n{{stack}}'),
+            warn: `${chalk.bgYellowBright.whiteBright(' WARN ')} ${chalk.yellowBright('{{message}}')}\n${chalk.gray(
+                '{{stack}}',
+            )}`,
+            info: `${chalk.bgBlueBright.whiteBright(' INFO ')} ${chalk.cyanBright('{{message}}')}`,
+            fatal: `${chalk.bgRedBright.whiteBright(' FATAL ')} ${chalk.redBright('{{message}}')}\n${chalk.white(
+                '{{stack}}',
+            )}`,
+            log: '{{message}}',
+            trace: chalk.gray('[{{timestamp}}] TRACE: {{message}}\n{{stack}}'),
+        },
+    ],
+    methods: ['debug', 'trace', 'log', 'info', 'warn', 'error', 'fatal'],
+    filters: [],
+} satisfies Tracer.LoggerConfig
 
-const LevelPrefixes = {
-    error: `${chalk.bgRed.whiteBright(' ERR! ')} `,
-    warn: `${chalk.bgYellow.black(' WARN ')} `,
-    info: `${chalk.bgBlue.whiteBright(' INFO ')} `,
-    log: chalk.reset(''),
-    debug: chalk.gray('DEBUG: '),
-    silly: chalk.gray('SILLY: '),
-} as Record<string, string>
+export function createLogger(config: Omit<Tracer.LoggerConfig, keyof typeof DefaultConfig>) {
+    const combinedConfig = { ...DefaultConfig, ...config }
 
-const LevelColorFunctions = {
-    error: chalk.redBright,
-    warn: chalk.yellowBright,
-    info: chalk.cyanBright,
-    log: chalk.reset,
-    debug: chalk.gray,
-    silly: chalk.gray,
-} as Record<string, ChalkInstance>
-
-export function createLogger(
-    serviceName: string,
-    config: SafeOmit<
-        LoggerOptions,
-        | 'defaultMeta'
-        | 'exceptionHandlers'
-        | 'exitOnError'
-        | 'handleExceptions'
-        | 'handleRejections'
-        | 'levels'
-        | 'rejectionHandlers'
-    >,
-) {
-    const logger = createWinstonLogger({
-        exitOnError: false,
-        defaultMeta: { serviceName },
-        handleExceptions: true,
-        handleRejections: true,
-        transports: config.transports ?? [
-            new transports.Console(),
-            new transports.File({
-                dirname: 'logs',
-                filename: `${serviceName}-${Date.now()}.log`,
-                format: format.combine(
-                    format.uncolorize(),
-                    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-                    format.printf(
-                        ({ level, message, timestamp }) => `[${timestamp}] ${level.toUpperCase()}: ${message}`,
-                    ),
-                ),
-            }),
-        ],
-        format: format.printf(({ level, message }) => LevelPrefixes[level] + LevelColorFunctions[level]!(message)),
-        ...config,
-    })
-
-    logger.silly(`Logger for ${serviceName} created at ${Date.now()}`)
-
-    return logger
+    if (
+        // biome-ignore lint/complexity/useOptionalChain: No Biome, this isn't a nullable check
+        supportsColor &&
+        supportsColor.hasBasic &&
+        supportsColorStderr &&
+        supportsColorStderr.hasBasic
+    )
+        return colorConsole(combinedConfig)
+    else return uncoloredConsole(combinedConfig)
 }
 
-type SafeOmit<T, K extends keyof T> = Omit<T, K>
 export type Logger = ReturnType<typeof createLogger>
