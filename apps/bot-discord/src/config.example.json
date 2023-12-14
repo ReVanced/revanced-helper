@@ -205,7 +205,7 @@
         "fields": [
           {
             "name": "🔸 Regarding your question",
-            "value": "You may have patched YouTube with the `Vanced MicroG support` patch which makes YouTube use Vanced MicroG instead of Google Services, but Vanced MicroG does not reliably support casting. In order to be able to cast videos on the patched app, you should not patch the app with the `Vanced MicroG support` patch, but then you are forced to mount the patched app with root permissions, because you will not be able to install the app in normal circumstances and Google Services will reject the patched app."
+            "value": "You may have patched YouTube with the `GmsCore support` patch which makes YouTube use Vanced MicroG instead of Google Services, but Vanced MicroG does not reliably support casting. In order to be able to cast videos on the patched app, you should not patch the app with the `GmsCore support` patch, but then you are forced to mount the patched app with root permissions, because you will not be able to install the app in normal circumstances and Google Services will reject the patched app."
           }
         ],
         "footer": {
@@ -227,7 +227,7 @@
         "fields": [
           {
             "name": "🔸 Regarding your question",
-            "value": "If you patched YouTube using the `Vanced MicroG support` patch, the patched app will redirect you to the download link of Vanced MicroG if you open it. In case it does not, please refer to <#953993848374325269> `17`."
+            "value": "If you patched YouTube using the `GmsCore support` patch, the patched app will redirect you to the download link of Vanced MicroG if you open it. In case it does not, please refer to <#953993848374325269> `17`."
           }
         ],
         "footer": {
