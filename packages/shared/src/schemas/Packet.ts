@@ -14,8 +14,8 @@ import {
     string,
     // merge
 } from 'valibot'
-import DisconnectReason from '../constants/DisconnectReason.js'
-import { ClientOperation, Operation, ServerOperation } from '../constants/Operation.js'
+import DisconnectReason from '../constants/DisconnectReason'
+import { ClientOperation, Operation, ServerOperation } from '../constants/Operation'
 
 /**
  * Schema to validate packets
@@ -90,5 +90,5 @@ export const PacketDataSchemas = {
 
 export type Packet<TOp extends Operation = Operation> = {
     op: TOp
-    d: Output<typeof PacketDataSchemas[TOp]>
+    d: Output<(typeof PacketDataSchemas)[TOp]>
 }

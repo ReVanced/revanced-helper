@@ -1,4 +1,4 @@
-import DisconnectReason from './DisconnectReason.js'
+import DisconnectReason from './DisconnectReason'
 
 /**
  * Humanized disconnect reasons for logs
