@@ -25,7 +25,7 @@
     "consoleLogLevel": {
       "description": "The log level to print to console",
       "type": "string",
-      "enum": ["error", "warn", "info", "log", "debug", "none"],
+      "enum": ["error", "warn", "info", "log", "debug", "trace", "none"],
       "default": "info"
     }
   }
