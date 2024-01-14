@@ -33,13 +33,14 @@ Heartbeat interval for clients. See [**💓 Heartbeating**](./packets.md#💓-he
 The level of logs to print to console. If the level is more important or equally important to set level, it will be forwarded to the console.
 
 The possible levels (sorted by their importance descendingly) are:
-- `fatal`
-- `error`
-- `warn`
-- `info`
-- `log`
-- `trace`
-- `debug`
+
+-   `fatal`
+-   `error`
+-   `warn`
+-   `info`
+-   `log`
+-   `trace`
+-   `debug`
 
 ## ⏭️ What's next
 
