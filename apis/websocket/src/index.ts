@@ -5,15 +5,15 @@ import witPkg from 'node-wit'
 import { createWorker as createTesseractWorker } from 'tesseract.js'
 const { Wit } = witPkg
 
-import { inspect as inspectObject } from 'node:util'
+import { inspect as inspectObject } from 'util'
 
-import Client from './classes/Client.js'
+import Client from './classes/Client'
 
-import { EventContext, parseImageEventHandler, parseTextEventHandler } from './events/index.js'
+import { EventContext, parseImageEventHandler, parseTextEventHandler } from './events/index'
 
 import { DisconnectReason, HumanizedDisconnectReason, createLogger } from '@revanced/bot-shared'
 import { WebSocket } from 'ws'
-import { checkEnvironment, getConfig } from './utils/index.js'
+import { checkEnvironment, getConfig } from './utils/index'
 
 // Load config, init logger, check environment
 
@@ -30,9 +30,6 @@ const tesseractWorker = await createTesseractWorker('eng')
 const witClient = new Wit({
     accessToken: process.env['WIT_AI_TOKEN']!,
 })
-
-logger.fatal('test')
-logger.error('test')
 
 // Server logic
 

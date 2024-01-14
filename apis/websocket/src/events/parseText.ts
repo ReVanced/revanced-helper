@@ -1,8 +1,8 @@
 import { ClientOperation, ServerOperation } from '@revanced/bot-shared'
 
-import { inspect as inspectObject } from 'node:util'
+import { inspect as inspectObject } from 'util'
 
-import type { EventHandler } from './index.js'
+import type { EventHandler } from './index'
 
 const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (packet, { witClient, logger }) => {
     const {
@@ -14,7 +14,6 @@ const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (pa
 
     try {
         const { intents } = await witClient.message(text, {})
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const intentsWithoutIds = intents.map(({ id, ...rest }) => rest)
 
         await client.send({

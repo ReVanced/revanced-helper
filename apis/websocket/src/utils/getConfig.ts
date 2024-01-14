@@ -1,6 +1,6 @@
-import { existsSync } from 'node:fs'
-import { resolve as resolvePath } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { existsSync } from 'fs'
+import { resolve as resolvePath } from 'path'
+import { pathToFileURL } from 'url'
 
 const configPath = resolvePath(process.cwd(), 'config.json')
 
@@ -17,10 +17,10 @@ const userConfig: Partial<Config> = existsSync(configPath)
 type BaseTypeOf<T> = T extends (infer U)[]
     ? U[]
     : T extends (...args: unknown[]) => infer U
-    ? (...args: unknown[]) => U
-    : T extends object
-    ? { [K in keyof T]: T[K] }
-    : T
+      ? (...args: unknown[]) => U
+      : T extends object
+          ? { [K in keyof T]: T[K] }
+          : T
 
 export type Config = Omit<BaseTypeOf<typeof import('../../config.json')>, '$schema'>
 

@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:events'
+import { EventEmitter } from 'events'
 import {
     ClientOperation,
     DisconnectReason,
@@ -167,8 +167,8 @@ export default class Client {
 
     protected _toBuffer(data: RawData) {
         if (data instanceof Buffer) return data
-        else if (data instanceof ArrayBuffer) return Buffer.from(data)
-        else return Buffer.concat(data)
+        if (data instanceof ArrayBuffer) return Buffer.from(data)
+        return Buffer.concat(data)
     }
 }
 
@@ -186,7 +186,7 @@ export type ClientEventName = keyof typeof ClientOperation
 
 export type ClientEventHandlers = {
     [K in Uncapitalize<ClientEventName>]: (
-        packet: ClientPacketObject<typeof ClientOperation[Capitalize<K>]>,
+        packet: ClientPacketObject<(typeof ClientOperation)[Capitalize<K>]>,
     ) => Promise<unknown> | unknown
 } & {
     ready: () => Promise<unknown> | unknown

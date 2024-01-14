@@ -1,7 +1,7 @@
 import { ClientOperation, ServerOperation } from '@revanced/bot-shared'
 import { AsyncQueue } from '@sapphire/async-queue'
 
-import type { EventHandler } from './index.js'
+import type { EventHandler } from './index'
 
 const queue = new AsyncQueue()
 
