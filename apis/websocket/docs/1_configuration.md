@@ -1,6 +1,6 @@
 # ⚙️ Configuration
 
-This is the default configuration:
+This is the default configuration (provided in [config.json](../config.json)):
 
 ```json
 {
