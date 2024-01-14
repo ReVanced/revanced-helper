@@ -1,5 +1,5 @@
-import { ClientOperation, Operation, ServerOperation } from '../constants/Operation.js'
-import { Packet } from '../schemas/Packet.js'
+import { ClientOperation, Operation, ServerOperation } from '../constants/Operation'
+import { Packet } from '../schemas/Packet'
 
 /**
  * Checks whether a packet is trying to do the given operation

@@ -1,1 +1,1 @@
-export * from './Packet.js'
+export * from './Packet'
