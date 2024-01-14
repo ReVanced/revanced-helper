@@ -27,6 +27,9 @@
       "enabled": true,
       "indentStyle": "space",
       "indentWidth": 2
+    },
+    "parser": {
+      "allowComments": true
     }
   },
   "javascript": {
@@ -44,12 +47,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "include": ["**/*.js", "**/*.json", "**/*.ts"],
-    "ignore": [
-      "**/tsconfig.json",
-      "**/tsconfig.*.json",
-      "dist/**/*",
-      "node_modules/**/*"
-    ]
+    "include": ["*.js", "*.json", "*.ts"],
+    "ignore": ["dist/**/*", "node_modules/**/*"]
   }
 }

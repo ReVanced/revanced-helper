@@ -1,14 +1,10 @@
 pre-commit:
     parallel: true
     commands:
-        format:
+        check:
             files: git diff --name-only --cached --diff-filter=AM @{push}
-            glob: '*.{js,ts,json,yml,md}'
-            run: bunx prettier --ignore-path .gitignore --check {files}
-        lint:
-            files: git diff --name-only --cached --diff-filter=AM @{push}
-            glob: '*.{js,ts}'
-            run: bunx eslint --cache {files}
+            glob: "*.{js,ts,json,yml,md}"
+            run: bunx biome check {files}
 commit-msg:
     parallel: false
     commands:
