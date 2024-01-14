@@ -1,17 +1,17 @@
 {
-    // `bun-types` will not be added until https://github.com/oven-sh/bun/issues/7247 is fixed
-    "extends": ["@tsconfig/strictest" /* "bun-types" */],
-    "compilerOptions": {
-        "lib": ["ESNext"],
-        "module": "NodeNext",
-        "moduleResolution": "Bundler",
-        "target": "ESNext",
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "declaration": false,
-        "allowSyntheticDefaultImports": true,
-        "isolatedModules": true
-    }
+  // `bun-types` will not be added until https://github.com/oven-sh/bun/issues/7247 is fixed
+  "extends": ["@tsconfig/strictest" /* "bun-types" */],
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "module": "NodeNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "declaration": false,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true
+  }
 }
