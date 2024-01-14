@@ -27,13 +27,13 @@
     },
     "homepage": "https://github.com/revanced/revanced-helper#readme",
     "dependencies": {
-        "@fastify/websocket": "^8.2.0",
+        "@fastify/websocket": "^8.3.1",
         "@revanced/bot-shared": "workspace:*",
-        "@sapphire/async-queue": "^1.5.0",
+        "@sapphire/async-queue": "^1.5.1",
         "chalk": "^5.3.0",
-        "fastify": "^4.24.3",
+        "fastify": "^4.25.2",
         "node-wit": "^6.6.0",
-        "tesseract.js": "^5.0.3"
+        "tesseract.js": "^5.0.4"
     },
     "devDependencies": {
         "@types/node-wit": "^6.0.3",
