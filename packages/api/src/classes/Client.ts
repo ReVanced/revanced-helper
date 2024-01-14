@@ -1,5 +1,5 @@
 import { ClientOperation, Packet, ServerOperation } from '@revanced/bot-shared'
-import ClientGateway, { ClientGatewayEventHandlers } from './ClientGateway.js'
+import ClientGateway, { ClientGatewayEventHandlers } from './ClientGateway'
 
 /**
  * The client that connects to the API.
