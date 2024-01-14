@@ -7,15 +7,17 @@
     "url": "git+https://github.com/revanced/revanced-helper.git"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.3.3",
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
+    "@biomejs/biome": "1.5.1",
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
     "@tsconfig/strictest": "^2.0.2",
     "conventional-changelog-conventionalcommits": "^7.0.2",
-    "lefthook": "^1.5.3",
-    "semantic-release": "^22.0.8",
-    "turbo": "^1.10.16",
-    "typescript": "^5.3.2"
+    "lefthook": "^1.5.6",
+    "semantic-release": "^23.0.0",
+    "turbo": "^1.11.3",
+    "typescript": "^5.3.3",
+    "@revanced/bot-shared": "workspace:*",
+    "@revanced/bot-api": "workspace:*"
   },
   "bugs": {
     "url": "https://github.com/revanced/revanced-helper/issues"
@@ -35,15 +37,19 @@
   "scripts": {
     "build": "turbo run build",
     "watch": "turbo run watch",
-    "format": "prettier --ignore-path .gitignore --write .",
-    "format:check": "prettier --ignore-path .gitignore --cache --check .",
+    "format": "biome check --apply .",
+    "format:check": "biome check .",
     "lint": "eslint --ignore-path .gitignore --cache .",
     "lint:apply": "eslint --ignore-path .gitignore --fix .",
     "commitlint": "commitlint --edit",
     "t": "turbo run",
     "prepare": "lefthook install"
   },
-  "trustedDependencies": ["lefthook", "biome", "turbo"],
+  "trustedDependencies": [
+    "lefthook",
+    "biome",
+    "turbo"
+  ],
   "workspaces": [
     "apis/*",
     "bots/*",
