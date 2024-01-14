@@ -127,15 +127,13 @@ export default class ClientGateway {
     #listen() {
         this.#socket.on('message', data => {
             const packet = deserializePacket(this._toBuffer(data))
-            // TODO: maybe log this?
-            // Just ignore the invalid packet, we don't have to disconnect
-            if (!isServerPacket(packet)) return
+
+            if (!isServerPacket(packet)) return this.#emitter.emit('invalidPacket', packet)
 
             this.#emitter.emit('packet', packet)
 
             switch (packet.op) {
                 case ServerOperation.Hello: {
-                    // eslint-disable-next-line no-case-declarations
                     const data = Object.freeze((packet as Packet<ServerOperation.Hello>).d)
                     this.config = data
                     this.#emitter.emit('hello', data)
@@ -186,8 +184,8 @@ export default class ClientGateway {
 
     protected _toBuffer(data: RawData) {
         if (data instanceof Buffer) return data
-        else if (data instanceof ArrayBuffer) return Buffer.from(data)
-        else return Buffer.concat(data)
+        if (data instanceof ArrayBuffer) return Buffer.from(data)
+        return Buffer.concat(data)
     }
 }
 
@@ -202,12 +200,13 @@ export type ClientGatewayServerEventName = keyof typeof ServerOperation
 
 export type ClientGatewayEventHandlers = {
     [K in Uncapitalize<ClientGatewayServerEventName>]: (
-        packet: Packet<typeof ServerOperation[Capitalize<K>]>,
+        packet: Packet<(typeof ServerOperation)[Capitalize<K>]>,
     ) => Promise<void> | void
 } & {
     hello: (config: NonNullable<ClientGateway['config']>) => Promise<void> | void
     ready: () => Promise<void> | void
     packet: (packet: Packet<ServerOperation>) => Promise<void> | void
+    invalidPacket: (packet: Packet) => Promise<void> | void
     disconnect: (reason: DisconnectReason) => Promise<void> | void
 }
 
