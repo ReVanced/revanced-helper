@@ -12,6 +12,6 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@revanced-helper/helper-client": "file:../../../packages/client",
-    "node-telegram-bot-api": "^0.61.0"
+    "node-telegram-bot-api": "^0.64.0"
   }
 }
