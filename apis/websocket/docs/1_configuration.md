@@ -27,7 +27,7 @@ Amount of concurrent queues that can be run at a time.
 
 ### `config.clientHeartbeatInterval`
 
-Heartbeat interval for clients. See [**💓 Heartbeating**](./packets.md#💓-heartbeating).
+Heartbeat interval for clients. See [**💓 Heartbeating**](./3_packets.md#💓-heartbeating).
 
 ### `config.consoleLogLevel`
 
