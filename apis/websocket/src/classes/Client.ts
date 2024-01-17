@@ -68,8 +68,8 @@ export default class Client {
         return new Promise<void>((resolve, reject) => {
             try {
                 this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
-
-                this.#socket.send(serializePacket(packet), err => (err ? reject(err) : resolve()))
+                this.#socket.send(serializePacket(packet))
+                resolve()
             } catch (e) {
                 reject(e)
             }
@@ -91,11 +91,13 @@ export default class Client {
     forceDisconnect(reason: DisconnectReason = DisconnectReason.Generic) {
         if (this.disconnected !== false) return
 
-        if (this.#hbTimeout) clearTimeout(this.#hbTimeout)
-        this.#socket.terminate()
-
-        this.ready = false
+        // It's so weird because if I moved this down a few lines
+        // it would just fire the disconnect event twice because of a race condition
         this.disconnected = reason
+        this.ready = false
+
+        if (this.#hbTimeout) clearTimeout(this.#hbTimeout)
+        this.#socket.close()
 
         this.#emitter.emit('disconnect', reason)
     }
@@ -111,6 +113,7 @@ export default class Client {
 
     #listen() {
         this.#socket.on('message', data => {
+            this.#emitter.emit('message', data)
             try {
                 const rawPacket = deserializePacket(this._toBuffer(data))
                 if (!isClientPacket(rawPacket)) throw null
@@ -192,4 +195,5 @@ export type ClientEventHandlers = {
     ready: () => Promise<unknown> | unknown
     packet: (packet: ClientPacketObject<ClientOperation>) => Promise<unknown> | unknown
     disconnect: (reason: DisconnectReason) => Promise<unknown> | unknown
+    message: (data: RawData) => Promise<unknown> | unknown
 }
