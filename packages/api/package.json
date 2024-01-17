@@ -1,40 +1,38 @@
 {
-    "name": "@revanced/bot-api",
-    "type": "module",
-    "version": "0.1.0",
-    "description": "🙌🏻 Programmatic API for bots assisting ReVanced to communicate to its API server",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "bun bundle && bun types",
-        "watch": "conc --raw \"bun bundle:watch\" \"bun types:watch\"",
-        "bundle": "bun build src/index.ts --outdir=dist --sourcemap=external --target=node --minify",
-        "bundle:watch": "bun run bundle --watch",
-        "types": "tsc --declaration --emitDeclarationOnly",
-        "types:watch": "bun types --watch --preserveWatchOutput",
-        "types:clean": "bun types --build --clean"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/revanced/revanced-helper.git",
-        "directory": "packages/api"
-    },
-    "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
-    "contributors": [
-        "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
-        "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
-    ],
-    "license": "GPL-3.0-or-later",
-    "bugs": {
-        "url": "https://github.com/revanced/revanced-helper/issues"
-    },
-    "homepage": "https://github.com/revanced/revanced-helper#readme",
-    "dependencies": {
-        "@revanced/bot-shared": "workspace:*",
-        "ws": "^8.14.2"
-    },
-    "devDependencies": {
-        "@types/ws": "^8.5.10",
-        "typed-emitter": "^2.1.0"
-    }
+  "name": "@revanced/bot-api",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "🙌🏻 Programmatic API for bots assisting ReVanced to communicate to its API server",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "bun bundle && bun types",
+    "watch": "bunx conc --raw \"bun bundle:watch\" \"bun types:watch\"",
+    "bundle": "bun build src/index.ts --outdir=dist --sourcemap=external --target=bun --minify",
+    "bundle:watch": "bun run bundle --watch",
+    "types": "tsc --declaration --emitDeclarationOnly",
+    "types:watch": "bun types --watch --preserveWatchOutput",
+    "types:clean": "bun types --build --clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revanced/revanced-helper.git",
+    "directory": "packages/api"
+  },
+  "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+  "contributors": [
+    "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+    "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
+  ],
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/revanced/revanced-helper/issues"
+  },
+  "homepage": "https://github.com/revanced/revanced-helper#readme",
+  "dependencies": {
+    "@revanced/bot-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typed-emitter": "^2.1.0"
+  }
 }
