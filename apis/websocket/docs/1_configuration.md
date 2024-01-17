@@ -22,11 +22,12 @@ The address and port for the server to listen on.
 
 Amount of concurrent queues that can be run at a time.
 
+> [!WARNING]
 > Setting this too high may cause performance issues.
 
 ### `config.clientHeartbeatInterval`
 
-Heartbeat interval for clients. See [**💓 Heartbeating**](./packets.md#💓-heartbeating).
+Heartbeat interval for clients. See [**💓 Heartbeating**](./3_packets.md#💓-heartbeating).
 
 ### `config.consoleLogLevel`
 
