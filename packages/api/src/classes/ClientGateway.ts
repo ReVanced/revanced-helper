@@ -10,7 +10,7 @@ import {
     uncapitalize,
 } from '@revanced/bot-shared'
 import type TypedEmitter from 'typed-emitter'
-import { type RawData, WebSocket } from 'ws'
+import { RawData, WebSocket } from 'ws'
 
 /**
  * The class that handles the WebSocket connection to the server.
@@ -41,14 +41,16 @@ export default class ClientGateway {
 
                 this.#socket.on('open', () => {
                     this.disconnected = false
+                    this.#listen()
+                    this.ready = true
+                    this.#emitter.emit('ready')
                     rs()
                 })
 
-                this.#socket.on('close', () => this.#handleDisconnect(DisconnectReason.Generic))
+                const errorHandler = () => this.#handleDisconnect(DisconnectReason.Generic)
 
-                this.#listen()
-                this.ready = true
-                this.#emitter.emit('ready')
+                this.#socket.on('close', errorHandler)
+                this.#socket.on('error', errorHandler)
             } catch (e) {
                 rj(e)
             }
@@ -112,7 +114,6 @@ export default class ClientGateway {
      */
     disconnect() {
         this.#throwIfDisconnected('Cannot disconnect when already disconnected from the server')
-
         this.#handleDisconnect(DisconnectReason.Generic)
     }
 
