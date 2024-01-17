@@ -2,9 +2,6 @@
 
 There are many methods to run the server. Choose one that suits best for the situation.
 
-> [!IMPORTANT]  
-> Make sure you've followed the [**🏗️ Setting up the environment**](./0_development_environment.md) steps.
-
 ## 👷🏻 Development mode (recommended)
 
 There will be no compilation step, and Bun will automatically watch changes and restart the server for you.
@@ -38,4 +35,11 @@ If you're looking to build and host the server somewhere else, you can run:
 bun bundle
 ```
 
-The files will be placed in the `dist` directory. **Configurations and `.env` files will NOT be copied automatically.**
+The files will be placed in the `dist` directory. **Configurations and `.env` files will NOT be copied automatically.**  
+You can run these files after using a runtime, eg. `bun run .` or `node .`.
+
+## ⏭️ What's next
+
+The next page will tell you about packets.
+
+Continue: [📨 Packets](./3_packets.md)
