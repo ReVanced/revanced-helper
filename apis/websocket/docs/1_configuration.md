@@ -8,7 +8,7 @@ This is the default configuration (provided in [config.json](../config.json)):
     "port": 3000,
     "ocrConcurrentQueues": 1,
     "clientHeartbeatInterval": 60000,
-    "debugLogsInProduction": false
+    "consoleLogLevel": "log"
 }
 ```
 
