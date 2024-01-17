@@ -1,23 +1,24 @@
 {
   "name": "revanced-helper",
+  "description": "🤖 Bots assisting ReVanced on multiple platforms",
+  "private": true,
   "version": "0.0.0",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
   "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+  "workspaces": ["apis/*", "bots/*", "packages/*"],
+  "scripts": {
+    "build": "turbo run build",
+    "watch": "turbo run watch",
+    "flint": "biome check --apply .",
+    "flint:check": "biome check .",
+    "clint": "commitlint --edit",
+    "prepare": "lefthook install"
+  },
+  "homepage": "https://github.com/revanced/revanced-helper#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/revanced/revanced-helper.git"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.5.1",
-    "@commitlint/cli": "^18.4.4",
-    "@commitlint/config-conventional": "^18.4.4",
-    "@tsconfig/strictest": "^2.0.2",
-    "conventional-changelog-conventionalcommits": "^7.0.2",
-    "lefthook": "^1.5.6",
-    "semantic-release": "^23.0.0",
-    "turbo": "^1.11.3",
-    "typescript": "^5.3.3",
-    "@revanced/bot-shared": "workspace:*",
-    "@revanced/bot-api": "workspace:*"
   },
   "bugs": {
     "url": "https://github.com/revanced/revanced-helper/issues"
@@ -26,33 +27,18 @@
     "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
     "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
   ],
-  "description": "🤖 Bots assisting ReVanced on multiple platforms",
-  "homepage": "https://github.com/revanced/revanced-helper#readme",
-  "license": "GPL-3.0-or-later",
-  "overrides": {
-    "uuid": ">=9.0.0",
-    "isomorphic-fetch": ">=3.0.0"
-  },
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "watch": "turbo run watch",
-    "format": "biome check --apply .",
-    "format:check": "biome check .",
-    "lint": "eslint --ignore-path .gitignore --cache .",
-    "lint:apply": "eslint --ignore-path .gitignore --fix .",
-    "commitlint": "commitlint --edit",
-    "t": "turbo run",
-    "prepare": "lefthook install"
-  },
-  "trustedDependencies": [
-    "lefthook",
-    "biome",
-    "turbo"
-  ],
-  "workspaces": [
-    "apis/*",
-    "bots/*",
-    "packages/*"
-  ]
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.2",
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "@revanced/bot-api": "workspace:*",
+    "@revanced/bot-shared": "workspace:*",
+    "@tsconfig/strictest": "^2.0.2",
+    "@types/bun": "latest",
+    "concurrently": "^8.2.2",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "lefthook": "^1.5.6",
+    "turbo": "^1.11.3",
+    "typescript": "^5.0.0"
+  }
 }
