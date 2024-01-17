@@ -24,16 +24,23 @@ To start developing, you'll need to set up the development environment first.
 4. Build packages/libraries
 
     ```sh
-    bun build:libs
+    bun run build
     ```
 
-5. Change your directory to this project's root
+5. Change your directory to a project's root
     ```sh
+    # WebSocket API
     cd apis/websocket
+
+    # Discord bot
+    cd bots/discord
+
+    # Programmatic API
+    cd packages/api
+
+    # Etc.
     ```
 
 ## ⏭️ What's next
 
-The next page will tell you about server configurations.
-
-Continue: [⚙️ Configuration](./1_configuration.md)
+You'll need to go to the respective project's documentation to continue.
