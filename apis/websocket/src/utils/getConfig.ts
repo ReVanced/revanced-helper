@@ -26,7 +26,7 @@ export type Config = Omit<BaseTypeOf<typeof import('../../config.json')>, '$sche
 
 export const defaultConfig: Config = {
     address: '127.0.0.1',
-    port: 80,
+    port: 8080,
     ocrConcurrentQueues: 1,
     clientHeartbeatInterval: 60000,
     consoleLogLevel: 'info',
