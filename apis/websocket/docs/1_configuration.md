@@ -22,6 +22,7 @@ The address and port for the server to listen on.
 
 Amount of concurrent queues that can be run at a time.
 
+> [!WARNING]
 > Setting this too high may cause performance issues.
 
 ### `config.clientHeartbeatInterval`
