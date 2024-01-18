@@ -23,8 +23,8 @@ Data fields include additional information for the server to process. They are *
 
 Schemas for packets and their respective data[^1], and the list of possible operation codes[^2] can be found in the `@revanced/bot-shared` package, with typings as well.
 
-[^1]: [`@revanced/bot-shared/src/schemas/Packet.ts`](../../packages/shared/src/schemas/Packet.ts)
-[^2]: [`@revanced/bot-shared/src/constants/Operation`](../../packages/shared/src/constants/Operation.ts)
+[^1]: [`@revanced/bot-shared/src/schemas/Packet.ts`](../../../packages/shared/src/schemas/Packet.ts)
+[^2]: [`@revanced/bot-shared/src/constants/Operation`](../../../packages/shared/src/constants/Operation.ts)
 
 ## 💓 Heartbeating
 
