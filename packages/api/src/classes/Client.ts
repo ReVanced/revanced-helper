@@ -1,30 +1,22 @@
 import { ClientOperation, Packet, ServerOperation } from '@revanced/bot-shared'
-import ClientGateway, { ClientGatewayEventHandlers } from './ClientGateway'
+import { ClientWebSocketManager, ClientWebSocketEvents, ClientWebSocketManagerOptions } from './ClientWebSocket'
 
 /**
  * The client that connects to the API.
  */
 export default class Client {
     ready = false
-    gateway: ClientGateway
+    ws: ClientWebSocketManager
     #parseId = 0
 
     constructor(options: ClientOptions) {
-        this.gateway = new ClientGateway({
-            url: options.api.gatewayUrl,
-        })
-
-        this.gateway.on('ready', () => {
+        this.ws = new ClientWebSocketManager(options.api.websocket)
+        this.ws.on('ready', () => {
             this.ready = true
         })
-    }
+        this.ws.on('disconnect', () => {
 
-    /**
-     * Connects to the WebSocket API
-     * @returns A promise that resolves when the client is ready
-     */
-    connect() {
-        return this.gateway.connect()
+        })
     }
 
     /**
@@ -45,7 +37,7 @@ export default class Client {
 
         const currentId = (this.#parseId++).toString()
 
-        this.gateway.send({
+        this.ws.send({
             op: ClientOperation.ParseText,
             d: {
                 text,
@@ -58,18 +50,18 @@ export default class Client {
         const promise = new Promise<CorrectPacket['d']>((rs, rj) => {
             const parsedTextListener = (packet: CorrectPacket) => {
                 if (packet.d.id !== currentId) return
-                this.gateway.off('parsedText', parsedTextListener)
+                this.ws.off('parsedText', parsedTextListener)
                 rs(packet.d)
             }
 
             const parseTextFailedListener = (packet: Packet<ServerOperation.ParseTextFailed>) => {
                 if (packet.d.id !== currentId) return
-                this.gateway.off('parseTextFailed', parseTextFailedListener)
+                this.ws.off('parseTextFailed', parseTextFailedListener)
                 rj()
             }
 
-            this.gateway.on('parsedText', parsedTextListener)
-            this.gateway.on('parseTextFailed', parseTextFailedListener)
+            this.ws.on('parsedText', parsedTextListener)
+            this.ws.on('parseTextFailed', parseTextFailedListener)
         })
 
         return await promise
@@ -85,7 +77,7 @@ export default class Client {
 
         const currentId = (this.#parseId++).toString()
 
-        this.gateway.send({
+        this.ws.send({
             op: ClientOperation.ParseImage,
             d: {
                 image_url: url,
@@ -98,18 +90,18 @@ export default class Client {
         const promise = new Promise<CorrectPacket['d']>((rs, rj) => {
             const parsedImageListener = (packet: CorrectPacket) => {
                 if (packet.d.id !== currentId) return
-                this.gateway.off('parsedImage', parsedImageListener)
+                this.ws.off('parsedImage', parsedImageListener)
                 rs(packet.d)
             }
 
             const parseImageFailedListener = (packet: Packet<ServerOperation.ParseImageFailed>) => {
                 if (packet.d.id !== currentId) return
-                this.gateway.off('parseImageFailed', parseImageFailedListener)
+                this.ws.off('parseImageFailed', parseImageFailedListener)
                 rj()
             }
 
-            this.gateway.on('parsedImage', parsedImageListener)
-            this.gateway.on('parseImageFailed', parseImageFailedListener)
+            this.ws.on('parsedImage', parsedImageListener)
+            this.ws.on('parseImageFailed', parseImageFailedListener)
         })
 
         return await promise
@@ -121,8 +113,8 @@ export default class Client {
      * @param handler The event handler
      * @returns The event handler function
      */
-    on<TOpName extends keyof ClientGatewayEventHandlers>(name: TOpName, handler: ClientGatewayEventHandlers[TOpName]) {
-        this.gateway.on(name, handler)
+    on<TOpName extends keyof ClientWebSocketEvents>(name: TOpName, handler: ClientWebSocketEvents[TOpName]) {
+        this.ws.on(name, handler)
         return handler
     }
 
@@ -132,8 +124,8 @@ export default class Client {
      * @param handler The event handler to remove
      * @returns The removed event handler function
      */
-    off<TOpName extends keyof ClientGatewayEventHandlers>(name: TOpName, handler: ClientGatewayEventHandlers[TOpName]) {
-        this.gateway.off(name, handler)
+    off<TOpName extends keyof ClientWebSocketEvents>(name: TOpName, handler: ClientWebSocketEvents[TOpName]) {
+        this.ws.off(name, handler)
         return handler
     }
 
@@ -143,11 +135,11 @@ export default class Client {
      * @param handler The event handler
      * @returns The event handler function
      */
-    once<TOpName extends keyof ClientGatewayEventHandlers>(
+    once<TOpName extends keyof ClientWebSocketEvents>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[TOpName],
+        handler: ClientWebSocketEvents[TOpName],
     ) {
-        this.gateway.once(name, handler)
+        this.ws.once(name, handler)
         return handler
     }
 
@@ -163,5 +155,5 @@ export interface ClientOptions {
 }
 
 export interface ClientApiOptions {
-    gatewayUrl: string
+    websocket: ClientWebSocketManagerOptions
 }
