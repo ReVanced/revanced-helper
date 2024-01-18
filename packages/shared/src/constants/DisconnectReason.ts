@@ -22,6 +22,10 @@ enum DisconnectReason {
      * The client had never connected to the server (**CLIENT-ONLY**)
      */
     NeverConnected = 5,
+    /**
+     * The client disconnected on its own (**CLIENT-ONLY**)
+     */
+    PlannedDisconnect = 6,
 }
 
 export default DisconnectReason
