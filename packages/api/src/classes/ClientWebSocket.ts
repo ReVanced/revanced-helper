@@ -16,18 +16,21 @@ import { RawData, WebSocket } from 'ws'
  * The class that handles the WebSocket connection to the server.
  * This is the only relevant class for the time being. But in the future, there may be more classes to handle different protocols of the API.
  */
-export default class ClientGateway {
+export class ClientWebSocketManager {
     readonly url: string
+    timeout: number
+
     ready = false
     disconnected: boolean | DisconnectReason = DisconnectReason.NeverConnected
-    config: Readonly<Packet<ServerOperation.Hello>['d']> | null = null!
+    config: Readonly<Packet<ServerOperation.Hello>['d']> | null = null
 
     #hbTimeout: NodeJS.Timeout = null!
     #socket: WebSocket = null!
-    #emitter = new EventEmitter() as TypedEmitter<ClientGatewayEventHandlers>
+    #emitter = new EventEmitter() as TypedEmitter<ClientWebSocketEvents>
 
-    constructor(options: ClientGatewayOptions) {
+    constructor(options: ClientWebSocketManagerOptions) {
         this.url = options.url
+        this.timeout = options.timeout ?? 10000
     }
 
     /**
@@ -39,6 +42,11 @@ export default class ClientGateway {
             try {
                 this.#socket = new WebSocket(this.url)
 
+                setTimeout(() => {
+                    if (!this.ready) throw new Error('WebSocket connection timed out')
+                    this.#socket.close()
+                }, this.timeout)
+
                 this.#socket.on('open', () => {
                     this.disconnected = false
                     this.#listen()
@@ -47,10 +55,14 @@ export default class ClientGateway {
                     rs()
                 })
 
-                const errorHandler = () => this.#handleDisconnect(DisconnectReason.Generic)
+                this.#socket.on('error', (err) => {
+                    throw err
+                })
 
-                this.#socket.on('close', errorHandler)
-                this.#socket.on('error', errorHandler)
+                this.#socket.on('close', (code, reason) => {
+                    if (code === 1006) throw new Error(`Failed to connect to WebSocket server: ${reason}`)
+                    this.#handleDisconnect(DisconnectReason.Generic)
+                })
             } catch (e) {
                 rj(e)
             }
@@ -63,9 +75,9 @@ export default class ClientGateway {
      * @param handler The event handler
      * @returns The event handler function
      */
-    on<TOpName extends keyof ClientGatewayEventHandlers>(
+    on<TOpName extends keyof ClientWebSocketEvents>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name],
+        handler: ClientWebSocketEvents[typeof name],
     ) {
         this.#emitter.on(name, handler)
     }
@@ -76,9 +88,9 @@ export default class ClientGateway {
      * @param handler The event handler to remove
      * @returns The removed event handler function
      */
-    off<TOpName extends keyof ClientGatewayEventHandlers>(
+    off<TOpName extends keyof ClientWebSocketEvents>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name],
+        handler: ClientWebSocketEvents[typeof name],
     ) {
         this.#emitter.off(name, handler)
     }
@@ -89,9 +101,9 @@ export default class ClientGateway {
      * @param handler The event handler
      * @returns The event handler function
      */
-    once<TOpName extends keyof ClientGatewayEventHandlers>(
+    once<TOpName extends keyof ClientWebSocketEvents>(
         name: TOpName,
-        handler: ClientGatewayEventHandlers[typeof name],
+        handler: ClientWebSocketEvents[typeof name],
     ) {
         this.#emitter.once(name, handler)
     }
@@ -114,14 +126,14 @@ export default class ClientGateway {
      */
     disconnect() {
         this.#throwIfDisconnected('Cannot disconnect when already disconnected from the server')
-        this.#handleDisconnect(DisconnectReason.Generic)
+        this.#handleDisconnect(DisconnectReason.PlannedDisconnect)
     }
 
     /**
      * Checks whether the client is ready
      * @returns Whether the client is ready
      */
-    isReady(): this is ReadiedClientGateway {
+    isReady(): this is ReadiedClientWebSocketManager {
         return this.ready
     }
 
@@ -145,7 +157,7 @@ export default class ClientGateway {
                     return this.#handleDisconnect((packet as Packet<ServerOperation.Disconnect>).d.reason)
                 default:
                     return this.#emitter.emit(
-                        uncapitalize(ServerOperation[packet.op] as ClientGatewayServerEventName),
+                        uncapitalize(ServerOperation[packet.op] as ClientWebSocketEventName),
                         // @ts-expect-error TypeScript doesn't know that the lines above negate the type enough
                         packet,
                     )
@@ -162,6 +174,7 @@ export default class ClientGateway {
         clearTimeout(this.#hbTimeout)
         this.disconnected = reason
         this.#socket.close()
+        this.#socket = null!
 
         this.#emitter.emit('disconnect', reason)
     }
@@ -190,25 +203,30 @@ export default class ClientGateway {
     }
 }
 
-export interface ClientGatewayOptions {
+export interface ClientWebSocketManagerOptions {
     /**
-     * The gateway URL to connect to
+     * The URL to connect to
      */
     url: string
+    /**
+     * The timeout for the connection
+     * @default 10000
+     */
+    timeout?: number
 }
 
-export type ClientGatewayServerEventName = keyof typeof ServerOperation
+export type ClientWebSocketEventName = keyof typeof ServerOperation
 
-export type ClientGatewayEventHandlers = {
-    [K in Uncapitalize<ClientGatewayServerEventName>]: (
+export type ClientWebSocketEvents = {
+    [K in Uncapitalize<ClientWebSocketEventName>]: (
         packet: Packet<(typeof ServerOperation)[Capitalize<K>]>,
     ) => Promise<void> | void
 } & {
-    hello: (config: NonNullable<ClientGateway['config']>) => Promise<void> | void
+    hello: (config: NonNullable<ClientWebSocketManager['config']>) => Promise<void> | void
     ready: () => Promise<void> | void
     packet: (packet: Packet<ServerOperation>) => Promise<void> | void
     invalidPacket: (packet: Packet) => Promise<void> | void
     disconnect: (reason: DisconnectReason) => Promise<void> | void
 }
 
-export type ReadiedClientGateway = RequiredProperty<InstanceType<typeof ClientGateway>>
+export type ReadiedClientWebSocketManager = RequiredProperty<InstanceType<typeof ClientWebSocketManager>>
