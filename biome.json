@@ -18,6 +18,9 @@
         },
         "useEnumInitializers": {
           "level": "off"
+        },
+        "useNodejsImportProtocol": {
+          "level": "off"
         }
       }
     }
