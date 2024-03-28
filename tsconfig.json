@@ -1,11 +1,9 @@
 {
-  "extends": ["@tsconfig/strictest", "bun-types"],
+  "extends": ["@tsconfig/strictest"],
   "compilerOptions": {
     "lib": ["ESNext"],
     "target": "ESNext",
     "module": "ESNext",
-    "moduleDetection": "force",
-
     "moduleResolution": "Bundler",
 
     "strict": true,
@@ -15,8 +13,8 @@
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": true,
     "noPropertyAccessFromIndexSignature": true,
-    
-    "composite": false,
+
+    "noEmitOnError": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "declaration": false,
