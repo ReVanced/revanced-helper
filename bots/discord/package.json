@@ -1,0 +1,36 @@
+{
+  "name": "@revanced/discord-bot",
+  "type": "module",
+  "private": true,
+  "version": "0.1.0",
+  "description": "🤖 Discord bot assisting ReVanced",
+  "main": "dist/index.js",
+  "scripts": {
+    "register": "bun run scripts/reload-slash-commands.ts",
+    "dev": "bun --watch src/index.ts",
+    "reload-slash": "bun run scripts/reload-slash-commands.ts",
+    "build": "echo This command is not available yet && exit 1",
+    "watch": "bun dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revanced/revanced-helper.git",
+    "directory": "bots/discord"
+  },
+  "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+  "contributors": [
+    "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+    "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
+  ],
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/revanced/revanced-helper/issues"
+  },
+  "homepage": "https://github.com/revanced/revanced-helper#readme",
+  "dependencies": {
+    "@revanced/bot-api": "workspace:*",
+    "@revanced/bot-shared": "workspace:*",
+    "chalk": "^5.3.0",
+    "discord.js": "^14.14.1"
+  }
+}
