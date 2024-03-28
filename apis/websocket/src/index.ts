@@ -1,43 +1,93 @@
-import witPkg from 'node-wit'
 import { createWorker as createTesseractWorker } from 'tesseract.js'
-const { Wit } = witPkg
 
 import { inspect as inspectObject } from 'util'
 
 import Client from './classes/Client'
 
-import { EventContext, parseImageEventHandler, parseTextEventHandler } from './events/index'
+import {
+    type EventContext,
+    type WitMessageResponse,
+    parseImageEventHandler,
+    parseTextEventHandler,
+    trainMessageEventHandler,
+} from './events'
 
 import { DisconnectReason, HumanizedDisconnectReason, createLogger } from '@revanced/bot-shared'
-import { checkEnvironment, getConfig } from './utils/index'
+import { getConfig } from './utils/config'
 
 import { createServer } from 'http'
-import { WebSocket, WebSocketServer } from 'ws'
+import { type WebSocket, WebSocketServer } from 'ws'
 
 // Load config, init logger, check environment
 
 const config = getConfig()
 const logger = createLogger({
-    level: config['consoleLogLevel'] === 'none' ? Infinity : config['consoleLogLevel'],
+    level: config.logLevel === 'none' ? Number.MAX_SAFE_INTEGER : config.logLevel,
 })
 
-checkEnvironment(logger)
+if (!process.env['NODE_ENV']) logger.warn('NODE_ENV not set, defaulting to `development`')
+const environment = (process.env['NODE_ENV'] ?? 'development') as NodeEnvironment
+
+if (!['development', 'production'].includes(environment)) {
+    logger.error('NODE_ENV is neither `development` nor `production`, unable to determine environment')
+    logger.info('Set NODE_ENV to blank to use `development` mode')
+    process.exit(1)
+}
+
+logger.info(`Running in ${environment} mode...`)
+
+if (environment === 'production' && process.env['IS_USING_DOT_ENV']) {
+    logger.warn('You seem to be using .env files, this is generally not a good idea in production...')
+}
+
+if (!process.env['WIT_AI_TOKEN']) {
+    logger.error('WIT_AI_TOKEN is not defined in the environment variables')
+    process.exit(1)
+}
 
 // Workers and API clients
 
-const tesseractWorker = await createTesseractWorker('eng')
-const witClient = new Wit({
-    accessToken: process.env['WIT_AI_TOKEN']!,
-})
+const tesseract = await createTesseractWorker('eng')
+const wit = {
+    token: process.env['WIT_AI_TOKEN']!,
+    async fetch(route: string, options?: RequestInit) {
+        const res = await fetch(`https://api.wit.ai${route}`, {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+                'Content-Type': 'application/json',
+            },
+            ...options,
+        })
+
+        if (!res.ok) throw new Error(`Failed to fetch from Wit.ai: ${res.statusText} (${res.status})`)
+
+        return await res.json()
+    },
+    message(text: string) {
+        return this.fetch(`/message?q=${encodeURIComponent(text)}&n=8`) as Promise<WitMessageResponse>
+    },
+    async train(text: string, label: string) {
+        await this.fetch('/utterances', {
+            body: JSON.stringify([
+                {
+                    text,
+                    intent: label,
+                    entities: [],
+                    traits: [],
+                },
+            ]),
+            method: 'POST',
+        })
+    },
+} as const
 
 // Server logic
 
-const clients = new Set<Client>()
-const clientSocketMap = new WeakMap<WebSocket, Client>()
+const clientMap = new WeakMap<WebSocket, Client>()
 const eventContext: EventContext = {
-    tesseractWorker,
+    tesseract,
     logger,
-    witClient,
+    wit,
     config,
 }
 
@@ -61,25 +111,24 @@ wss.on('connection', async (socket, request) => {
         const client = new Client({
             socket,
             id: `${request.socket.remoteAddress}:${request.socket.remotePort}`,
-            heartbeatInterval: config['clientHeartbeatInterval'],
         })
 
-        clientSocketMap.set(socket, client)
-        clients.add(client)
+        clientMap.set(socket, client)
 
         logger.debug(`Client ${client.id}'s instance has been added`)
-        logger.info(`New client connected (now ${clients.size} clients) with ID:`, client.id)
+        logger.info(`New client connected with ID: ${client.id}`)
 
         client.on('disconnect', reason => {
-            clients.delete(client)
-            logger.info(`Client ${client.id} disconnected because client ${HumanizedDisconnectReason[reason]}`)
+            logger.info(
+                `Client ${client.id} disconnected because client ${HumanizedDisconnectReason[reason]} (${reason})`,
+            )
         })
 
-        client.on('parseText', async packet => parseTextEventHandler(packet, eventContext))
+        client.on('parseText', packet => parseTextEventHandler(packet, eventContext))
+        client.on('parseImage', packet => parseImageEventHandler(packet, eventContext))
+        client.on('trainMessage', packet => trainMessageEventHandler(packet, eventContext))
 
-        client.on('parseImage', async packet => parseImageEventHandler(packet, eventContext))
-
-        if (['debug', 'trace'].includes(config['consoleLogLevel'])) {
+        if (['debug', 'trace'].includes(config.logLevel)) {
             logger.debug('Debug logs enabled, attaching debug events...')
 
             client.on('packet', ({ client, ...rawPacket }) =>
@@ -87,14 +136,12 @@ wss.on('connection', async (socket, request) => {
             )
 
             client.on('message', d => logger.debug(`Message from client ${client.id}:`, d))
-
-            client.on('heartbeat', () => logger.debug('Heartbeat received from client', client.id))
         }
     } catch (e) {
         if (e instanceof Error) logger.error(e.stack ?? e.message)
         else logger.error(inspectObject(e))
 
-        const client = clientSocketMap.get(socket)
+        const client = clientMap.get(socket)
 
         if (!client) {
             logger.error(
@@ -104,9 +151,6 @@ wss.on('connection', async (socket, request) => {
         }
 
         if (client.disconnected === false) client.disconnect(DisconnectReason.ServerError)
-        else client.forceDisconnect()
-
-        clients.delete(client)
 
         logger.debug(`Client ${client.id} disconnected because of an internal error`)
     }
@@ -114,7 +158,7 @@ wss.on('connection', async (socket, request) => {
 
 // Start the server
 
-server.listen(config['port'], config['address'])
+server.listen(config.port, config.address)
 
 logger.debug(`Starting with these configurations: ${inspectObject(config)}`)
 

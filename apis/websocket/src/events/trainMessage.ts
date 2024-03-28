@@ -4,34 +4,32 @@ import { inspect as inspectObject } from 'util'
 
 import type { EventHandler } from '.'
 
-const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (packet, { wit, logger }) => {
+const trainMessageEventHandler: EventHandler<ClientOperation.TrainMessage> = async (packet, { wit, logger }) => {
     const {
         client,
-        d: { text },
+        d: { text, label },
     } = packet
 
     const nextSeq = client.currentSequence++
     const actualText = text.slice(0, 279)
 
-    logger.debug(`Client ${client.id} requested to parse text:`, actualText)
+    logger.debug(`Client ${client.id} requested to train label ${label} with:`, actualText)
 
     try {
-        const { intents } = await wit.message(actualText)
-        const intentsWithoutIds = intents.map(({ id, ...rest }) => rest)
-
+        await wit.train(actualText, label)
         await client.send(
             {
-                op: ServerOperation.ParsedText,
-                d: {
-                    labels: intentsWithoutIds,
-                },
+                op: ServerOperation.TrainedMessage,
+                d: null,
             },
             nextSeq,
         )
+
+        logger.debug(`Trained label ${label} with:`, actualText)
     } catch (e) {
         await client.send(
             {
-                op: ServerOperation.ParseTextFailed,
+                op: ServerOperation.TrainMessageFailed,
                 d: null,
             },
             nextSeq,
@@ -42,4 +40,4 @@ const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (pa
     }
 }
 
-export default parseTextEventHandler
+export default trainMessageEventHandler

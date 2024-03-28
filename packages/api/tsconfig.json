@@ -1,12 +1,12 @@
 {
-    "extends": "../../tsconfig.packages.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "rootDir": "./src",
-        "outDir": "dist",
-        "module": "ESNext",
-        "composite": true,
-        "noEmit": false
-    },
-    "exclude": ["node_modules", "dist"]
+  "extends": "../../tsconfig.packages.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "dist",
+    "module": "ESNext",
+    "composite": true,
+    "noEmit": false
+  },
+  "exclude": ["node_modules", "dist"]
 }

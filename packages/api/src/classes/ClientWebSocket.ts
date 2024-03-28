@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events'
 import {
-    ClientOperation,
+    type ClientOperation,
     DisconnectReason,
-    Packet,
+    type Packet,
     ServerOperation,
     deserializePacket,
     isServerPacket,
@@ -10,7 +10,7 @@ import {
     uncapitalize,
 } from '@revanced/bot-shared'
 import type TypedEmitter from 'typed-emitter'
-import { RawData, WebSocket } from 'ws'
+import { type RawData, WebSocket } from 'ws'
 
 /**
  * The class that handles the WebSocket connection to the server.
@@ -21,10 +21,9 @@ export class ClientWebSocketManager {
     timeout: number
 
     ready = false
-    disconnected: boolean | DisconnectReason = DisconnectReason.NeverConnected
-    config: Readonly<Packet<ServerOperation.Hello>['d']> | null = null
+    disconnected: false | DisconnectReason = false
+    currentSequence = 0
 
-    #hbTimeout: NodeJS.Timeout = null!
     #socket: WebSocket = null!
     #emitter = new EventEmitter() as TypedEmitter<ClientWebSocketEvents>
 
@@ -42,26 +41,27 @@ export class ClientWebSocketManager {
             try {
                 this.#socket = new WebSocket(this.url)
 
-                setTimeout(() => {
-                    if (!this.ready) throw new Error('WebSocket connection timed out')
-                    this.#socket.close()
+                const timeout = setTimeout(() => {
+                    if (!this.ready) {
+                        this.#socket?.close(DisconnectReason.TooSlow)
+                        throw new Error('WebSocket connection was not readied in time')
+                    }
                 }, this.timeout)
 
                 this.#socket.on('open', () => {
-                    this.disconnected = false
+                    clearTimeout(timeout)
                     this.#listen()
-                    this.ready = true
-                    this.#emitter.emit('ready')
                     rs()
                 })
 
-                this.#socket.on('error', (err) => {
+                this.#socket.on('error', err => {
+                    clearTimeout(timeout)
                     throw err
                 })
 
                 this.#socket.on('close', (code, reason) => {
-                    if (code === 1006) throw new Error(`Failed to connect to WebSocket server: ${reason}`)
-                    this.#handleDisconnect(DisconnectReason.Generic)
+                    clearTimeout(timeout)
+                    this._handleDisconnect(code, reason.toString())
                 })
             } catch (e) {
                 rj(e)
@@ -75,10 +75,7 @@ export class ClientWebSocketManager {
      * @param handler The event handler
      * @returns The event handler function
      */
-    on<TOpName extends keyof ClientWebSocketEvents>(
-        name: TOpName,
-        handler: ClientWebSocketEvents[typeof name],
-    ) {
+    on<TOpName extends keyof ClientWebSocketEvents>(name: TOpName, handler: ClientWebSocketEvents[typeof name]) {
         this.#emitter.on(name, handler)
     }
 
@@ -88,10 +85,7 @@ export class ClientWebSocketManager {
      * @param handler The event handler to remove
      * @returns The removed event handler function
      */
-    off<TOpName extends keyof ClientWebSocketEvents>(
-        name: TOpName,
-        handler: ClientWebSocketEvents[typeof name],
-    ) {
+    off<TOpName extends keyof ClientWebSocketEvents>(name: TOpName, handler: ClientWebSocketEvents[typeof name]) {
         this.#emitter.off(name, handler)
     }
 
@@ -101,10 +95,7 @@ export class ClientWebSocketManager {
      * @param handler The event handler
      * @returns The event handler function
      */
-    once<TOpName extends keyof ClientWebSocketEvents>(
-        name: TOpName,
-        handler: ClientWebSocketEvents[typeof name],
-    ) {
+    once<TOpName extends keyof ClientWebSocketEvents>(name: TOpName, handler: ClientWebSocketEvents[typeof name]) {
         this.#emitter.once(name, handler)
     }
 
@@ -126,7 +117,7 @@ export class ClientWebSocketManager {
      */
     disconnect() {
         this.#throwIfDisconnected('Cannot disconnect when already disconnected from the server')
-        this.#handleDisconnect(DisconnectReason.PlannedDisconnect)
+        this._handleDisconnect(DisconnectReason.PlannedDisconnect)
     }
 
     /**
@@ -143,22 +134,22 @@ export class ClientWebSocketManager {
 
             if (!isServerPacket(packet)) return this.#emitter.emit('invalidPacket', packet)
 
+            this.currentSequence = packet.s
             this.#emitter.emit('packet', packet)
 
             switch (packet.op) {
                 case ServerOperation.Hello: {
-                    const data = Object.freeze((packet as Packet<ServerOperation.Hello>).d)
-                    this.config = data
-                    this.#emitter.emit('hello', data)
-                    this.#startHeartbeating()
+                    this.#emitter.emit('hello')
+                    this.ready = true
+                    this.#emitter.emit('ready')
                     break
                 }
                 case ServerOperation.Disconnect:
-                    return this.#handleDisconnect((packet as Packet<ServerOperation.Disconnect>).d.reason)
+                    return this._handleDisconnect((packet as Packet<ServerOperation.Disconnect>).d.reason)
                 default:
                     return this.#emitter.emit(
                         uncapitalize(ServerOperation[packet.op] as ClientWebSocketEventName),
-                        // @ts-expect-error TypeScript doesn't know that the lines above negate the type enough
+                        // @ts-expect-error: TS at it again
                         packet,
                     )
             }
@@ -170,30 +161,12 @@ export class ClientWebSocketManager {
         if (this.#socket.readyState !== this.#socket.OPEN) throw new Error(errorMessage)
     }
 
-    #handleDisconnect(reason: DisconnectReason) {
-        clearTimeout(this.#hbTimeout)
-        this.disconnected = reason
-        this.#socket.close()
+    protected _handleDisconnect(reason: DisconnectReason | number, message?: string) {
+        this.disconnected = reason in DisconnectReason ? reason : DisconnectReason.Generic
+        this.#socket?.close(reason)
         this.#socket = null!
 
-        this.#emitter.emit('disconnect', reason)
-    }
-
-    #startHeartbeating() {
-        this.on('heartbeatAck', packet => {
-            this.#hbTimeout = setTimeout(() => {
-                this.send({
-                    op: ClientOperation.Heartbeat,
-                    d: null,
-                })
-            }, packet.d.nextHeartbeat - Date.now())
-        })
-
-        // Immediately send a heartbeat so we can get when to send the next one
-        this.send({
-            op: ClientOperation.Heartbeat,
-            d: null,
-        })
+        this.#emitter.emit('disconnect', reason, message)
     }
 
     protected _toBuffer(data: RawData) {
@@ -217,16 +190,18 @@ export interface ClientWebSocketManagerOptions {
 
 export type ClientWebSocketEventName = keyof typeof ServerOperation
 
-export type ClientWebSocketEvents = {
-    [K in Uncapitalize<ClientWebSocketEventName>]: (
-        packet: Packet<(typeof ServerOperation)[Capitalize<K>]>,
-    ) => Promise<void> | void
-} & {
-    hello: (config: NonNullable<ClientWebSocketManager['config']>) => Promise<void> | void
+type ClientWebSocketPredefinedEvents = {
+    hello: () => Promise<void> | void
     ready: () => Promise<void> | void
     packet: (packet: Packet<ServerOperation>) => Promise<void> | void
     invalidPacket: (packet: Packet) => Promise<void> | void
-    disconnect: (reason: DisconnectReason) => Promise<void> | void
+    disconnect: (reason: DisconnectReason | number, message?: string) => Promise<void> | void
 }
+
+export type ClientWebSocketEvents = {
+    [K in Exclude<Uncapitalize<ClientWebSocketEventName>, keyof ClientWebSocketPredefinedEvents>]: (
+        packet: Packet<(typeof ServerOperation)[Capitalize<K>]>,
+    ) => Promise<void> | void
+} & ClientWebSocketPredefinedEvents
 
 export type ReadiedClientWebSocketManager = RequiredProperty<InstanceType<typeof ClientWebSocketManager>>

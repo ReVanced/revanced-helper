@@ -1,5 +1,5 @@
-import { ClientOperation, Operation, ServerOperation } from '../constants/Operation'
-import { Packet } from '../schemas/Packet'
+import { ClientOperation, type Operation, ServerOperation } from '../constants/Operation'
+import type { Packet } from '../schemas/Packet'
 
 /**
  * Checks whether a packet is trying to do the given operation
@@ -21,7 +21,7 @@ export function isClientPacket(packet: Packet): packet is Packet<ClientOperation
 }
 
 /**
- * Checks whether this packet is a server packet **(this does NOT validate the data)**
+ * Checks whether this packet is a server packet **(this does NOT validate the data or the sequence number)**
  * @param packet A packet
  * @returns Whether this packet is a server packet
  */

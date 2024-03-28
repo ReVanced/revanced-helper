@@ -17,12 +17,7 @@
       "type": "integer",
       "default": 1
     },
-    "clientHeartbeatInterval": {
-      "description": "Time in milliseconds to wait for a client to send a heartbeat packet, if no packet is received, the server will wait for `clientHeartbeatExtraTime` milliseconds before disconnecting the client",
-      "type": "integer",
-      "default": 60000
-    },
-    "consoleLogLevel": {
+    "logLevel": {
       "description": "The log level to print to console",
       "type": "string",
       "enum": ["error", "warn", "info", "log", "debug", "trace", "none"],

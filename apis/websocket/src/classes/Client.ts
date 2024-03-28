@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import {
     ClientOperation,
     DisconnectReason,
-    Packet,
+    type Packet,
     ServerOperation,
     deserializePacket,
     isClientPacket,
@@ -17,38 +17,30 @@ export default class Client {
     id: string
     disconnected: DisconnectReason | false = false
     ready = false
+    currentSequence = 0
 
-    lastHeartbeat: number = null!
-    heartbeatInterval: number
-
-    #hbTimeout: NodeJS.Timeout = null!
     #emitter = new EventEmitter() as TypedEmitter<ClientEventHandlers>
     #socket: WebSocket
 
     constructor(options: ClientOptions) {
         this.#socket = options.socket
-        this.heartbeatInterval = options.heartbeatInterval ?? 60000
         this.id = options.id
 
-        this.#socket.on('error', () => this.forceDisconnect())
-        this.#socket.on('close', () => this.forceDisconnect())
-        this.#socket.on('unexpected-response', () => this.forceDisconnect())
+        this.#socket.on('error', () => this.disconnect(DisconnectReason.ServerError))
+        this.#socket.on('close', code => this._handleDisconnect(code))
+        this.#socket.on('unexpected-response', () => this.disconnect(DisconnectReason.InvalidPacket))
 
         this.send({
             op: ServerOperation.Hello,
-            d: {
-                heartbeatInterval: this.heartbeatInterval,
-            },
+            d: null,
         })
             .then(() => {
-                this.#listen()
-                this.#listenHeartbeat()
+                this._listen()
                 this.ready = true
                 this.#emitter.emit('ready')
             })
             .catch(() => {
-                if (this.disconnected === false) this.disconnect(DisconnectReason.ServerError)
-                else this.forceDisconnect(DisconnectReason.ServerError)
+                this.disconnect(DisconnectReason.ServerError)
             })
     }
 
@@ -64,54 +56,40 @@ export default class Client {
         this.#emitter.off(name, handler)
     }
 
-    send<TOp extends ServerOperation>(packet: Packet<TOp>) {
+    send<TOp extends ServerOperation>(packet: Omit<Packet<TOp>, 's'>, sequence?: number) {
         return new Promise<void>((resolve, reject) => {
-            try {
-                this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
-                this.#socket.send(serializePacket(packet))
-                resolve()
-            } catch (e) {
-                reject(e)
-            }
+            this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
+            this.#socket.send(
+                serializePacket({ ...packet, s: sequence ?? this.currentSequence++ } as Packet<TOp>),
+                err => (err ? reject(err) : resolve()),
+            )
         })
     }
 
-    async disconnect(reason: DisconnectReason = DisconnectReason.Generic) {
+    async disconnect(reason: DisconnectReason | number = DisconnectReason.Generic) {
         this.#throwIfDisconnected('Cannot disconnect client that has already disconnected')
 
-        try {
-            await this.send({ op: ServerOperation.Disconnect, d: { reason } })
-        } catch (err) {
-            throw new Error(`Cannot send disconnect reason to client ${this.id}: ${err}`)
-        } finally {
-            this.forceDisconnect(reason)
-        }
-    }
-
-    forceDisconnect(reason: DisconnectReason = DisconnectReason.Generic) {
-        if (this.disconnected !== false) return
-
-        // It's so weird because if I moved this down a few lines
-        // it would just fire the disconnect event twice because of a race condition
-        this.disconnected = reason
-        this.ready = false
-
-        if (this.#hbTimeout) clearTimeout(this.#hbTimeout)
-        this.#socket.close()
-
-        this.#emitter.emit('disconnect', reason)
+        this.#socket.close(reason)
+        this._handleDisconnect(reason)
     }
 
     #throwIfDisconnected(errorMessage: string) {
         if (this.disconnected !== false) throw new Error(errorMessage)
 
         if (this.#socket.readyState !== this.#socket.OPEN) {
-            this.forceDisconnect(DisconnectReason.Generic)
+            this.#socket.close(DisconnectReason.NoOpenSocket)
             throw new Error(errorMessage)
         }
     }
 
-    #listen() {
+    protected _handleDisconnect(code: number) {
+        this.disconnected = code
+        this.ready = false
+
+        this.#emitter.emit('disconnect', code)
+    }
+
+    protected _listen() {
         this.#socket.on('message', data => {
             this.#emitter.emit('message', data)
             try {
@@ -136,38 +114,6 @@ export default class Client {
         })
     }
 
-    #listenHeartbeat() {
-        this.lastHeartbeat = Date.now()
-        this.#startHeartbeatTimeout()
-
-        this.on('heartbeat', () => {
-            this.lastHeartbeat = Date.now()
-            this.#hbTimeout.refresh()
-
-            this.send({
-                op: ServerOperation.HeartbeatAck,
-                d: {
-                    nextHeartbeat: this.lastHeartbeat + this.heartbeatInterval,
-                },
-            }).catch(() => {})
-        })
-    }
-
-    #startHeartbeatTimeout() {
-        this.#hbTimeout = setTimeout(() => {
-            if (Date.now() - this.lastHeartbeat > 0) {
-                // TODO: put into config
-                // 5000 is extra time to account for latency
-                const interval = setTimeout(() => this.disconnect(DisconnectReason.TimedOut), 5000)
-
-                this.once('heartbeat', () => clearTimeout(interval))
-                // This should never happen but it did in my testing so I'm adding this just in case
-                this.once('disconnect', () => clearTimeout(interval))
-                // Technically we don't have to do this, but JUST IN CASE!
-            } else this.#hbTimeout.refresh()
-        }, this.heartbeatInterval)
-    }
-
     protected _toBuffer(data: RawData) {
         if (data instanceof Buffer) return data
         if (data instanceof ArrayBuffer) return Buffer.from(data)
@@ -178,7 +124,6 @@ export default class Client {
 export interface ClientOptions {
     id: string
     socket: WebSocket
-    heartbeatInterval?: number
 }
 
 export type ClientPacketObject<TOp extends ClientOperation> = Packet<TOp> & {

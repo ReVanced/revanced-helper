@@ -3,29 +3,33 @@
  */
 enum DisconnectReason {
     /**
-     * Unknown reason
+     * The client disconnected on its own (**CLIENT-ONLY**)
      */
-    Generic = 1,
-    /**
-     * The client did not respond in time
-     */
-    TimedOut = 2,
+    PlannedDisconnect = 1000,
     /**
      * The client sent an invalid packet (unserializable or invalid JSON)
      */
-    InvalidPacket = 3,
+    InvalidPacket = 1007,
     /**
      * The server has encountered an internal error
      */
-    ServerError = 4,
+    ServerError = 1011,
     /**
-     * The client had never connected to the server (**CLIENT-ONLY**)
+     * Unknown reason
      */
-    NeverConnected = 5,
+    Generic = 4000,
     /**
-     * The client disconnected on its own (**CLIENT-ONLY**)
+     * The client did not respond with a heartbeat in time
      */
-    PlannedDisconnect = 6,
+    TimedOut = 4001,
+    /**
+     * The receiving end didn't have an open socket
+     */
+    NoOpenSocket = 4003,
+    /**
+     * The client was not ready in time (**CLIENT-ONLY**)
+     */
+    TooSlow = 4002,
 }
 
 export default DisconnectReason

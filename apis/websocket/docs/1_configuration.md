@@ -7,7 +7,6 @@ This is the default configuration (provided in [config.json](../config.json)):
     "address": "127.0.0.1",
     "port": 3000,
     "ocrConcurrentQueues": 1,
-    "clientHeartbeatInterval": 60000,
     "consoleLogLevel": "log"
 }
 ```
@@ -25,22 +24,18 @@ Amount of concurrent queues that can be run at a time.
 > [!WARNING]
 > Setting this too high may cause performance issues.
 
-### `config.clientHeartbeatInterval`
-
-Heartbeat interval for clients. See [**💓 Heartbeating**](./3_packets.md#💓-heartbeating).
-
-### `config.consoleLogLevel`
+### `config.logLevel`
 
 The level of logs to print to console. If the level is more important or equally important to set level, it will be forwarded to the console.
 
 The possible levels (sorted by their importance descendingly) are:
 
+-   `none` (no messages)
 -   `fatal`
 -   `error`
 -   `warn`
 -   `info`
 -   `log`
--   `trace`
 -   `debug`
 
 ## ⏭️ What's next

@@ -3,18 +3,17 @@
  */
 export enum ClientOperation {
     /**
-     * Client's heartbeat (to check if the connection is dead or not)
-     */
-    Heartbeat = 100,
-
-    /**
      * Client's request to parse text
      */
-    ParseText = 110,
+    ParseText = 100,
     /**
      * Client's request to parse image
      */
-    ParseImage = 111,
+    ParseImage = 101,
+    /**
+     * Client's request to train a message
+     */
+    TrainMessage = 102,
 }
 
 /**
@@ -22,13 +21,9 @@ export enum ClientOperation {
  */
 export enum ServerOperation {
     /**
-     * Server's acknowledgement of a client's heartbeat
-     */
-    HeartbeatAck = 1,
-    /**
      * Server's initial response to a client's connection
      */
-    Hello = 2,
+    Hello = 1,
 
     /**
      * Server's response to client's request to parse text
@@ -46,6 +41,14 @@ export enum ServerOperation {
      * Server's failure response to client's request to parse image
      */
     ParseImageFailed = 13,
+    /**
+     * Server's response to client's request to train a message
+     */
+    TrainedMessage = 14,
+    /**
+     * Server's failure response to client's request to train a message
+     */
+    TrainMessageFailed = 15,
 
     /**
      * Server's disconnect message

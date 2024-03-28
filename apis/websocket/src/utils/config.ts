@@ -7,7 +7,7 @@ const configPath = resolvePath(process.cwd(), 'config.json')
 const userConfig: Partial<Config> = existsSync(configPath)
     ? (
           await import(pathToFileURL(configPath).href, {
-              assert: {
+              with: {
                   type: 'json',
               },
           })
@@ -28,10 +28,9 @@ export const defaultConfig: Config = {
     address: '127.0.0.1',
     port: 8080,
     ocrConcurrentQueues: 1,
-    clientHeartbeatInterval: 60000,
-    consoleLogLevel: 'info',
+    logLevel: 'info',
 }
 
-export default function getConfig() {
+export function getConfig() {
     return Object.assign(defaultConfig, userConfig) satisfies Config
 }

@@ -1,13 +1,12 @@
 import {
     url,
-    AnySchema,
-    NullSchema,
-    ObjectSchema,
-    Output,
+    type AnySchema,
+    type NullSchema,
+    type ObjectSchema,
+    type Output,
     array,
     enum_,
     null_,
-    number,
     object,
     parse,
     special,
@@ -30,6 +29,8 @@ export const PacketSchema = special<Packet>(input => {
         'd' in input &&
         typeof input.d === 'object'
     ) {
+        if (input.op in ServerOperation && !('s' in input && typeof input.s === 'number')) return false
+
         try {
             parse(PacketDataSchemas[input.op as Operation], input.d)
             return true
@@ -44,14 +45,8 @@ export const PacketSchema = special<Packet>(input => {
  * Schema to validate packet data for each possible operations
  */
 export const PacketDataSchemas = {
-    [ServerOperation.Hello]: object({
-        heartbeatInterval: number(),
-    }),
-    [ServerOperation.HeartbeatAck]: object({
-        nextHeartbeat: number(),
-    }),
+    [ServerOperation.Hello]: null_(),
     [ServerOperation.ParsedText]: object({
-        id: string(),
         labels: array(
             object({
                 name: string(),
@@ -60,27 +55,25 @@ export const PacketDataSchemas = {
         ),
     }),
     [ServerOperation.ParsedImage]: object({
-        id: string(),
         text: string(),
     }),
-    [ServerOperation.ParseTextFailed]: object({
-        id: string(),
-    }),
-    [ServerOperation.ParseImageFailed]: object({
-        id: string(),
-    }),
+    [ServerOperation.ParseTextFailed]: null_(),
+    [ServerOperation.ParseImageFailed]: null_(),
     [ServerOperation.Disconnect]: object({
         reason: enum_(DisconnectReason),
     }),
+    [ServerOperation.TrainedMessage]: null_(),
+    [ServerOperation.TrainMessageFailed]: null_(),
 
-    [ClientOperation.Heartbeat]: null_(),
     [ClientOperation.ParseText]: object({
-        id: string(),
         text: string(),
     }),
     [ClientOperation.ParseImage]: object({
-        id: string(),
         image_url: string([url()]),
+    }),
+    [ClientOperation.TrainMessage]: object({
+        text: string(),
+        label: string(),
     }),
 } as const satisfies Record<
     Operation,
@@ -88,7 +81,12 @@ export const PacketDataSchemas = {
     ObjectSchema<any> | AnySchema | NullSchema
 >
 
-export type Packet<TOp extends Operation = Operation> = {
+export type Packet<TOp extends Operation = Operation> = TOp extends ServerOperation
+    ? PacketWithSequenceNumber<TOp>
+    : Omit<PacketWithSequenceNumber<TOp>, 's'>
+
+type PacketWithSequenceNumber<TOp extends Operation> = {
     op: TOp
     d: Output<(typeof PacketDataSchemas)[TOp]>
+    s: number
 }

@@ -1,3 +1,3 @@
-export * from './constants/index'
-export * from './schemas/index'
-export * from './utils/index'
+export * from './constants'
+export * from './schemas'
+export * from './utils'

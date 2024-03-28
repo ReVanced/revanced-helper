@@ -1,5 +1,10 @@
-import { ClientOperation, Packet, ServerOperation } from '@revanced/bot-shared'
-import { ClientWebSocketManager, ClientWebSocketEvents, ClientWebSocketManagerOptions } from './ClientWebSocket'
+import { ClientOperation, ServerOperation } from '@revanced/bot-shared'
+import { awaitPacket } from 'src/utils/packets'
+import {
+    type ClientWebSocketEvents,
+    ClientWebSocketManager,
+    type ClientWebSocketManagerOptions,
+} from './ClientWebSocket'
 
 /**
  * The client that connects to the API.
@@ -7,7 +12,6 @@ import { ClientWebSocketManager, ClientWebSocketEvents, ClientWebSocketManagerOp
 export default class Client {
     ready = false
     ws: ClientWebSocketManager
-    #parseId = 0
 
     constructor(options: ClientOptions) {
         this.ws = new ClientWebSocketManager(options.api.websocket)
@@ -15,7 +19,7 @@ export default class Client {
             this.ready = true
         })
         this.ws.on('disconnect', () => {
-
+            this.ready = false
         })
     }
 
@@ -35,36 +39,34 @@ export default class Client {
     async parseText(text: string) {
         this.#throwIfNotReady()
 
-        const currentId = (this.#parseId++).toString()
+        return await this.ws
+            .send({
+                op: ClientOperation.ParseText,
+                d: {
+                    text,
+                },
+            })
+            .then(() => {
+                // Since we don't have heartbeats anymore, this is fine.
+                // But if we add anything similar, this will cause another race condition
+                // To fix this, we can try adding a instanced function that would return the currentSequence
+                // and it would be updated every time a "heartbeat ack" packet is received
+                const expectedNextSeq = this.ws.currentSequence + 1
+                const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
+                    awaitPacket(this.ws, op, expectedNextSeq, timeout)
 
-        this.ws.send({
-            op: ClientOperation.ParseText,
-            d: {
-                text,
-                id: currentId,
-            },
-        })
-
-        type CorrectPacket = Packet<ServerOperation.ParsedText>
-
-        const promise = new Promise<CorrectPacket['d']>((rs, rj) => {
-            const parsedTextListener = (packet: CorrectPacket) => {
-                if (packet.d.id !== currentId) return
-                this.ws.off('parsedText', parsedTextListener)
-                rs(packet.d)
-            }
-
-            const parseTextFailedListener = (packet: Packet<ServerOperation.ParseTextFailed>) => {
-                if (packet.d.id !== currentId) return
-                this.ws.off('parseTextFailed', parseTextFailedListener)
-                rj()
-            }
-
-            this.ws.on('parsedText', parsedTextListener)
-            this.ws.on('parseTextFailed', parseTextFailedListener)
-        })
-
-        return await promise
+                return Promise.race([
+                    awaitPkt(ServerOperation.ParsedText),
+                    awaitPkt(ServerOperation.ParseTextFailed, this.ws.timeout + 5000),
+                ])
+                    .then(pkt => {
+                        if (pkt.op === ServerOperation.ParsedText) return pkt.d
+                        throw new Error('Failed to parse text, the API encountered an error')
+                    })
+                    .catch(() => {
+                        throw new Error('Failed to parse text, the API did not respond in time')
+                    })
+            })
     }
 
     /**
@@ -75,36 +77,62 @@ export default class Client {
     async parseImage(url: string) {
         this.#throwIfNotReady()
 
-        const currentId = (this.#parseId++).toString()
+        return await this.ws
+            .send({
+                op: ClientOperation.ParseImage,
+                d: {
+                    image_url: url,
+                },
+            })
+            .then(() => {
+                // See line 48
+                const expectedNextSeq = this.ws.currentSequence + 1
+                const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
+                    awaitPacket(this.ws, op, expectedNextSeq, timeout)
 
-        this.ws.send({
-            op: ClientOperation.ParseImage,
-            d: {
-                image_url: url,
-                id: currentId,
-            },
-        })
+                return Promise.race([
+                    awaitPkt(ServerOperation.ParsedImage),
+                    awaitPkt(ServerOperation.ParseImageFailed, this.ws.timeout + 5000),
+                ])
+                    .then(pkt => {
+                        if (pkt.op === ServerOperation.ParsedImage) return pkt.d
+                        throw new Error('Failed to parse image, the API encountered an error')
+                    })
+                    .catch(() => {
+                        throw new Error('Failed to parse image, the API did not respond in time')
+                    })
+            })
+    }
 
-        type CorrectPacket = Packet<ServerOperation.ParsedImage>
+    async trainMessage(text: string, label: string) {
+        this.#throwIfNotReady()
 
-        const promise = new Promise<CorrectPacket['d']>((rs, rj) => {
-            const parsedImageListener = (packet: CorrectPacket) => {
-                if (packet.d.id !== currentId) return
-                this.ws.off('parsedImage', parsedImageListener)
-                rs(packet.d)
-            }
+        return await this.ws
+            .send({
+                op: ClientOperation.TrainMessage,
+                d: {
+                    label,
+                    text,
+                },
+            })
+            .then(() => {
+                // See line 48
+                const expectedNextSeq = this.ws.currentSequence + 1
+                const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
+                    awaitPacket(this.ws, op, expectedNextSeq, timeout)
 
-            const parseImageFailedListener = (packet: Packet<ServerOperation.ParseImageFailed>) => {
-                if (packet.d.id !== currentId) return
-                this.ws.off('parseImageFailed', parseImageFailedListener)
-                rj()
-            }
-
-            this.ws.on('parsedImage', parsedImageListener)
-            this.ws.on('parseImageFailed', parseImageFailedListener)
-        })
-
-        return await promise
+                return Promise.race([
+                    awaitPkt(ServerOperation.TrainedMessage),
+                    awaitPkt(ServerOperation.TrainMessageFailed, this.ws.timeout + 5000),
+                ])
+                    .then(pkt => {
+                        if (pkt.op === ServerOperation.TrainedMessage) return
+                        throw new Error('Failed to train message, the API encountered an error')
+                    })
+                    .catch(() => {
+                        throw new Error('Failed to train message, the API did not respond in time')
+                    })
+            })
     }
 
     /**
@@ -135,12 +163,16 @@ export default class Client {
      * @param handler The event handler
      * @returns The event handler function
      */
-    once<TOpName extends keyof ClientWebSocketEvents>(
-        name: TOpName,
-        handler: ClientWebSocketEvents[TOpName],
-    ) {
+    once<TOpName extends keyof ClientWebSocketEvents>(name: TOpName, handler: ClientWebSocketEvents[TOpName]) {
         this.ws.once(name, handler)
         return handler
+    }
+
+    /**
+     * Disconnects the client from the API
+     */
+    disconnect() {
+        this.ws.disconnect()
     }
 
     #throwIfNotReady() {

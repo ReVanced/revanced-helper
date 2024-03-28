@@ -1,1 +1,1 @@
-export * from './classes/index'
+export * from './classes'

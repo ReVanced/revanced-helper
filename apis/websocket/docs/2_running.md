@@ -36,7 +36,7 @@ bun bundle
 ```
 
 The files will be placed in the `dist` directory. **Configurations and `.env` files will NOT be copied automatically.**  
-You can run these files after using a runtime, eg. `bun run .` or `node .`.
+You can run these files using the command `bun run index.js`.
 
 ## ⏭️ What's next
 
