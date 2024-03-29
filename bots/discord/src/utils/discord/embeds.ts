@@ -1,4 +1,4 @@
-import { DefaultEmbedColor, ReVancedLogoURL } from '$/constants'
+import { DefaultEmbedColor, MessageScanHumanizedMode, ReVancedLogoURL } from '$/constants'
 import { EmbedBuilder } from 'discord.js'
 import type { ConfigMessageScanResponseMessage } from '../../../config.example'
 
@@ -26,11 +26,19 @@ export const createSuccessEmbed = (title: string, description?: string) =>
         false,
     )
 
-export const createMessageScanResponseEmbed = (response: ConfigMessageScanResponseMessage) => {
+export const createMessageScanResponseEmbed = (
+    response: ConfigMessageScanResponseMessage,
+    mode: 'ocr' | 'nlp' | 'match',
+) => {
     const embed = new EmbedBuilder().setTitle(response.title)
 
     if (response.description) embed.setDescription(response.description)
     if (response.fields) embed.addFields(response.fields)
+
+    embed.setFooter({
+        text: `ReVanced • Done via ${MessageScanHumanizedMode[mode]}`,
+        iconURL: ReVancedLogoURL,
+    })
 
     return applyCommonStyles(embed)
 }

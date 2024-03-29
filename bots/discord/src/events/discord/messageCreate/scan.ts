@@ -23,7 +23,7 @@ on('messageCreate', async (ctx, msg) => {
             logger.debug('Response found')
 
             const reply = await msg.reply({
-                embeds: [createMessageScanResponseEmbed(response)],
+                embeds: [createMessageScanResponseEmbed(response, label ? 'nlp' : 'match')],
             })
 
             if (label)
@@ -52,12 +52,12 @@ on('messageCreate', async (ctx, msg) => {
 
             try {
                 const { text: content } = await api.client.parseImage(attachment.url)
-                const { response } = await getResponseFromContent(content, ctx)
+                const { response } = await getResponseFromContent(content, ctx, true)
 
                 if (response) {
                     logger.debug(`Response found for attachment: ${attachment.url}`)
                     await msg.reply({
-                        embeds: [createMessageScanResponseEmbed(response)],
+                        embeds: [createMessageScanResponseEmbed(response, 'ocr')],
                     })
 
                     break

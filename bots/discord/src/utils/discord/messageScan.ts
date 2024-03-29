@@ -6,6 +6,7 @@ import { createMessageScanResponseEmbed } from './embeds'
 export const getResponseFromContent = async (
     content: string,
     { api, logger, config: { messageScan: config } }: typeof import('src/context'),
+    ocrMode = false,
 ) => {
     if (!config || !config.responses) {
         logger.warn('No message scan config found')
@@ -21,12 +22,22 @@ export const getResponseFromContent = async (
     const firstLabelIndexes: number[] = []
 
     // Test if all regexes before a label trigger is matched
-    for (const trigger of config.responses) {
-        const { triggers, response: resp } = trigger
+    for (let i = 0; i < config.responses.length; i++) {
+        const trigger = config.responses[i]!
+
+        const { triggers, ocrTriggers, response: resp } = trigger
         if (response) break
 
-        for (let i = 0; i < triggers.length; i++) {
-            const trigger = triggers[i]!
+        if (ocrMode && ocrTriggers)
+            for (const regex of ocrTriggers)
+                if (regex.test(content)) {
+                    logger.debug(`Message matched regex (OCR mode): ${regex.source}`)
+                    response = resp
+                    break
+                }
+
+        for (let j = 0; j < triggers.length; j++) {
+            const trigger = triggers[j]!
 
             if (trigger instanceof RegExp) {
                 if (trigger.test(content)) {
@@ -35,14 +46,14 @@ export const getResponseFromContent = async (
                     break
                 }
             } else {
-                firstLabelIndexes.push(i)
+                firstLabelIndexes[i] = j
                 break
             }
         }
     }
 
     // If none of the regexes match, we can search for labels immediately
-    if (!response) {
+    if (!response && !ocrMode) {
         const scan = await api.client.parseText(content)
         if (scan.labels.length) {
             const matchedLabel = scan.labels[0]!
@@ -129,7 +140,7 @@ export const handleUserResponseCorrection = async (
     if (response.label !== label) {
         db.labeledResponses.edit(response.reply, { label, correctedBy: user.id })
         await reply.edit({
-            embeds: [createMessageScanResponseEmbed(correctLabelResponse.response)],
+            embeds: [createMessageScanResponseEmbed(correctLabelResponse.response, 'nlp')],
         })
     }
 

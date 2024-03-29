@@ -4,6 +4,12 @@ export const MessageScanLabeledResponseReactions = {
     delete: '❌',
 } as const
 
+export const MessageScanHumanizedMode = {
+    ocr: 'image recognition',
+    nlp: 'text analysis',
+    match: 'pattern matching',
+} as const
+
 export const DefaultEmbedColor = '#4E98F0'
 export const ReVancedLogoURL =
     'https://media.discordapp.net/attachments/1095487869923119144/1115436493050224660/revanced-logo.png'
