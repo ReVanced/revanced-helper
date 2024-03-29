@@ -52,7 +52,7 @@ export class BasicDatabase<T extends Record<string, BasicSQLBindings>> {
     }
 
     #encodeValue(value: unknown) {
-        if (typeof value === 'string') return `'${value}'`
+        if (typeof value === 'string') return `'${value.replaceAll("'", "\\'")}'`
         if (typeof value === 'number') return value
         if (typeof value === 'boolean') return value ? 1 : 0
         if (value === null) return 'NULL'
