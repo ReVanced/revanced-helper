@@ -1,9 +1,9 @@
 import type { Command } from '$commands'
 import { listAllFilesRecursive } from '$utils/fs'
 
-export const loadCommands = async () => {
+export const loadCommands = async (dir: string) => {
     const commandsMap: Record<string, Command> = {}
-    const files = await listAllFilesRecursive('src/commands')
+    const files = listAllFilesRecursive(dir)
     const commands = await Promise.all(
         files.map(async file => {
             const command = await import(file)

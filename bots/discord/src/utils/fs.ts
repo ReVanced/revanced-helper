@@ -1,17 +1,21 @@
-import { join } from 'path'
-import { readdir, stat } from 'fs/promises'
+import { readdirSync, statSync } from 'fs'
+import { dirname, join } from 'path'
+import { fileURLToPath } from 'bun'
 
-export async function listAllFilesRecursive(dir: string): Promise<string[]> {
-    const files = await readdir(dir)
+export const listAllFilesRecursive = (dir: string): string[] => {
+    const files = readdirSync(dir)
     const result: string[] = []
     for (const file of files) {
         const filePath = join(dir, file)
-        const fileStat = await stat(filePath)
+        const fileStat = statSync(filePath)
         if (fileStat.isDirectory()) {
-            result.push(...(await listAllFilesRecursive(filePath)))
+            result.push(...listAllFilesRecursive(filePath))
         } else {
             result.push(filePath)
         }
     }
     return result
 }
+
+export const pathJoinCurrentDir = (importMetaUrl: string, ...objects: [string, ...string[]]) =>
+    join(dirname(fileURLToPath(importMetaUrl)), ...objects)

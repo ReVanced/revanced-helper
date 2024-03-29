@@ -1,16 +1,17 @@
-import { listAllFilesRecursive } from '$utils/fs'
+// import { listAllFilesRecursive, pathJoinCurrentDir } from '$utils/fs'
 import { getMissingEnvironmentVariables } from '@revanced/bot-shared'
 import { api, discord, logger } from './context'
+import { listAllFilesRecursive, pathJoinCurrentDir } from './utils/fs' with { type: 'macro' }
 
-for (const apiEvents of await listAllFilesRecursive('src/events/api')) {
-    await import(apiEvents)
+for (const event of listAllFilesRecursive(pathJoinCurrentDir(import.meta.url, 'events', 'api'))) {
+    await import(event)
 }
 
 const { client: apiClient } = api
 await apiClient.ws.connect()
 
-for (const discordEvents of await listAllFilesRecursive('src/events/discord')) {
-    await import(discordEvents)
+for (const event of listAllFilesRecursive(pathJoinCurrentDir(import.meta.url, 'events', 'discord'))) {
+    await import(event)
 }
 
 const { client: discordClient } = discord
