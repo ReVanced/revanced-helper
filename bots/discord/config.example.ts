@@ -66,7 +66,13 @@ export type ConfigMessageScanResponse = {
 }
 
 export type ConfigMessageScanResponseLabelConfig = {
+    /**
+     * Label name
+     */
     label: string
+    /**
+     * Confidence threshold
+     */
     threshold: number
 }
 
