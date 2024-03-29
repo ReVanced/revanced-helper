@@ -3,11 +3,11 @@ import { api } from '../../context'
 
 const { client } = api
 
-export function on<Event extends EventName>(event: Event, listener: ListenerOf<Event>) {
+export const on = <Event extends EventName>(event: Event, listener: ListenerOf<Event>) => {
     client.on(event, listener)
 }
 
-export function once<Event extends EventName>(event: Event, listener: ListenerOf<Event>) {
+export const once = <Event extends EventName>(event: Event, listener: ListenerOf<Event>) => {
     client.once(event, listener)
 }
 
