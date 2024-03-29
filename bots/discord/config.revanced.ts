@@ -177,6 +177,7 @@ export default {
                         threshold: 0.85,
                     },
                 ],
+                ocrTriggers: [/is not installed/],
                 response: {
                     title: 'Why does YouTube say, I am offline ❓',
                     description:
@@ -224,21 +225,6 @@ export default {
                         {
                             name: '🔸 Regarding your question',
                             value: 'Please refer to <#953993848374325269> `32`.',
-                        },
-                    ],
-                },
-            },
-            {
-                triggers: [],
-                ocrTriggers: [/is not installed/],
-                response: {
-                    title: 'How do I download videos on YouTube ❓',
-                    description:
-                        'You might have asked a question that has already been answered in <#953993848374325269>. Make sure to read it as it will answer a lot of your questions, guaranteed.',
-                    fields: [
-                        {
-                            name: '🔸 Regarding your question',
-                            value: 'In order to be able to download videos on YouTube without YouTube Premium, you can patch YouTube with the `External downloads` patch. You can configure the downloader in the settings of the patched app. NewPipe is the default downloader. Please refer to <#953993848374325269> `24`.',
                         },
                     ],
                 },
