@@ -1,3 +1,4 @@
+import { createStackTraceEmbed } from '$/utils/discord/embeds'
 import { PermissionFlagsBits, SlashCommandBuilder, type TextBasedChannel } from 'discord.js'
 import type { Command } from '.'
 
@@ -48,7 +49,9 @@ export default {
                 ephemeral: true,
             })
         } catch (e) {
-            await interaction.reply({})
+            await interaction.reply({
+                embeds: [createStackTraceEmbed(e)],
+            })
         }
     },
 } satisfies Command
