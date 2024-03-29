@@ -93,6 +93,9 @@ Whether to use whitelist (`true`) or blacklist (`false`) mode.
 An array containing response configurations. A response can be triggered by multiple ways[^1], which can be specified in the `response.triggers` field.
 The `response` field contains the embed data that the bot should send. If it is set to `null`, the bot will not send a response or delete the current response if editing.
 
+> [!NOTE]  
+> If you want only OCR results to match a certain regular expression, you can put them into the `response.ocrTriggers` array.
+
 ```ts
 {
     triggers: [
