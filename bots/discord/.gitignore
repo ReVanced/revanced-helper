@@ -174,5 +174,8 @@ dist
 # Finder (MacOS) folder config
 .DS_Store
 
+# Config
+config.ts
+
 # DB
 *.db

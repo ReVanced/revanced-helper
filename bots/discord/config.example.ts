@@ -47,6 +47,9 @@ export type Config = {
         humanCorrections: {
             falsePositiveLabel: string
             allowUsers?: string[]
+            /**
+             * Match mode is set to Any
+             */
             memberRequirements?: {
                 permissions?: bigint
                 roles?: string[]
@@ -62,6 +65,10 @@ export type Config = {
 
 export type ConfigMessageScanResponse = {
     triggers: Array<RegExp | ConfigMessageScanResponseLabelConfig>
+    /**
+     * Extra triggers for text done via OCR
+     */
+    ocrTriggers?: Array<RegExp>
     response: ConfigMessageScanResponseMessage | null
 }
 
