@@ -4,7 +4,7 @@ import { createLogger } from '@revanced/bot-shared'
 import { ActivityType, Client as DiscordClient, Partials } from 'discord.js'
 import config from '../config'
 import { LabeledResponseDatabase } from './classes/Database'
-import { pathJoinCurrentDir } from './utils/fs' with { type: 'macro' }
+import { pathJoinCurrentDir } from './utils/fs'
 
 export { config }
 export const logger = createLogger({
