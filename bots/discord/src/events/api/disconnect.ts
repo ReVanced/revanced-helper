@@ -18,7 +18,7 @@ on('disconnect', (reason, msg) => {
 
     // TODO: move to config
     if (api.disconnectCount >= 3) {
-        console.error(new Error('Disconnected from bot API too many times'))
+        console.error('Disconnected from bot API too many times')
         // We don't want the process hanging
         process.exit(1)
     }

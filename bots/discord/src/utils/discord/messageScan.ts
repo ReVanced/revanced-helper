@@ -54,6 +54,7 @@ export const getResponseFromContent = async (
 
     // If none of the regexes match, we can search for labels immediately
     if (!response && !ocrMode) {
+        logger.debug('No match from before regexes, doing NLP')
         const scan = await api.client.parseText(content)
         if (scan.labels.length) {
             const matchedLabel = scan.labels[0]!
@@ -82,7 +83,8 @@ export const getResponseFromContent = async (
     }
 
     // If we still don't have a label, we can match all regexes after the initial label trigger
-    if (!response)
+    if (!response) {
+        logger.debug('No match from NLP, doing after regexes')
         for (let i = 0; i < config.responses.length; i++) {
             const { triggers, response: resp } = config.responses[i]!
             const firstLabelIndex = firstLabelIndexes[i] ?? -1
@@ -99,6 +101,7 @@ export const getResponseFromContent = async (
                 }
             }
         }
+    }
 
     return {
         response,
