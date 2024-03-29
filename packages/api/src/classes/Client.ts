@@ -39,33 +39,31 @@ export default class Client {
     async parseText(text: string) {
         this.#throwIfNotReady()
 
-        return await this.ws
-            .send({
-                op: ClientOperation.ParseText,
-                d: {
-                    text,
-                },
-            })
-            .then(() => {
-                // Since we don't have heartbeats anymore, this is fine.
-                // But if we add anything similar, this will cause another race condition
-                // To fix this, we can try adding a instanced function that would return the currentSequence
-                // and it would be updated every time a "heartbeat ack" packet is received
-                const expectedNextSeq = this.ws.currentSequence + 1
-                const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
-                    awaitPacket(this.ws, op, expectedNextSeq, timeout)
+        this.ws.send({
+            op: ClientOperation.ParseText,
+            d: {
+                text,
+            },
+        })
 
-                return Promise.race([
-                    awaitPkt(ServerOperation.ParsedText),
-                    awaitPkt(ServerOperation.ParseTextFailed, this.ws.timeout + 5000),
-                ])
-                    .then(pkt => {
-                        if (pkt.op === ServerOperation.ParsedText) return pkt.d
-                        throw new Error('Failed to parse text, the API encountered an error')
-                    })
-                    .catch(() => {
-                        throw new Error('Failed to parse text, the API did not respond in time')
-                    })
+        // Since we don't have heartbeats anymore, this is fine.
+        // But if we add anything similar, this will cause another race condition
+        // To fix this, we can try adding a instanced function that would return the currentSequence
+        // and it would be updated every time a "heartbeat ack" packet is received
+        const expectedNextSeq = this.ws.currentSequence + 1
+        const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
+            awaitPacket(this.ws, op, expectedNextSeq, timeout)
+
+        return Promise.race([
+            awaitPkt(ServerOperation.ParsedText),
+            awaitPkt(ServerOperation.ParseTextFailed, this.ws.timeout + 5000),
+        ])
+            .then(pkt => {
+                if (pkt.op === ServerOperation.ParsedText) return pkt.d
+                throw new Error('Failed to parse text, the API encountered an error')
+            })
+            .catch(() => {
+                throw new Error('Failed to parse text, the API did not respond in time')
             })
     }
 
@@ -77,61 +75,57 @@ export default class Client {
     async parseImage(url: string) {
         this.#throwIfNotReady()
 
-        return await this.ws
-            .send({
-                op: ClientOperation.ParseImage,
-                d: {
-                    image_url: url,
-                },
-            })
-            .then(() => {
-                // See line 48
-                const expectedNextSeq = this.ws.currentSequence + 1
-                const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
-                    awaitPacket(this.ws, op, expectedNextSeq, timeout)
+        this.ws.send({
+            op: ClientOperation.ParseImage,
+            d: {
+                image_url: url,
+            },
+        })
 
-                return Promise.race([
-                    awaitPkt(ServerOperation.ParsedImage),
-                    awaitPkt(ServerOperation.ParseImageFailed, this.ws.timeout + 5000),
-                ])
-                    .then(pkt => {
-                        if (pkt.op === ServerOperation.ParsedImage) return pkt.d
-                        throw new Error('Failed to parse image, the API encountered an error')
-                    })
-                    .catch(() => {
-                        throw new Error('Failed to parse image, the API did not respond in time')
-                    })
+        // See line 48
+        const expectedNextSeq = this.ws.currentSequence + 1
+        const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
+            awaitPacket(this.ws, op, expectedNextSeq, timeout)
+
+        return Promise.race([
+            awaitPkt(ServerOperation.ParsedImage),
+            awaitPkt(ServerOperation.ParseImageFailed, this.ws.timeout + 5000),
+        ])
+            .then(pkt => {
+                if (pkt.op === ServerOperation.ParsedImage) return pkt.d
+                throw new Error('Failed to parse image, the API encountered an error')
+            })
+            .catch(() => {
+                throw new Error('Failed to parse image, the API did not respond in time')
             })
     }
 
     async trainMessage(text: string, label: string) {
         this.#throwIfNotReady()
 
-        return await this.ws
-            .send({
-                op: ClientOperation.TrainMessage,
-                d: {
-                    label,
-                    text,
-                },
-            })
-            .then(() => {
-                // See line 48
-                const expectedNextSeq = this.ws.currentSequence + 1
-                const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
-                    awaitPacket(this.ws, op, expectedNextSeq, timeout)
+        this.ws.send({
+            op: ClientOperation.TrainMessage,
+            d: {
+                label,
+                text,
+            },
+        })
 
-                return Promise.race([
-                    awaitPkt(ServerOperation.TrainedMessage),
-                    awaitPkt(ServerOperation.TrainMessageFailed, this.ws.timeout + 5000),
-                ])
-                    .then(pkt => {
-                        if (pkt.op === ServerOperation.TrainedMessage) return
-                        throw new Error('Failed to train message, the API encountered an error')
-                    })
-                    .catch(() => {
-                        throw new Error('Failed to train message, the API did not respond in time')
-                    })
+        // See line 48
+        const expectedNextSeq = this.ws.currentSequence + 1
+        const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
+            awaitPacket(this.ws, op, expectedNextSeq, timeout)
+
+        return Promise.race([
+            awaitPkt(ServerOperation.TrainedMessage),
+            awaitPkt(ServerOperation.TrainMessageFailed, this.ws.timeout + 5000),
+        ])
+            .then(pkt => {
+                if (pkt.op === ServerOperation.TrainedMessage) return
+                throw new Error('Failed to train message, the API encountered an error')
+            })
+            .catch(() => {
+                throw new Error('Failed to train message, the API did not respond in time')
             })
     }
 

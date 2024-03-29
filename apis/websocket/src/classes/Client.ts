@@ -34,14 +34,10 @@ export default class Client {
             op: ServerOperation.Hello,
             d: null,
         })
-            .then(() => {
-                this._listen()
-                this.ready = true
-                this.#emitter.emit('ready')
-            })
-            .catch(() => {
-                this.disconnect(DisconnectReason.ServerError)
-            })
+
+        this._listen()
+        this.ready = true
+        this.#emitter.emit('ready')
     }
 
     on<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
@@ -57,12 +53,9 @@ export default class Client {
     }
 
     send<TOp extends ServerOperation>(packet: Omit<Packet<TOp>, 's'>, sequence?: number) {
-        return new Promise<void>((resolve, reject) => {
-            this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
-            this.#socket.send(
-                serializePacket({ ...packet, s: sequence ?? this.currentSequence++ } as Packet<TOp>),
-                err => (err ? reject(err) : resolve()),
-            )
+        this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
+        this.#socket.send(serializePacket({ ...packet, s: sequence ?? this.currentSequence++ } as Packet<TOp>), err => {
+            throw err
         })
     }
 

@@ -49,6 +49,7 @@ export class ClientWebSocketManager {
                 }, this.timeout)
 
                 this.#socket.on('open', () => {
+                    this.disconnected = false
                     clearTimeout(timeout)
                     this.#listen()
                     rs()
@@ -107,9 +108,9 @@ export class ClientWebSocketManager {
     send<TOp extends ClientOperation>(packet: Packet<TOp>) {
         this.#throwIfDisconnected('Cannot send a packet when already disconnected from the server')
 
-        return new Promise<void>((resolve, reject) =>
-            this.#socket.send(serializePacket(packet), err => (err ? reject(err) : resolve())),
-        )
+        this.#socket.send(serializePacket(packet), err => {
+            throw err
+        })
     }
 
     /**
