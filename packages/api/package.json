@@ -19,9 +19,9 @@
     "url": "git+https://github.com/revanced/revanced-helper.git",
     "directory": "packages/api"
   },
-  "author": "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+  "author": "Palm <palmdevelops@gmail.com> (https://github.com/PalmDevs)",
   "contributors": [
-    "Palm <palmpasuthorn@gmail.com> (https://github.com/PalmDevs)",
+    "Palm <palmdevelops@gmail.com> (https://github.com/PalmDevs)",
     "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
   ],
   "license": "GPL-3.0-or-later",

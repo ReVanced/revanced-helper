@@ -1,4 +1,4 @@
-import { createErrorEmbed } from '$utils/discord/embeds'
+import { createErrorEmbed, createStackTraceEmbed } from '$utils/discord/embeds'
 import { on } from '$utils/discord/events'
 
 export default on('interactionCreate', async (context, interaction) => {
@@ -66,12 +66,7 @@ export default on('interactionCreate', async (context, interaction) => {
     } catch (err) {
         logger.error(`Error while executing command ${interaction.commandName}:`, err)
         await interaction.reply({
-            embeds: [
-                createErrorEmbed(
-                    'An error occurred while executing this command',
-                    'Please report this to the developers.',
-                ),
-            ],
+            embeds: [createStackTraceEmbed(err)],
             ephemeral: true,
         })
     }
