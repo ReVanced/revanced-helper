@@ -21,6 +21,5 @@
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "allowImportingTsExtensions": false
-  },
-  "exclude": ["**/dist"]
+  }
 }

@@ -40,21 +40,21 @@ export default class Client {
         this.#emitter.emit('ready')
     }
 
-    on<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
+    on<T extends keyof ClientEventHandlers>(name: T, handler: ClientEventHandlers[typeof name]) {
         this.#emitter.on(name, handler)
     }
 
-    once<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
+    once<T extends keyof ClientEventHandlers>(name: T, handler: ClientEventHandlers[typeof name]) {
         this.#emitter.once(name, handler)
     }
 
-    off<TOpName extends keyof ClientEventHandlers>(name: TOpName, handler: ClientEventHandlers[typeof name]) {
+    off<T extends keyof ClientEventHandlers>(name: T, handler: ClientEventHandlers[typeof name]) {
         this.#emitter.off(name, handler)
     }
 
-    send<TOp extends ServerOperation>(packet: Omit<Packet<TOp>, 's'>, sequence?: number) {
+    send<T extends ServerOperation>(packet: Omit<Packet<T>, 's'>, sequence?: number) {
         this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
-        this.#socket.send(serializePacket({ ...packet, s: sequence ?? this.currentSequence++ } as Packet<TOp>), err => {
+        this.#socket.send(serializePacket({ ...packet, s: sequence ?? this.currentSequence++ } as Packet<T>), err => {
             throw err
         })
     }

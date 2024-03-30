@@ -11,5 +11,6 @@
     {
       "path": "./packages/api"
     }
-  ]
+  ],
+  "exclude": ["**/node_modules", "**/dist"]
 }

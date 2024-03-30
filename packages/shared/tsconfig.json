@@ -7,6 +7,5 @@
     "module": "ESNext",
     "composite": true,
     "noEmit": false
-  },
-  "exclude": ["node_modules", "dist"]
+  }
 }
