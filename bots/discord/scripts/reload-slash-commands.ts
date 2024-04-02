@@ -1,42 +1,50 @@
 import { REST } from '@discordjs/rest'
 import { getMissingEnvironmentVariables } from '@revanced/bot-shared'
 import { Routes } from 'discord-api-types/v9'
-import type { RESTGetCurrentApplicationResult, RESTPutAPIApplicationCommandsResult } from 'discord.js'
-import { config, discord } from '../src/context'
+import type {
+    RESTGetCurrentApplicationResult,
+    RESTPutAPIApplicationCommandsResult,
+    RESTPutAPIApplicationGuildCommandsResult,
+} from 'discord.js'
+import { config, discord, logger } from '../src/context'
 
 // Check if token exists
 
 const missingEnvs = getMissingEnvironmentVariables(['DISCORD_TOKEN'])
 if (missingEnvs.length) {
-    for (const env of missingEnvs) console.error(`${env} is not defined in environment variables`)
+    for (const env of missingEnvs) logger.fatal(`${env} is not defined in environment variables`)
     process.exit(1)
 }
 
-const commands = Object.values(discord.commands)
-const globalCommands = commands.filter(x => x.global && x.data.dm_permission)
-const guildCommands = commands.filter(x => !x.global)
+// Group commands by global and guild
+
+const { global: globalCommands = [], guild: guildCommands = [] } = Object.groupBy(Object.values(discord.commands), c =>
+    c.global ? 'global' : 'guild',
+)
+
+// Set commands
 
 const rest = new REST({ version: '10' }).setToken(process.env['DISCORD_TOKEN']!)
 
 try {
     const app = (await rest.get(Routes.currentApplication())) as RESTGetCurrentApplicationResult
+    const data = (await rest.put(Routes.applicationCommands(app.id), {
+        body: globalCommands.map(({ data }) => {
+            if (!data.dm_permission) data.dm_permission = true
+            logger.warn(`Command ${data.name} has no dm_permission set, forcing to true as it is a global command`)
+            return data
+        }),
+    })) as RESTPutAPIApplicationCommandsResult
 
-    if (typeof app === 'object' && app && 'id' in app && typeof app.id === 'string') {
-        const data = (await rest.put(Routes.applicationCommands(app.id), {
-            body: globalCommands.map(x => x.data),
-        })) as RESTPutAPIApplicationCommandsResult
+    logger.info(`Reloaded ${data.length} global commands`)
 
-        console.info(`Reloaded ${data.length} global commands.`)
+    for (const guildId of config.guilds) {
+        const data = (await rest.put(Routes.applicationGuildCommands(app.id, guildId), {
+            body: guildCommands.map(x => x.data),
+        })) as RESTPutAPIApplicationGuildCommandsResult
 
-        const guildCommandsMapped = guildCommands.map(x => x.data)
-        for (const guildId of config.allowedGuilds) {
-            const data = (await rest.put(Routes.applicationGuildCommands(app.id, guildId), {
-                body: guildCommandsMapped,
-            })) as RESTPutAPIApplicationCommandsResult
-
-            console.info(`Reloaded ${data.length} guild commands for guild ${guildId}.`)
-        }
+        logger.info(`Reloaded ${data.length} guild commands for guild ${guildId}`)
     }
-} catch (error) {
-    console.error(error)
+} catch (e) {
+    logger.fatal(e)
 }

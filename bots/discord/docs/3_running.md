@@ -21,4 +21,4 @@ As a workaround, you can zip up the whole project, unzip, and run it in developm
 
 The next page will tell you how to add commands and listen to events to the bot.
 
-Continue: [✨ Adding commands and listening to events](./3_commands_and_events.md)
+Continue: [✨ Adding commands and listening to events](./4_commands_and_events.md)

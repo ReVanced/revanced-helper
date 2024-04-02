@@ -1,23 +1,28 @@
 export default {
     owners: ['USER_ID_HERE'],
-    allowedGuilds: ['GUILD_ID_HERE'],
+    guilds: ['GUILD_ID_HERE'],
     messageScan: {
-        channels: ['CHANNEL_ID_HERE'],
-        roles: ['ROLE_ID_HERE'],
-        users: ['USER_ID_HERE'],
-        whitelist: false,
+        filter: {
+            channels: ['CHANNEL_ID_HERE'],
+            roles: ['ROLE_ID_HERE'],
+            users: ['USER_ID_HERE'],
+            whitelist: false,
+        },
         humanCorrections: {
             falsePositiveLabel: 'false_positive',
-            allowUsers: ['USER_ID_HERE'],
-            memberRequirements: {
-                permissions: 8n,
-                roles: ['ROLE_ID_HERE'],
+            allow: {
+                members: {
+                    permissions: 8n,
+                    roles: ['ROLE_ID_HERE'],
+                },
             },
         },
         allowedAttachmentMimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
         responses: [
             {
-                triggers: [/^regexp?$/, { label: 'label', threshold: 0.85 }],
+                triggers: {
+                    text: [/^regexp?$/, { label: 'label', threshold: 0.85 }],
+                },
                 response: {
                     title: 'Embed title',
                     description: 'Embed description',
@@ -35,28 +40,31 @@ export default {
     api: {
         websocketUrl: 'ws://127.0.0.1:3000',
     },
-} as Config
+} satisfies Config as Config
 
 export type Config = {
     owners: string[]
-    allowedGuilds: string[]
-    messageScan?: Partial<{
-        roles: string[]
-        users: string[]
-        channels: string[]
+    guilds: string[]
+    messageScan?: {
+        allowedAttachmentMimeTypes: string[]
+        filter: {
+            roles?: string[]
+            users?: string[]
+            channels?: string[]
+            whitelist: boolean
+        }
         humanCorrections: {
             falsePositiveLabel: string
-            allowUsers?: string[]
-            /**
-             * Match mode is set to Any
-             */
-            memberRequirements?: {
-                permissions?: bigint
-                roles?: string[]
+            allow?: {
+                users?: string[]
+                members?: {
+                    permissions?: bigint
+                    roles?: string[]
+                }
             }
         }
         responses: ConfigMessageScanResponse[]
-    }> & { whitelist: boolean; allowedAttachmentMimeTypes: string[] }
+    }
     logLevel: 'none' | 'error' | 'warn' | 'info' | 'log' | 'trace' | 'debug'
     api: {
         websocketUrl: string
@@ -64,11 +72,11 @@ export type Config = {
 }
 
 export type ConfigMessageScanResponse = {
-    triggers: Array<RegExp | ConfigMessageScanResponseLabelConfig>
-    /**
-     * Extra triggers for text done via OCR
-     */
-    ocrTriggers?: Array<RegExp>
+    triggers: {
+        text?: Array<RegExp | ConfigMessageScanResponseLabelConfig>
+        image?: Array<RegExp>
+    }
+    filterOverride?: NonNullable<Config['messageScan']>['filter']
     response: ConfigMessageScanResponseMessage | null
 }
 

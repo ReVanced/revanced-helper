@@ -107,4 +107,4 @@ API events are stored in [`src/events/api`](../src/events/api), and Discord even
 
 The next page will tell you how to create and interact with a database.
 
-Continue: [🫙 Storing data](./4_databases.md)
+Continue: [🫙 Storing data](./5_databases.md)

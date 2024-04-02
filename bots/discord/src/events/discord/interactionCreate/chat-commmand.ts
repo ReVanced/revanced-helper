@@ -1,3 +1,4 @@
+import CommandError from '$/classes/CommandError'
 import { createErrorEmbed, createStackTraceEmbed } from '$utils/discord/embeds'
 import { on } from '$utils/discord/events'
 
@@ -8,40 +9,46 @@ export default on('interactionCreate', async (context, interaction) => {
     const command = discord.commands[interaction.commandName]
 
     logger.debug(`Command ${interaction.commandName} being invoked by ${interaction.user.tag}`)
+    if (!command) return void logger.error(`Command ${interaction.commandName} not implemented but registered!!!`)
 
-    if (!command) {
-        logger.error(`Command ${interaction.commandName} not implemented but registered!!!`)
-        return void interaction.reply({
-            embeds: [
-                createErrorEmbed(
-                    'Command not implemented',
-                    'This command has not been implemented yet. Please report this to the developers.',
-                ),
-            ],
-            ephemeral: true,
-        })
-    }
+    const isOwner = config.owners.includes(interaction.user.id)
 
-    const userIsOwner = config.owners.includes(interaction.user.id)
-
-    if ((command.ownerOnly ?? true) && !userIsOwner)
+    /**
+     * Owner check
+     */
+    if (command.ownerOnly && !isOwner)
         return void (await interaction.reply({
             embeds: [createErrorEmbed('Massive skill issue', 'This command can only be used by the bot owners.')],
             ephemeral: true,
         }))
 
+    /**
+     * Sanity check
+     */
+    if (!command.global && !interaction.inGuild()) {
+        logger.error(`Command ${interaction.commandName} cannot be run in DMs, but was registered as global`)
+        await interaction.reply({
+            embeds: [createErrorEmbed('Cannot run that here', 'This command can only be used in a server.')],
+            ephemeral: true,
+        })
+        return
+    }
+
+    /**
+     * Permission checks
+     */
     if (interaction.inGuild()) {
         // Bot owners get bypass
-        if (command.memberRequirements && !userIsOwner) {
-            const { permissions = -1n, roles = [], mode } = command.memberRequirements
+        if (command.memberRequirements && !isOwner) {
+            const { permissions = 0n, roles = [], mode } = command.memberRequirements
 
             const member = await interaction.guild!.members.fetch(interaction.user.id)
 
             const [missingPermissions, missingRoles] = [
                 // This command is an owner-only command (the user is not an owner, checked above)
-                permissions < 0n ||
+                permissions <= 0n ||
                     // or the user doesn't have the required permissions
-                    (permissions >= 0n && !interaction.memberPermissions.has(permissions)),
+                    (permissions > 0n && !interaction.memberPermissions.has(permissions)),
 
                 // If not:
                 !roles.some(x => member.roles.cache.has(x)),
@@ -66,7 +73,7 @@ export default on('interactionCreate', async (context, interaction) => {
     } catch (err) {
         logger.error(`Error while executing command ${interaction.commandName}:`, err)
         await interaction.reply({
-            embeds: [createStackTraceEmbed(err)],
+            embeds: [err instanceof CommandError ? err.toEmbed() : createStackTraceEmbed(err)],
             ephemeral: true,
         })
     }

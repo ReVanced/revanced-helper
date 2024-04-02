@@ -1,55 +1,59 @@
 import type { LabeledResponse } from '$/classes/Database'
-import type { Config, ConfigMessageScanResponseLabelConfig, ConfigMessageScanResponseMessage } from 'config.example'
+import type {
+    Config,
+    ConfigMessageScanResponse,
+    ConfigMessageScanResponseLabelConfig,
+    ConfigMessageScanResponseMessage,
+} from 'config.example'
 import type { Message, PartialUser, User } from 'discord.js'
 import { createMessageScanResponseEmbed } from './embeds'
 
-export const getResponseFromContent = async (
+export const getResponseFromText = async (
     content: string,
-    { api, logger, config: { messageScan: config } }: typeof import('src/context'),
+    responses: ConfigMessageScanResponse[],
+    // Just to be safe that we will never use data from the context parameter
+    { api, logger }: Omit<typeof import('src/context'), 'config'>,
     ocrMode = false,
 ) => {
-    if (!config || !config.responses) {
-        logger.warn('No message scan config found')
-
-        return {
-            response: null,
-            label: undefined,
-        }
-    }
-
     let label: string | undefined
     let response: ConfigMessageScanResponseMessage | undefined | null
     const firstLabelIndexes: number[] = []
 
     // Test if all regexes before a label trigger is matched
-    for (let i = 0; i < config.responses.length; i++) {
-        const trigger = config.responses[i]!
+    for (let i = 0; i < responses.length; i++) {
+        const trigger = responses[i]!
 
-        const { triggers, ocrTriggers, response: resp } = trigger
+        // Filter override check is not neccessary here, we are already passing responses that match the filter
+        // from the messageCreate handler
+        const {
+            triggers: { text: textTriggers, image: imageTriggers },
+            response: resp,
+        } = trigger
         if (response) break
 
-        if (ocrMode && ocrTriggers)
-            for (const regex of ocrTriggers)
-                if (regex.test(content)) {
-                    logger.debug(`Message matched regex (OCR mode): ${regex.source}`)
-                    response = resp
+        if (ocrMode) {
+            if (imageTriggers)
+                for (const regex of imageTriggers)
+                    if (regex.test(content)) {
+                        logger.debug(`Message matched regex (OCR mode): ${regex.source}`)
+                        response = resp
+                        break
+                    }
+        } else
+            for (let j = 0; j < textTriggers!.length; j++) {
+                const trigger = textTriggers![j]!
+
+                if (trigger instanceof RegExp) {
+                    if (trigger.test(content)) {
+                        logger.debug(`Message matched regex (before mode): ${trigger.source}`)
+                        response = resp
+                        break
+                    }
+                } else {
+                    firstLabelIndexes[i] = j
                     break
                 }
-
-        for (let j = 0; j < triggers.length; j++) {
-            const trigger = triggers[j]!
-
-            if (trigger instanceof RegExp) {
-                if (trigger.test(content)) {
-                    logger.debug(`Message matched regex (before mode): ${trigger.source}`)
-                    response = resp
-                    break
-                }
-            } else {
-                firstLabelIndexes[i] = j
-                break
             }
-        }
     }
 
     // If none of the regexes match, we can search for labels immediately
@@ -61,8 +65,8 @@ export const getResponseFromContent = async (
             logger.debug(`Message matched label with confidence: ${matchedLabel.name}, ${matchedLabel.confidence}`)
 
             let triggerConfig: ConfigMessageScanResponseLabelConfig | undefined
-            const labelConfig = config.responses.find(x => {
-                const config = x.triggers.find(
+            const labelConfig = responses.find(x => {
+                const config = x.triggers.text!.find(
                     (x): x is ConfigMessageScanResponseLabelConfig => 'label' in x && x.label === matchedLabel.name,
                 )
                 if (config) triggerConfig = config
@@ -85,12 +89,15 @@ export const getResponseFromContent = async (
     // If we still don't have a label, we can match all regexes after the initial label trigger
     if (!response) {
         logger.debug('No match from NLP, doing after regexes')
-        for (let i = 0; i < config.responses.length; i++) {
-            const { triggers, response: resp } = config.responses[i]!
+        for (let i = 0; i < responses.length; i++) {
+            const {
+                triggers: { text: textTriggers },
+                response: resp,
+            } = responses[i]!
             const firstLabelIndex = firstLabelIndexes[i] ?? -1
 
-            for (let i = firstLabelIndex + 1; i < triggers.length; i++) {
-                const trigger = triggers[i]!
+            for (let i = firstLabelIndex + 1; i < textTriggers!.length; i++) {
+                const trigger = textTriggers![i]!
 
                 if (trigger instanceof RegExp) {
                     if (trigger.test(content)) {
@@ -111,19 +118,20 @@ export const getResponseFromContent = async (
 
 export const shouldScanMessage = (
     message: Message,
-    config: NonNullable<Config['messageScan']>,
+    filter: NonNullable<Config['messageScan']>['filter'],
 ): message is Message<true> => {
     if (message.author.bot) return false
     if (!message.guild) return false
+    if (!filter) return true
 
     const filters = [
-        config.users?.includes(message.author.id),
-        message.member?.roles.cache.some(x => config.roles?.includes(x.id)),
-        config.channels?.includes(message.channel.id),
+        filter.users?.includes(message.author.id),
+        message.member?.roles.cache.some(x => filter.roles?.includes(x.id)),
+        filter.channels?.includes(message.channel.id),
     ]
 
-    if (config.whitelist && filters.every(x => !x)) return false
-    if (!config.whitelist && filters.some(x => x)) return false
+    if (filter.whitelist && filters.every(x => !x)) return false
+    if (!filter.whitelist && filters.some(x => x)) return false
 
     return true
 }
@@ -135,7 +143,9 @@ export const handleUserResponseCorrection = async (
     label: string,
     user: User | PartialUser,
 ) => {
-    const correctLabelResponse = msConfig!.responses!.find(r => r.triggers.some(t => 'label' in t && t.label === label))
+    const correctLabelResponse = msConfig!.responses!.find(r =>
+        r.triggers.text!.some(t => 'label' in t && t.label === label),
+    )
 
     if (!correctLabelResponse) throw new Error('Cannot find label config for the selected label')
     if (!correctLabelResponse.response) return void (await reply.delete())

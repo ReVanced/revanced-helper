@@ -30,27 +30,31 @@ on('messageReactionAdd', async (context, rct, user) => {
     if (reactionMessage.author.id !== reaction.client.user!.id) return
     if (!PossibleReactions.includes(reaction.emoji.name!)) return
 
-    if (reactionMessage.inGuild() && msConfig.humanCorrections.memberRequirements) {
-        const {
-            memberRequirements: { roles, permissions },
-        } = msConfig.humanCorrections
-
-        if (!roles && !permissions)
-            return void logger.warn(
-                'No member requirements specified for human corrections, ignoring this request for security reasons',
-            )
-
-        const member = await reactionMessage.guild.members.fetch(user.id)
-
+    if (!config.owners.includes(user.id)) {
+        // User is in guild, and config has member requirements
         if (
-            permissions &&
-            !member.permissions.has(permissions) &&
-            roles &&
-            !roles.some(role => member.roles.cache.has(role))
-        )
-            return
-        // User is not owner, and not included in allowUsers
-    } else if (!config.owners.includes(user.id) && !msConfig.humanCorrections.allowUsers?.includes(user.id)) return
+            reactionMessage.inGuild() &&
+            (msConfig.humanCorrections.allow?.members || msConfig.humanCorrections.allow?.users)
+        ) {
+            const {
+                allow: { users: allowedUsers, members: allowedMembers },
+            } = msConfig.humanCorrections
+
+            if (allowedMembers) {
+                const member = await reactionMessage.guild.members.fetch(user.id)
+                const { permissions, roles } = allowedMembers
+
+                if (!(member.permissions.has(permissions ?? 0n) || roles?.some(role => member.roles.cache.has(role))))
+                    return
+            } else if (allowedUsers) {
+                if (!allowedUsers.includes(user.id)) return
+            } else {
+                return void logger.warn(
+                    'No member or user requirements set for human corrections, all requests will be ignored',
+                )
+            }
+        }
+    }
 
     // Sanity check
     const response = db.labeledResponses.get(rct.message.id)
@@ -69,7 +73,9 @@ on('messageReactionAdd', async (context, rct, user) => {
             // Bot is wrong :(
 
             const labels = msConfig.responses!.flatMap(r =>
-                r.triggers.filter((t): t is ConfigMessageScanResponseLabelConfig => 'label' in t).map(t => t.label),
+                r.triggers
+                    .text!.filter((t): t is ConfigMessageScanResponseLabelConfig => 'label' in t)
+                    .map(t => t.label),
             )
 
             const componentPrefix = `cr_${reactionMessage.id}`

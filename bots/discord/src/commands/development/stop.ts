@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from 'discord.js'
-import type { Command } from '.'
+
+import type { Command } from '..'
 
 export default {
-    data: new SlashCommandBuilder().setName('stop').setDescription('Stops the bot').toJSON(),
+    data: new SlashCommandBuilder().setName('stop').setDescription('Stops the bot').setDMPermission(true).toJSON(),
 
     ownerOnly: true,
     global: true,

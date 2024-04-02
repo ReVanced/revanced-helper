@@ -22,7 +22,6 @@ export type Command = {
         mode?: 'all' | 'any'
         /**
          * The permissions required to use this command (in BitFields).
-         * For safety reasons, this is set to `-1n` and only bot owners can use this command unless explicitly specified.
          *
          * - **0n** means that everyone can use this command.
          * - **-1n** means that only bot owners can use this command.
@@ -37,13 +36,12 @@ export type Command = {
     }
     /**
      * Whether this command can only be used by bot owners.
-     * For safety reasons, this is set to `true` and only bot owners can use this command unless explicitly specified.
-     * @default true
+     * @default false
      */
     ownerOnly?: boolean
     /**
      * Whether to register this command as a global slash command.
-     * For safety reasons, this is set to `false` and commands will be registered in allowed guilds only.
+     * This is set to `false` and commands will be registered in allowed guilds only by default.
      * @default false
      */
     global?: boolean
