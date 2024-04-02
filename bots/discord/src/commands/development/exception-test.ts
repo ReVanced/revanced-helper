@@ -12,6 +12,10 @@ export default {
                 .setName('type')
                 .setDescription('The type of exception to throw')
                 .addChoices({
+                    name: 'process exception',
+                    value: 'Process',
+                })
+                .addChoices({
                     name: 'generic error',
                     value: 'Generic',
                 })
@@ -36,10 +40,12 @@ export default {
         .setDMPermission(true)
         .toJSON(),
 
+    ownerOnly: true,
     global: true,
 
     async execute(_, interaction) {
         const type = interaction.options.getString('type', true)
-        throw new CommandError(CommandErrorType[type as keyof typeof CommandErrorType], '[INTENTIONAL BOT DESIGN]')
+        if (type === 'Process') throw new Error('Intentional process exception')
+        throw new CommandError(CommandErrorType[type as keyof typeof CommandErrorType], 'Intentional bot design') // ;)
     },
 } satisfies Command
