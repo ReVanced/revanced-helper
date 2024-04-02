@@ -1,5 +1,4 @@
-import { ClientOperation, ServerOperation } from '@revanced/bot-shared'
-import { awaitPacket } from 'src/utils/packets'
+import { ClientOperation, type Packet, ServerOperation } from '@revanced/bot-shared'
 import {
     type ClientWebSocketEvents,
     ClientWebSocketManager,
@@ -12,6 +11,7 @@ import {
 export default class Client {
     ready = false
     ws: ClientWebSocketManager
+    #awaiter: ClientWebSocketPacketAwaiter
 
     constructor(options: ClientOptions) {
         this.ws = new ClientWebSocketManager(options.api.websocket)
@@ -21,6 +21,8 @@ export default class Client {
         this.ws.on('disconnect', () => {
             this.ready = false
         })
+
+        this.#awaiter = new ClientWebSocketPacketAwaiter(this.ws)
     }
 
     /**
@@ -50,13 +52,9 @@ export default class Client {
         // But if we add anything similar, this will cause another race condition
         // To fix this, we can try adding a instanced function that would return the currentSequence
         // and it would be updated every time a "heartbeat ack" packet is received
-        const expectedNextSeq = this.ws.currentSequence + 1
-        const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
-            awaitPacket(this.ws, op, expectedNextSeq, timeout)
-
         return Promise.race([
-            awaitPkt(ServerOperation.ParsedText),
-            awaitPkt(ServerOperation.ParseTextFailed, this.ws.timeout + 5000),
+            this.#awaiter.await(ServerOperation.ParsedText, this.ws.currentSequence),
+            this.#awaiter.await(ServerOperation.ParseTextFailed, this.ws.timeout + 5000),
         ])
             .then(pkt => {
                 if (pkt.op === ServerOperation.ParsedText) return pkt.d
@@ -82,14 +80,11 @@ export default class Client {
             },
         })
 
-        // See line 48
-        const expectedNextSeq = this.ws.currentSequence + 1
-        const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
-            awaitPacket(this.ws, op, expectedNextSeq, timeout)
+        // See line 50
 
         return Promise.race([
-            awaitPkt(ServerOperation.ParsedImage),
-            awaitPkt(ServerOperation.ParseImageFailed, this.ws.timeout + 5000),
+            this.#awaiter.await(ServerOperation.ParsedImage, this.ws.currentSequence),
+            this.#awaiter.await(ServerOperation.ParseImageFailed, this.ws.timeout + 5000),
         ])
             .then(pkt => {
                 if (pkt.op === ServerOperation.ParsedImage) return pkt.d
@@ -111,17 +106,13 @@ export default class Client {
             },
         })
 
-        // See line 48
-        const expectedNextSeq = this.ws.currentSequence + 1
-        const awaitPkt = (op: ServerOperation, timeout = this.ws.timeout) =>
-            awaitPacket(this.ws, op, expectedNextSeq, timeout)
-
+        // See line 50
         return Promise.race([
-            awaitPkt(ServerOperation.TrainedMessage),
-            awaitPkt(ServerOperation.TrainMessageFailed, this.ws.timeout + 5000),
+            this.#awaiter.await(ServerOperation.TrainedMessage, this.ws.currentSequence),
+            this.#awaiter.await(ServerOperation.TrainMessageFailed, this.ws.timeout + 5000),
         ])
             .then(pkt => {
-                if (pkt.op === ServerOperation.TrainedMessage) return
+                if (pkt.op === ServerOperation.TrainedMessage) return pkt.d
                 throw new Error('Failed to train message, the API encountered an error')
             })
             .catch(() => {
@@ -163,6 +154,13 @@ export default class Client {
     }
 
     /**
+     * Connects the client to the API
+     */
+    connect() {
+        return this.ws.connect()
+    }
+
+    /**
      * Disconnects the client from the API
      */
     disconnect() {
@@ -171,6 +169,45 @@ export default class Client {
 
     #throwIfNotReady() {
         if (!this.isReady()) throw new Error('Client is not ready')
+    }
+}
+
+export class ClientWebSocketPacketAwaiter {
+    #ws: ClientWebSocketManager
+    #resolvers: Map<string, (packet: Packet<ServerOperation>) => void>
+
+    constructor(ws: ClientWebSocketManager) {
+        this.#ws = ws
+        this.#resolvers = new Map()
+
+        this.#ws.on('packet', packet => {
+            const key = this.keyFor(packet.op, packet.s)
+            const resolve = this.#resolvers.get(key)
+            if (resolve) {
+                resolve(packet)
+                this.#resolvers.delete(key)
+            }
+        })
+    }
+
+    keyFor(op: ServerOperation, seq: number) {
+        return `${op}-${seq}`
+    }
+
+    await<TOp extends ServerOperation>(
+        op: TOp,
+        expectedSeq: number,
+        timeout = 10000,
+    ): Promise<Packet<ServerOperation>> {
+        return new Promise((resolve, reject) => {
+            const key = this.keyFor(op, expectedSeq)
+            this.#resolvers.set(key, resolve)
+
+            setTimeout(() => {
+                this.#resolvers.delete(key)
+                reject('Awaiting packet timed out')
+            }, timeout)
+        })
     }
 }
 

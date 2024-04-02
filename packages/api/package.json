@@ -7,11 +7,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "bun bundle && bun types",
-    "watch": "bunx conc --raw \"bun bundle:watch\" \"bun types:watch\"",
     "bundle": "bun build src/index.ts --outdir=dist --target=bun",
-    "bundle:watch": "bun run bundle --watch",
     "types": "tsc --declaration --emitDeclarationOnly",
-    "types:watch": "bun types --watch --preserveWatchOutput",
     "types:clean": "bun types --build --clean"
   },
   "repository": {
@@ -30,7 +27,8 @@
   },
   "homepage": "https://github.com/revanced/revanced-helper#readme",
   "dependencies": {
-    "@revanced/bot-shared": "workspace:*"
+    "@revanced/bot-shared": "workspace:*",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "typed-emitter": "^2.1.0"

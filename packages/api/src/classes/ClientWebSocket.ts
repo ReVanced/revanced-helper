@@ -20,6 +20,7 @@ export class ClientWebSocketManager {
     readonly url: string
     timeout: number
 
+    connecting = false
     ready = false
     disconnected: false | DisconnectReason = false
     currentSequence = 0
@@ -36,8 +37,12 @@ export class ClientWebSocketManager {
      * Connects to the WebSocket API
      * @returns A promise that resolves when the client is ready
      */
-    connect() {
-        return new Promise<void>((rs, rj) => {
+    async connect() {
+        if (this.connecting) throw new Error('Cannot connect when already connecting to the server')
+
+        this.connecting = true
+
+        await new Promise<void>((rs, rj) => {
             try {
                 this.#socket = new WebSocket(this.url)
 
@@ -63,10 +68,13 @@ export class ClientWebSocketManager {
                 this.#socket.on('close', (code, reason) => {
                     clearTimeout(timeout)
                     this._handleDisconnect(code, reason.toString())
+                    throw new Error('WebSocket connection closed before ready')
                 })
             } catch (e) {
                 rj(e)
             }
+        }).finally(() => {
+            this.connecting = false
         })
     }
 
@@ -107,6 +115,8 @@ export class ClientWebSocketManager {
      */
     send<TOp extends ClientOperation>(packet: Packet<TOp>) {
         this.#throwIfDisconnected('Cannot send a packet when already disconnected from the server')
+
+        this.currentSequence++
 
         this.#socket.send(serializePacket(packet), err => {
             throw err
@@ -164,6 +174,7 @@ export class ClientWebSocketManager {
 
     protected _handleDisconnect(reason: DisconnectReason | number, message?: string) {
         this.disconnected = reason in DisconnectReason ? reason : DisconnectReason.Generic
+        this.connecting = false
         this.#socket?.close(reason)
         this.#socket = null!
 
