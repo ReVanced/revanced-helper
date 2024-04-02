@@ -33,13 +33,13 @@
     "@commitlint/config-conventional": "^19.1.0",
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
-    "@tsconfig/strictest": "^2.0.4",
-    "@types/bun": "^1.0.10",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/bun": "^1.0.12",
     "concurrently": "^8.2.2",
     "conventional-changelog-conventionalcommits": "^7.0.2",
-    "lefthook": "^1.6.7",
-    "turbo": "^1.13.0",
+    "lefthook": "^1.6.8",
+    "turbo": "^1.13.1",
     "typescript": "^5.4.3"
   },
-  "trustedDependencies": ["@biomejs/biome", "tesseract.js"]
+  "trustedDependencies": ["@biomejs/biome", "lefthook", "tesseract.js"]
 }
