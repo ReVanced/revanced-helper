@@ -58,11 +58,11 @@
    Continuing the legacy of Vanced
 </p>
 
-# 🚙 ReVanced Bot WebSocket API
+# 🤖 ReVanced Discord Bot
 
 ![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)
 
-The WebSocket API for ReVanced bots utilizing BSON for packet transmission.
+Discord bot assisting ReVanced's Discord server.
 
 ## 📚 Documentation
 
@@ -70,4 +70,4 @@ Documentation are provided [here](./docs/README.md).
 
 ## 📄 License
 
-**ReVanced Bot WebSocket API** adopts the [GNU General Public License 3.0](./LICENSE), tl;dr: You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
+**ReVanced Discord Bot** adopts the [GNU General Public License 3.0](./LICENSE), tl;dr: You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
