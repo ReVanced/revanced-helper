@@ -15,7 +15,7 @@ Roles, users, and channels which will be affected by the blacklist/whitelist rul
 Whether to use whitelist (`true`) or blacklist (`false`) mode.
 
 -   Blacklist mode **will refuse** to scan messages that match any of the filters above
--   Whitelist mode **will refuse** to scan messages that match any of the filters above.
+-   Whitelist mode **will only** scan messages that match any of the filters above.
 
 ## 💬 Responses
 
@@ -79,7 +79,8 @@ filterOverride: {
 },
 ```
 
-[^1]: Possible triggers are regular expressions or [label configurations](../config.example.ts#68).
+[^1]: Possible triggers are regular expressions or [label configurations](../config.example.ts#L83).  
+  Label configurations are only allowed for **text scans** currently. However in the future, it may also come for image scans. There is nothing preventing this from happening.
 
 ## ⏭️ What's next
 
