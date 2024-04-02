@@ -1,7 +1,5 @@
 import { type ClientOperation, ServerOperation } from '@revanced/bot-shared'
 
-import { inspect as inspectObject } from 'util'
-
 import type { EventHandler } from '.'
 
 const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (packet, { wit, logger }) => {
@@ -19,7 +17,7 @@ const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (pa
         const { intents } = await wit.message(actualText)
         const intentsWithoutIds = intents.map(({ id, ...rest }) => rest)
 
-        await client.send(
+        client.send(
             {
                 op: ServerOperation.ParsedText,
                 d: {
@@ -29,16 +27,16 @@ const parseTextEventHandler: EventHandler<ClientOperation.ParseText> = async (pa
             nextSeq,
         )
     } catch (e) {
-        await client.send(
-            {
-                op: ServerOperation.ParseTextFailed,
-                d: null,
-            },
-            nextSeq,
-        )
-
-        if (e instanceof Error) logger.error(e.stack ?? e.message)
-        else logger.error(inspectObject(e))
+        if (!client.disconnected)
+            client.send(
+                {
+                    op: ServerOperation.ParseTextFailed,
+                    d: null,
+                },
+                nextSeq,
+            )
+        else logger.warn(`Client disconnected before the failed packet could be sent (${nextSeq})`)
+        logger.error(`Failed to parse text (${nextSeq}):`, e)
     }
 }
 

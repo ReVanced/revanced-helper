@@ -1,7 +1,5 @@
 import { type ClientOperation, ServerOperation } from '@revanced/bot-shared'
 
-import { inspect as inspectObject } from 'util'
-
 import type { EventHandler } from '.'
 
 const trainMessageEventHandler: EventHandler<ClientOperation.TrainMessage> = async (packet, { wit, logger }) => {
@@ -13,11 +11,11 @@ const trainMessageEventHandler: EventHandler<ClientOperation.TrainMessage> = asy
     const nextSeq = client.currentSequence++
     const actualText = text.slice(0, 279)
 
-    logger.debug(`Client ${client.id} requested to train label ${label} with:`, actualText)
+    logger.debug(`${client.id} requested to train label ${label} (${nextSeq}) with:`, actualText)
 
     try {
         await wit.train(actualText, label)
-        await client.send(
+        client.send(
             {
                 op: ServerOperation.TrainedMessage,
                 d: null,
@@ -25,18 +23,18 @@ const trainMessageEventHandler: EventHandler<ClientOperation.TrainMessage> = asy
             nextSeq,
         )
 
-        logger.debug(`Trained label ${label} with:`, actualText)
+        logger.debug(`Trained label (${nextSeq})`)
     } catch (e) {
-        await client.send(
-            {
-                op: ServerOperation.TrainMessageFailed,
-                d: null,
-            },
-            nextSeq,
-        )
-
-        if (e instanceof Error) logger.error(e.stack ?? e.message)
-        else logger.error(inspectObject(e))
+        if (!client.disconnected)
+            client.send(
+                {
+                    op: ServerOperation.TrainMessageFailed,
+                    d: null,
+                },
+                nextSeq,
+            )
+        else logger.warn(`Client ${client.id} disconnected before the failed packet could be sent`)
+        logger.error(`Failed to train (${nextSeq})`, e)
     }
 }
 
