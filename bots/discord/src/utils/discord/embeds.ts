@@ -27,7 +27,7 @@ export const createMessageScanResponseEmbed = (
     response: ConfigMessageScanResponseMessage,
     mode: 'ocr' | 'nlp' | 'match',
 ) => {
-    const embed = new EmbedBuilder().setTitle(response.title)
+    const embed = new EmbedBuilder().setTitle(response.title ?? null)
 
     if (response.description) embed.setDescription(response.description)
     if (response.fields) embed.addFields(response.fields)

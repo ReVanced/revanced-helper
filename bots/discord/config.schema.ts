@@ -1,3 +1,5 @@
+import type { APIEmbed } from 'discord.js'
+
 export type Config = {
     owners: string[]
     guilds: string[]
@@ -47,11 +49,4 @@ export type ConfigMessageScanResponseLabelConfig = {
     threshold: number
 }
 
-export type ConfigMessageScanResponseMessage = {
-    title: string
-    description?: string
-    fields?: Array<{
-        name: string
-        value: string
-    }>
-}
+export type ConfigMessageScanResponseMessage = APIEmbed
