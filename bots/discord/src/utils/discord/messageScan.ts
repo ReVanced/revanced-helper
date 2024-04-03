@@ -4,7 +4,7 @@ import type {
     ConfigMessageScanResponse,
     ConfigMessageScanResponseLabelConfig,
     ConfigMessageScanResponseMessage,
-} from 'config.example'
+} from 'config.schema'
 import type { Message, PartialUser, User } from 'discord.js'
 import { createMessageScanResponseEmbed } from './embeds'
 

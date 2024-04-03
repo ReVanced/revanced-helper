@@ -1,5 +1,5 @@
 import { PermissionFlagsBits } from 'discord.js'
-import type { Config } from './config.example'
+import type { Config } from './config.schema'
 
 export default {
     owners: ['629368283354628116', '737323631117598811', '282584705218510848'],

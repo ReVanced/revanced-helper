@@ -1,6 +1,6 @@
 # ⚙️ Configuration
 
-You will need to copy `config.example.ts` to `config.ts` to be able to start the bot, as it is the default configuration.
+See [`config.ts`](../config.ts).
 
 ---
 

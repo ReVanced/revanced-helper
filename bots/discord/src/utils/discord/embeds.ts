@@ -1,6 +1,6 @@
 import { DefaultEmbedColor, MessageScanHumanizedMode, ReVancedLogoURL } from '$/constants'
 import { EmbedBuilder } from 'discord.js'
-import type { ConfigMessageScanResponseMessage } from '../../../config.example'
+import type { ConfigMessageScanResponseMessage } from '../../../config.schema'
 
 export const createErrorEmbed = (title: string, description?: string) =>
     applyCommonEmbedStyles(

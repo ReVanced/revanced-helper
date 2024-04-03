@@ -79,7 +79,7 @@ filterOverride: {
 },
 ```
 
-[^1]: Possible triggers are regular expressions or [label configurations](../config.example.ts#L83).  
+[^1]: Possible triggers are regular expressions or [label configurations](../config.schema.ts#L83).  
   Label configurations are only allowed for **text scans** currently. However in the future, it may also come for image scans. There is nothing preventing this from happening.
 
 ## ⏭️ What's next

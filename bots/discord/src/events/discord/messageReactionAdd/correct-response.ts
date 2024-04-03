@@ -11,7 +11,7 @@ import {
 } from 'discord.js'
 
 import { handleUserResponseCorrection } from '$/utils/discord/messageScan'
-import type { ConfigMessageScanResponseLabelConfig } from 'config.example'
+import type { ConfigMessageScanResponseLabelConfig } from 'config.schema'
 
 const PossibleReactions = Object.values(Reactions) as string[]
 
