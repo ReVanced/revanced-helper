@@ -11,7 +11,7 @@ To start developing, you'll need to set up the development environment first.
 2. Clone the mono-repository
 
     ```sh
-    git clone https://github.com/ReVanced/revanced-helper.git &&
+    git clone https://github.com/revanced/revanced-helper.git &&
     cd revanced-helper
     ```
 

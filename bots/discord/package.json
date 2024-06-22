@@ -8,7 +8,7 @@
   "scripts": {
     "register": "bun run scripts/reload-slash-commands.ts",
     "dev": "bun --watch src/index.ts",
-    "build": "tsc && bun run scripts/after-build",
+    "build": "tsc",
     "watch": "bun dev"
   },
   "repository": {
