@@ -6,7 +6,7 @@
   "description": "🧦 WebSocket API server for bots assisting ReVanced",
   "main": "dist/index.js",
   "scripts": {
-    "bundle": "bun build src/index.ts --outdir=dist --target=bun",
+    "bundle": "bun build src/index.ts --outdir=dist --target=bun && bun run after_build.ts",
     "dev": "bun run src/index.ts --watch",
     "build": "bun bundle",
     "watch": "bun dev"

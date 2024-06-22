@@ -19,8 +19,8 @@ type BaseTypeOf<T> = T extends (infer U)[]
     : T extends (...args: unknown[]) => infer U
       ? (...args: unknown[]) => U
       : T extends object
-          ? { [K in keyof T]: T[K] }
-          : T
+        ? { [K in keyof T]: T[K] }
+        : T
 
 export type Config = Omit<BaseTypeOf<typeof import('../../config.json')>, '$schema'>
 
