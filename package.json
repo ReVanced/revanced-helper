@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "license": "GPL-3.0-or-later",
   "type": "module",
-  "author": "Palm <palmdevelops@gmail.com> (https://github.com/PalmDevs)",
+  "author": "Palm <contact@palmdevs.me> (https://palmdevs.me)",
   "workspaces": ["apis/*", "bots/*", "packages/*"],
   "scripts": {
     "build": "turbo run build",
@@ -24,8 +24,8 @@
     "url": "https://github.com/revanced/revanced-helper/issues"
   },
   "contributors": [
-    "Palm <palmdevelops@gmail.com> (https://github.com/PalmDevs)",
-    "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
+    "Palm <contact@palmdevs.me> (https://palmdevs.me)",
+    "ReVanced <nosupport@revanced.app> (https://revanced.app)"
   ],
   "devDependencies": {
     "@biomejs/biome": "^1.8.2",
