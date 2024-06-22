@@ -1,0 +1,11 @@
+diff --git a/src/worker/node/defaultOptions.js b/src/worker/node/defaultOptions.js
+index 053c1e3e3b561b2e5b5e3609e9c6b509b1661f11..d4fe84893786d340de3527bcf7f090e1006c0f09 100644
+--- a/src/worker/node/defaultOptions.js
++++ b/src/worker/node/defaultOptions.js
+@@ -6,5 +6,5 @@ const defaultOptions = require('../../constants/defaultOptions');
+  */
+ module.exports = {
+   ...defaultOptions,
+-  workerPath: path.join(__dirname, '..', '..', 'worker-script', 'node', 'index.js'),
++  workerPath: path.join(import.meta.dir, 'tesseract.js', 'src', 'worker-script', 'node', 'index.js'),
+ };
