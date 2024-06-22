@@ -28,18 +28,18 @@
     "ReVanced <nosupport@revanced.app> (https://github.com/revanced)"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^1.6.3",
-    "@commitlint/cli": "^19.2.1",
-    "@commitlint/config-conventional": "^19.1.0",
+    "@biomejs/biome": "^1.8.2",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/bun": "^1.0.12",
+    "@types/bun": "^1.1.5",
     "concurrently": "^8.2.2",
     "conventional-changelog-conventionalcommits": "^7.0.2",
-    "lefthook": "^1.6.8",
-    "turbo": "^1.13.1",
-    "typescript": "^5.4.3"
+    "lefthook": "^1.6.18",
+    "turbo": "^1.13.4",
+    "typescript": "^5.5.2"
   },
   "trustedDependencies": ["@biomejs/biome", "lefthook", "tesseract.js"]
 }

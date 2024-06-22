@@ -30,6 +30,6 @@
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
     "chalk": "^5.3.0",
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.15.3"
   }
 }

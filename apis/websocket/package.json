@@ -30,7 +30,7 @@
     "@revanced/bot-shared": "workspace:*",
     "@sapphire/async-queue": "^1.5.2",
     "chalk": "^5.3.0",
-    "tesseract.js": "^5.0.5"
+    "tesseract.js": "^5.1.0"
   },
   "devDependencies": {
     "typed-emitter": "^2.1.0"
