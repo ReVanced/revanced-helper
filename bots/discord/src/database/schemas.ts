@@ -1,5 +1,5 @@
 import type { InferSelectModel } from 'drizzle-orm'
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
 
 export const responses = sqliteTable('responses', {
     replyId: text('reply').primaryKey().notNull(),
@@ -11,11 +11,18 @@ export const responses = sqliteTable('responses', {
     correctedById: text('by'),
 })
 
-export const appliedPresets = sqliteTable('applied_presets', {
-    memberId: text('member').primaryKey().notNull(),
-    guildId: text('guild').notNull(),
-    presets: text('presets', { mode: 'json' }).$type<string[]>().notNull().default([]),
-})
+export const appliedPresets = sqliteTable(
+    'applied_presets',
+    {
+        memberId: text('member').notNull(),
+        guildId: text('guild').notNull(),
+        preset: text('preset').notNull(),
+        until: integer('until'),
+    },
+    table => ({
+        uniqueComposite: uniqueIndex('unique_composite').on(table.memberId, table.preset, table.guildId),
+    }),
+)
 
 export type Response = InferSelectModel<typeof responses>
 export type AppliedPreset = InferSelectModel<typeof appliedPresets>
