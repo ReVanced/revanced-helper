@@ -14,10 +14,10 @@ for (const event of listAllFilesRecursive(pathJoinCurrentDir(import.meta.url, 'e
     await import(event)
 }
 
-await api.client.connect()
+api.client.connect()
 
 for (const event of listAllFilesRecursive(pathJoinCurrentDir(import.meta.url, 'events', 'discord'))) {
     await import(event)
 }
 
-await discord.client.login()
+discord.client.login()

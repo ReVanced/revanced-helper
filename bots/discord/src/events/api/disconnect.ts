@@ -26,5 +26,5 @@ on('disconnect', (reason, msg) => {
     logger.info(
         `Disconnected from bot API ${++api.disconnectCount} times (this time because: ${reason}, ${msg}), reconnecting again...`,
     )
-    setTimeout(() => ws.connect(), 10000)
+    setTimeout(() => api.client.connect(), 10000)
 })
