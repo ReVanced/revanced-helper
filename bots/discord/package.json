@@ -8,6 +8,7 @@
   "scripts": {
     "register": "bun run scripts/reload-slash-commands.ts",
     "dev": "bun --watch src/index.ts",
+    "prepare": "drizzle-kit push",
     "build": "tsc",
     "watch": "bun dev"
   },
@@ -31,9 +32,11 @@
     "@revanced/bot-shared": "workspace:*",
     "chalk": "^5.3.0",
     "discord.js": "^14.15.3",
-    "drizzle-orm": "^0.31.2"
+    "drizzle-orm": "^0.31.2",
+    "simple-duration": "^1.1.0"
   },
   "devDependencies": {
+    "@libsql/client": "^0.6.2",
     "drizzle-kit": "^0.22.7"
   }
 }
