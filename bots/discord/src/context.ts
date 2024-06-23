@@ -1,10 +1,14 @@
-import { loadCommands } from '$utils/discord/commands'
+import { Database } from 'bun:sqlite'
 import { Client as APIClient } from '@revanced/bot-api'
 import { createLogger } from '@revanced/bot-shared'
 import { ActivityType, Client as DiscordClient, Partials } from 'discord.js'
+import { drizzle } from 'drizzle-orm/bun-sqlite'
+
 import config from '../config'
-import { LabeledResponseDatabase } from './classes/Database'
-import { pathJoinCurrentDir } from './utils/fs'
+import * as schemas from './database/schemas'
+
+import { loadCommands } from '$utils/discord/commands'
+import { pathJoinCurrentDir } from '$utils/fs'
 
 export { config }
 export const logger = createLogger({
@@ -23,9 +27,11 @@ export const api = {
     disconnectCount: 0,
 }
 
-export const database = {
-    labeledResponses: new LabeledResponseDatabase(),
-} as const
+const db = new Database('db.sqlite')
+
+export const database = drizzle(db, {
+    schema: schemas,
+})
 
 export const discord = {
     client: new DiscordClient({

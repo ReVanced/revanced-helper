@@ -1,4 +1,4 @@
-import type { LabeledResponse } from '$/classes/Database'
+import { type Response, responses } from '$/database/schemas'
 import type {
     Config,
     ConfigMessageScanResponse,
@@ -6,6 +6,7 @@ import type {
     ConfigMessageScanResponseMessage,
 } from 'config.schema'
 import type { Message, PartialUser, User } from 'discord.js'
+import { eq } from 'drizzle-orm'
 import { createMessageScanResponseEmbed } from './embeds'
 
 export const getResponseFromText = async (
@@ -138,7 +139,7 @@ export const shouldScanMessage = (
 
 export const handleUserResponseCorrection = async (
     { api, database: db, config: { messageScan: msConfig }, logger }: typeof import('$/context'),
-    response: LabeledResponse,
+    response: Response,
     reply: Message,
     label: string,
     user: User | PartialUser,
@@ -151,14 +152,19 @@ export const handleUserResponseCorrection = async (
     if (!correctLabelResponse.response) return void (await reply.delete())
 
     if (response.label !== label) {
-        db.labeledResponses.edit(response.reply, { label, correctedBy: user.id })
+        db.update(responses)
+            .set({
+                label,
+                correctedById: user.id,
+            })
+            .where(eq(responses.replyId, response.replyId))
         await reply.edit({
             embeds: [createMessageScanResponseEmbed(correctLabelResponse.response, 'nlp')],
         })
     }
 
-    await api.client.trainMessage(response.text, label)
-    logger.debug(`User ${user.id} trained message ${response.reply} as ${label} (positive)`)
+    await api.client.trainMessage(response.content, label)
+    logger.debug(`User ${user.id} trained message ${response.replyId} as ${label} (positive)`)
 
     await reply.reactions.removeAll()
 }

@@ -179,3 +179,4 @@ config.ts
 
 # DB
 *.db
+*.sqlite

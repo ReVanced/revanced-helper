@@ -10,8 +10,10 @@ import {
     StringSelectMenuOptionBuilder,
 } from 'discord.js'
 
+import { responses } from '$/database/schemas'
 import { handleUserResponseCorrection } from '$/utils/discord/messageScan'
 import type { ConfigMessageScanResponseLabelConfig } from 'config.schema'
+import { eq } from 'drizzle-orm'
 
 const PossibleReactions = Object.values(Reactions) as string[]
 
@@ -57,8 +59,8 @@ on('messageReactionAdd', async (context, rct, user) => {
     }
 
     // Sanity check
-    const response = db.labeledResponses.get(rct.message.id)
-    if (!response || response.correctedBy) return
+    const response = await db.query.responses.findFirst({ where: eq(responses.replyId, rct.message.id) })
+    if (!response || response.correctedById) return
 
     const handleCorrection = (label: string) =>
         handleUserResponseCorrection(context, response, reactionMessage, label, user)

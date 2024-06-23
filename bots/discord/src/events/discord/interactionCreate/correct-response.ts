@@ -1,8 +1,10 @@
+import { responses } from '$/database/schemas'
 import { handleUserResponseCorrection } from '$/utils/discord/messageScan'
 import { createErrorEmbed, createStackTraceEmbed, createSuccessEmbed } from '$utils/discord/embeds'
 import { on } from '$utils/discord/events'
 
 import type { ButtonInteraction, StringSelectMenuInteraction, TextBasedChannel } from 'discord.js'
+import { eq } from 'drizzle-orm'
 
 // No permission check required as it is already done when the user reacts to a bot response
 export default on('interactionCreate', async (context, interaction) => {
@@ -19,7 +21,7 @@ export default on('interactionCreate', async (context, interaction) => {
     const [, key, action] = interaction.customId.split('_') as ['cr', string, 'select' | 'cancel' | 'delete']
     if (!key || !action) return
 
-    const response = db.labeledResponses.get(key)
+    const response = await db.query.responses.findFirst({ where: eq(responses.replyId, key) })
     // If the message isn't saved in my DB (unrelated message)
     if (!response)
         return void (await interaction.reply({
@@ -30,8 +32,8 @@ export default on('interactionCreate', async (context, interaction) => {
     try {
         // We're gonna pretend reactionChannel is a text-based channel, but it can be many more
         // But `messages` should always exist as a property
-        const reactionGuild = await interaction.client.guilds.fetch(response.guild)
-        const reactionChannel = (await reactionGuild.channels.fetch(response.channel)) as TextBasedChannel | null
+        const reactionGuild = await interaction.client.guilds.fetch(response.guildId)
+        const reactionChannel = (await reactionGuild.channels.fetch(response.channelId)) as TextBasedChannel | null
         const reactionMessage = await reactionChannel?.messages.fetch(key)
 
         if (!reactionMessage) {
@@ -55,7 +57,7 @@ export default on('interactionCreate', async (context, interaction) => {
         const handleCorrection = (label: string) =>
             handleUserResponseCorrection(context, response, reactionMessage, label, interaction.user)
 
-        if (response.correctedBy)
+        if (response.correctedById)
             return await editMessage(
                 'Response already corrected',
                 'Thank you for your feedback! Unfortunately, this response has already been corrected by someone else.',

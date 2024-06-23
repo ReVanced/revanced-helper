@@ -1,4 +1,5 @@
 import { MessageScanLabeledResponseReactions } from '$/constants'
+import { responses } from '$/database/schemas'
 import { getResponseFromText, shouldScanMessage } from '$/utils/discord/messageScan'
 import { createMessageScanResponseEmbed } from '$utils/discord/embeds'
 import { on } from '$utils/discord/events'
@@ -30,13 +31,13 @@ on('messageCreate', async (ctx, msg) => {
                 })
 
                 if (label)
-                    db.labeledResponses.save({
-                        reply: reply.id,
-                        channel: reply.channel.id,
-                        guild: reply.guild!.id,
-                        referenceMessage: msg.id,
+                    db.insert(responses).values({
+                        replyId: reply.id,
+                        channelId: reply.channel.id,
+                        guildId: reply.guild!.id,
+                        referenceId: msg.id,
                         label,
-                        text: msg.content,
+                        content: msg.content,
                     })
 
                 if (label) {
