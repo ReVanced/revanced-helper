@@ -3,6 +3,28 @@ import type { Config } from './config.schema'
 export default {
     owners: ['USER_ID_HERE'],
     guilds: ['GUILD_ID_HERE'],
+    moderation: {
+        log: {
+            channel: 'CHANNEL_ID_HERE',
+            // Optional
+            thread: 'THREAD_ID_HERE',
+        },
+    },
+    rolePresets: {
+        guilds: {
+            GUILD_ID_HERE: {
+                preset: {
+                    give: ['ROLE_ID_HERE'],
+                    take: ['ROLE_ID_HERE'],
+                },
+                anotherPreset: {
+                    give: ['ROLE_ID_HERE'],
+                    take: ['ROLE_ID_HERE'],
+                },
+            },
+        },
+        checkExpiredEvery: 3600,
+    },
     messageScan: {
         filter: {
             channels: ['CHANNEL_ID_HERE'],

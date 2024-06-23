@@ -3,6 +3,16 @@ import type { APIEmbed } from 'discord.js'
 export type Config = {
     owners: string[]
     guilds: string[]
+    moderation?: {
+        log?: {
+            channel: string
+            thread?: string
+        }
+    }
+    rolePresets?: {
+        checkExpiredEvery: number
+        guilds: Record<string, Record<string, RolePresetData>>
+    }
     messageScan?: {
         allowedAttachmentMimeTypes: string[]
         filter: {
@@ -27,6 +37,11 @@ export type Config = {
     api: {
         websocketUrl: string
     }
+}
+
+export type RolePresetData = {
+    give: string[]
+    take: string[]
 }
 
 export type ConfigMessageScanResponse = {
