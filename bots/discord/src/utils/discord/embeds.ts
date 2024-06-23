@@ -1,5 +1,5 @@
 import { DefaultEmbedColor, MessageScanHumanizedMode, ReVancedLogoURL } from '$/constants'
-import { EmbedBuilder } from 'discord.js'
+import { EmbedBuilder, type EmbedField, type User } from 'discord.js'
 import type { ConfigMessageScanResponseMessage } from '../../../config.schema'
 
 export const createErrorEmbed = (title: string, description?: string) =>
@@ -38,6 +38,35 @@ export const createMessageScanResponseEmbed = (
     })
 
     return applyCommonEmbedStyles(embed, true, true, true)
+}
+
+export const createModerationActionEmbed = (
+    action: string,
+    user: User,
+    moderator: User,
+    reason?: string,
+    expires?: number | null,
+) => {
+    const fields: EmbedField[] = []
+    if (reason) fields.push({ name: 'Reason', value: reason, inline: true })
+    if (Number.isInteger(expires) || expires === null)
+        fields.push({
+            name: 'Expires',
+            value: Number.isInteger(expires) ? new Date(expires! * 1000).toLocaleString() : 'Never',
+            inline: true,
+        })
+
+    const embed = new EmbedBuilder()
+        .setTitle(`${action} ${user.tag}`)
+        .setDescription(`${user.toString()} was ${action.toLowerCase()} by ${moderator.toString()}`)
+        .addFields(fields)
+
+    return applyCommonEmbedStyles(embed, true, true, true)
+}
+
+export const applyReferenceToModerationActionEmbed = (embed: EmbedBuilder, reference: string) => {
+    embed.addFields({ name: 'Reference', value: `[Jump to message](${reference})`, inline: true })
+    return embed
 }
 
 export const applyCommonEmbedStyles = (
