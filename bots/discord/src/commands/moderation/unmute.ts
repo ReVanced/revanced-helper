@@ -9,7 +9,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('unmute')
         .setDescription('Unmute a member')
-        .addUserOption(option => option.setName('member').setRequired(true).setDescription('The member to mute'))
+        .addUserOption(option => option.setName('member').setRequired(true).setDescription('The member to unmute'))
         .toJSON(),
 
     memberRequirements: {
@@ -28,7 +28,7 @@ export default {
             )
 
         await removeRolePreset(member, 'mute')
-        const embed = createModerationActionEmbed('Muted', user, interaction.user)
+        const embed = createModerationActionEmbed('Unmuted', user, interaction.user)
 
         const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())
 
