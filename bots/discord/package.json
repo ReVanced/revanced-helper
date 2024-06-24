@@ -32,8 +32,7 @@
     "@revanced/bot-shared": "workspace:*",
     "chalk": "^5.3.0",
     "discord.js": "^14.15.3",
-    "drizzle-orm": "^0.31.2",
-    "simple-duration": "^1.1.0"
+    "drizzle-orm": "^0.31.2"
   },
   "devDependencies": {
     "@libsql/client": "^0.6.2",
