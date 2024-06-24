@@ -5,6 +5,9 @@ export type Config = {
     guilds: string[]
     moderation?: {
         roles: string[]
+        cure?: {
+            defaultName: string
+        }
         log?: {
             channel: string
             thread?: string

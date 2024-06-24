@@ -1,5 +1,6 @@
 import { config, logger } from '$/context'
-import type { ChatInputCommandInteraction, EmbedBuilder, Guild, User } from 'discord.js'
+import decancer from 'decancer'
+import type { ChatInputCommandInteraction, EmbedBuilder, Guild, GuildMember, User } from 'discord.js'
 import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from './embeds'
 
 const PresetLogAction = {
@@ -42,4 +43,17 @@ export const getLogChannel = async (guild: Guild) => {
     }
 
     return
+}
+
+export const cureNickname = async (member: GuildMember) => {
+    if (!member.manageable) throw new Error('Member is not manageable')
+    const name = member.displayName
+    let cured = decancer(name)
+        .toString()
+        .replace(/[^a-zA-Z0-9]/g, '')
+
+    if (!cured || !/^[a-zA-Z]/.test(cured)) cured = config.moderation?.cure?.defaultName ?? 'ReVanced member'
+
+    await member.setNickname(cured, 'Nickname cured')
+    logger.log(`Cured nickname for ${member.user.tag} (${member.id}) from "${name}"`)
 }
