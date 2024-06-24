@@ -46,15 +46,18 @@ export const createModerationActionEmbed = (
     moderator: User,
     reason?: string,
     expires?: number | null,
+    extraFields?: EmbedField[][],
 ) => {
     const fields: EmbedField[] = []
+    if (extraFields?.[0]) fields.push(...extraFields[0])
     if (reason) fields.push({ name: 'Reason', value: reason, inline: true })
     if (Number.isInteger(expires) || expires === null)
         fields.push({
             name: 'Expires',
-            value: Number.isInteger(expires) ? new Date(expires! * 1000).toLocaleString() : 'Never',
+            value: Number.isInteger(expires) ? `<t:${expires}:F>` : 'Never',
             inline: true,
         })
+    if (extraFields?.[1]) fields.push(...extraFields[1])
 
     const embed = new EmbedBuilder()
         .setTitle(`${action} ${user.tag}`)
