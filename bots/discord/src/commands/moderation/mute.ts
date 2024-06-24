@@ -5,7 +5,8 @@ import { applyRolePreset } from '$/utils/discord/rolePresets'
 import type { Command } from '..'
 
 import { config } from '$/context'
-import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from '$/utils/discord/embeds'
+import { createModerationActionEmbed } from '$/utils/discord/embeds'
+import { sendModerationReplyAndLogs } from '$/utils/discord/moderation'
 import { parseDuration } from '$/utils/duration'
 
 export default {
@@ -23,9 +24,9 @@ export default {
 
     global: false,
 
-    async execute({ config, logger }, interaction) {
+    async execute({ logger }, interaction) {
         const user = interaction.options.getUser('member', true)
-        const reason = interaction.options.getString('reason')
+        const reason = interaction.options.getString('reason') ?? 'No reason provided'
         const duration = interaction.options.getString('duration')
         const durationMs = duration ? parseDuration(duration) : null
 
@@ -35,6 +36,8 @@ export default {
                 'The duration must be at least 1 millisecond long.',
             )
 
+        const expires = durationMs ? Date.now() + durationMs : null
+        const moderator = await interaction.guild!.members.fetch(interaction.user.id)
         const member = await interaction.guild!.members.fetch(user.id)
         if (!member)
             throw new CommandError(
@@ -42,25 +45,23 @@ export default {
                 'The provided member is not in the server or does not exist.',
             )
 
-        await applyRolePreset(member, 'mute', durationMs ? Date.now() + durationMs : null)
+        if (member.manageable)
+            throw new CommandError(CommandErrorType.Generic, 'This user cannot be managed by the bot.')
 
-        const embed = createModerationActionEmbed(
-            'Muted',
-            user,
-            interaction.user,
-            reason ?? 'No reason provided',
-            durationMs,
+        if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0)
+            throw new CommandError(
+                CommandErrorType.InvalidUser,
+                'You cannot mute a user with a role equal to or higher than yours.',
+            )
+
+        await applyRolePreset(member, 'mute', durationMs ? Date.now() + durationMs : null)
+        await sendModerationReplyAndLogs(
+            interaction,
+            createModerationActionEmbed('Muted', user, interaction.user, reason, durationMs),
         )
 
-        const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())
-
-        const logConfig = config.moderation?.log
-        if (logConfig) {
-            const channel = await interaction.guild!.channels.fetch(logConfig.thread ?? logConfig.channel)
-            if (!channel || !channel.isTextBased())
-                return void logger.warn('The moderation log channel does not exist, skipping logging')
-
-            await channel.send({ embeds: [applyReferenceToModerationActionEmbed(embed, reply.url)] })
-        }
+        logger.info(
+            `Moderator ${interaction.user.tag} (${interaction.user.id}) muted ${user.tag} (${user.id}) until ${expires} because ${reason}`,
+        )
     },
 } satisfies Command

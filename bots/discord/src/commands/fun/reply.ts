@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, type TextBasedChannel } from 'discord.js'
 
+import { config } from '$/context'
 import type { Command } from '..'
 
 export default {
@@ -16,7 +17,7 @@ export default {
         .toJSON(),
 
     memberRequirements: {
-        roles: ['955220417969262612', '973886585294704640'],
+        roles: config.moderation?.roles ?? [],
     },
 
     global: false,

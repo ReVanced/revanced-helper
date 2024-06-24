@@ -48,12 +48,18 @@ export default {
 
         logger.info(`Setting slowmode to ${duration}ms on ${channel.id}`)
 
-        await channel.setRateLimitPerUser(
-            duration / 1000,
-            `Slowmode set by @${interaction.user.username} (${interaction.user.id})`,
-        )
+        await channel.setRateLimitPerUser(duration / 1000, `Set by ${interaction.user.tag} (${interaction.user.id})`)
+
         await interaction.reply({
-            embeds: [createSuccessEmbed(`Slowmode set to ${durationToString(duration)} on ${channel.toString()}`)],
+            embeds: [
+                createSuccessEmbed(
+                    `Slowmode ${duration ? `set to ${durationToString(duration)}` : 'removed'} on ${channel.toString()}`,
+                ),
+            ],
         })
+
+        logger.info(
+            `${interaction.user.tag} (${interaction.user.id}) set the slowmode on ${channel.name} (${channel.id}) to ${duration}ms`,
+        )
     },
 } satisfies Command

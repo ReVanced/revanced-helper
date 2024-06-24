@@ -2,8 +2,10 @@ import { SlashCommandBuilder } from 'discord.js'
 
 import type { Command } from '..'
 
+import CommandError, { CommandErrorType } from '$/classes/CommandError'
 import { config } from '$/context'
-import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from '$/utils/discord/embeds'
+import { createModerationActionEmbed } from '$/utils/discord/embeds'
+import { sendModerationReplyAndLogs } from '$/utils/discord/moderation'
 import { parseDuration } from '$/utils/duration'
 
 export default {
@@ -23,10 +25,21 @@ export default {
 
     global: false,
 
-    async execute({ config, logger }, interaction) {
-        const user = interaction.options.getUser('member', true)
-        const reason = interaction.options.getString('reason') ?? undefined
+    async execute({ logger }, interaction) {
+        const user = interaction.options.getUser('user', true)
+        const reason = interaction.options.getString('reason') ?? 'No reason provided'
         const dmd = interaction.options.getString('dmd')
+
+        const member = await interaction.guild!.members.fetch(user.id)
+        const moderator = await interaction.guild!.members.fetch(interaction.user.id)
+
+        if (member.bannable) throw new CommandError(CommandErrorType.Generic, 'This user cannot be banned by the bot.')
+
+        if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0)
+            throw new CommandError(
+                CommandErrorType.InvalidUser,
+                'You cannot ban a user with a role equal to or higher than yours.',
+            )
 
         const dms = Math.floor(dmd ? parseDuration(dmd) : 0 / 1000)
         await interaction.guild!.members.ban(user, {
@@ -34,16 +47,12 @@ export default {
             deleteMessageSeconds: dms,
         })
 
-        const embed = createModerationActionEmbed('Banned', user, interaction.user, reason ?? 'No reason provided')
-        const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())
-
-        const logConfig = config.moderation?.log
-        if (logConfig) {
-            const channel = await interaction.guild!.channels.fetch(logConfig.thread ?? logConfig.channel)
-            if (!channel || !channel.isTextBased())
-                return void logger.warn('The moderation log channel does not exist, skipping logging')
-
-            await channel.send({ embeds: [applyReferenceToModerationActionEmbed(embed, reply.url)] })
-        }
+        await sendModerationReplyAndLogs(
+            interaction,
+            createModerationActionEmbed('Banned', user, interaction.user, reason),
+        )
+        logger.info(
+            `${interaction.user.tag} (${interaction.user.id}) banned ${user.tag} (${user.id}) because ${reason}, deleting their messages sent in the previous ${dms}s`,
+        )
     },
 } satisfies Command

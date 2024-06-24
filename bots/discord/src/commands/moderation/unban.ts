@@ -3,7 +3,8 @@ import { SlashCommandBuilder } from 'discord.js'
 import type { Command } from '..'
 
 import { config } from '$/context'
-import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from '$/utils/discord/embeds'
+import { createModerationActionEmbed } from '$/utils/discord/embeds'
+import { sendModerationReplyAndLogs } from '$/utils/discord/moderation'
 
 export default {
     data: new SlashCommandBuilder()
@@ -18,24 +19,15 @@ export default {
 
     global: false,
 
-    async execute({ config, logger }, interaction) {
-        const user = interaction.options.getUser('member', true)
+    async execute({ logger }, interaction) {
+        const user = interaction.options.getUser('user', true)
 
         await interaction.guild!.members.unban(
             user,
             `Unbanned by moderator ${interaction.user.tag} (${interaction.user.id})`,
         )
 
-        const embed = createModerationActionEmbed('Unbanned', user, interaction.user)
-        const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())
-
-        const logConfig = config.moderation?.log
-        if (logConfig) {
-            const channel = await interaction.guild!.channels.fetch(logConfig.thread ?? logConfig.channel)
-            if (!channel || !channel.isTextBased())
-                return void logger.warn('The moderation log channel does not exist, skipping logging')
-
-            await channel.send({ embeds: [applyReferenceToModerationActionEmbed(embed, reply.url)] })
-        }
+        await sendModerationReplyAndLogs(interaction, createModerationActionEmbed('Unbanned', user, interaction.user))
+        logger.info(`${interaction.user.tag} (${interaction.user.id}) unbanned ${user.tag} (${user.id})`)
     },
 } satisfies Command
