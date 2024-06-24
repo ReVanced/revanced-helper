@@ -6,7 +6,7 @@ import type { Command } from '..'
 
 import { config } from '$/context'
 import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from '$/utils/discord/embeds'
-import { parse } from 'simple-duration'
+import { parseDuration } from '$/utils/duration'
 
 export default {
     data: new SlashCommandBuilder()
@@ -27,7 +27,7 @@ export default {
         const user = interaction.options.getUser('member', true)
         const reason = interaction.options.getString('reason')
         const duration = interaction.options.getString('duration')
-        const durationMs = duration ? parse(duration) : null
+        const durationMs = duration ? parseDuration(duration) : null
 
         if (Number.isInteger(durationMs) && durationMs! < 1)
             throw new CommandError(
