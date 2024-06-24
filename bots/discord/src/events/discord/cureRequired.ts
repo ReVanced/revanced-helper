@@ -3,7 +3,7 @@ import { cureNickname } from '$/utils/discord/moderation'
 
 on('guildMemberUpdate', async (_, oldMember, newMember) => {
     if (newMember.user.bot) return
-    if (oldMember.nickname !== newMember.nickname) await cureNickname(newMember)
+    if (oldMember.displayName !== newMember.displayName) await cureNickname(newMember)
 })
 
 on('guildMemberAdd', (_, member) => {
