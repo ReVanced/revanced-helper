@@ -46,7 +46,7 @@ export const removeRolePreset = async (member: GuildMember, presetName: PresetKe
  * @returns The currently applied presets AND a callback function to run after correcting the presets in the database
  */
 const commonOperations = async (presetName: string, member: GuildMember, applying: boolean) => {
-    const preset = config.rolePresets?.guilds[presetName]?.[member.guild.id]
+    const preset = config.rolePresets?.guilds[member.guild.id]?.[presetName]
     if (!preset) throw new Error(`The preset "${presetName}" does not exist for this server`)
 
     const roles = new Set(member.roles.cache.keys())
