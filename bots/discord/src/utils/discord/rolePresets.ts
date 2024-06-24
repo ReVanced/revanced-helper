@@ -7,7 +7,7 @@ import { and, eq } from 'drizzle-orm'
 type PresetKey = string
 
 export const applyRolePreset = async (member: GuildMember, presetName: PresetKey, untilMs: number | null) => {
-    const afterInsert = await commonOperations(presetName, member, true)
+    const afterInsert = await applyRolesUsingPreset(presetName, member, true)
     const until = untilMs ? Math.ceil(untilMs / 1000) : null
 
     await database
@@ -26,7 +26,7 @@ export const applyRolePreset = async (member: GuildMember, presetName: PresetKey
 }
 
 export const removeRolePreset = async (member: GuildMember, presetName: PresetKey) => {
-    const afterDelete = await commonOperations(presetName, member, false)
+    const afterDelete = await applyRolesUsingPreset(presetName, member, false)
 
     await database
         .delete(appliedPresets)
@@ -41,11 +41,7 @@ export const removeRolePreset = async (member: GuildMember, presetName: PresetKe
         .then(afterDelete)
 }
 
-/**
- * Inserts (if not already present) an entry in the database, sets the member's roles
- * @returns The currently applied presets AND a callback function to run after correcting the presets in the database
- */
-const commonOperations = async (presetName: string, member: GuildMember, applying: boolean) => {
+export const applyRolesUsingPreset = async (presetName: string, member: GuildMember, applying: boolean) => {
     const preset = config.rolePresets?.guilds[member.guild.id]?.[presetName]
     if (!preset) throw new Error(`The preset "${presetName}" does not exist for this server`)
 
