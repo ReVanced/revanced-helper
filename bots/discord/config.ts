@@ -4,6 +4,7 @@ export default {
     owners: ['USER_ID_HERE'],
     guilds: ['GUILD_ID_HERE'],
     moderation: {
+        roles: ['ROLE_ID_HERE'],
         log: {
             channel: 'CHANNEL_ID_HERE',
             // Optional

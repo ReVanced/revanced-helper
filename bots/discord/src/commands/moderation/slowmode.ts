@@ -4,6 +4,7 @@ import { durationToString, parseDuration } from '$/utils/duration'
 import { SlashCommandBuilder } from 'discord.js'
 
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
+import { config } from '$/context'
 import type { Command } from '..'
 
 export default {
@@ -20,7 +21,7 @@ export default {
         .toJSON(),
 
     memberRequirements: {
-        roles: ['955220417969262612', '973886585294704640'],
+        roles: config.moderation?.roles ?? [],
     },
 
     global: false,

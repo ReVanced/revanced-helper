@@ -4,6 +4,7 @@ export type Config = {
     owners: string[]
     guilds: string[]
     moderation?: {
+        roles: string[]
         log?: {
             channel: string
             thread?: string

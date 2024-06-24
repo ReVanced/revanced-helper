@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
+import { config } from '$/context'
 import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from '$/utils/discord/embeds'
 import { removeRolePreset } from '$/utils/discord/rolePresets'
 import type { Command } from '..'
@@ -13,7 +14,7 @@ export default {
         .toJSON(),
 
     memberRequirements: {
-        permissions: 8n,
+        roles: config.moderation?.roles ?? [],
     },
 
     global: false,

@@ -4,6 +4,7 @@ import CommandError, { CommandErrorType } from '$/classes/CommandError'
 import { applyRolePreset } from '$/utils/discord/rolePresets'
 import type { Command } from '..'
 
+import { config } from '$/context'
 import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from '$/utils/discord/embeds'
 import { parse } from 'simple-duration'
 
@@ -17,7 +18,7 @@ export default {
         .toJSON(),
 
     memberRequirements: {
-        permissions: 8n,
+        roles: config.moderation?.roles ?? [],
     },
 
     global: false,
