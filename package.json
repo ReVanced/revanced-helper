@@ -41,8 +41,5 @@
     "turbo": "^1.13.4",
     "typescript": "^5.5.2"
   },
-  "trustedDependencies": ["@biomejs/biome", "esbuild", "lefthook", "tesseract.js"],
-  "patchedDependencies": {
-    "tesseract.js@5.1.0": "patches/tesseract.js@5.1.0.patch"
-  }
+  "trustedDependencies": ["@biomejs/biome", "esbuild", "lefthook"]
 }

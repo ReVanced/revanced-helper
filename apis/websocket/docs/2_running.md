@@ -35,8 +35,17 @@ If you're looking to build and host the server somewhere else, you can run:
 bun bundle
 ```
 
-The files will be placed in the `dist` directory. **Configurations and `.env` files will NOT be copied automatically.**  
-You can run these files using the command `bun run index.js`.
+The files will be placed in the `dist` directory. **Configurations and `.env` files will NOT be copied automatically.**
+
+To start up the server, you'll need to install `tesseract.js` first.
+```sh
+bun install tesseract.js
+# or
+bun install tesseract.js -g
+
+# Run the server
+bun run index.js
+```
 
 ## ⏭️ What's next
 
