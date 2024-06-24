@@ -69,7 +69,7 @@ export default on('interactionCreate', async (context, interaction) => {
 
     try {
         logger.debug(`Command ${interaction.commandName} being executed`)
-        await command.execute(context, interaction)
+        await command.execute(context, interaction, { userIsOwner: isOwner })
     } catch (err) {
         logger.error(`Error while executing command ${interaction.commandName}:`, err)
         await interaction[interaction.replied ? 'followUp' : 'reply']({

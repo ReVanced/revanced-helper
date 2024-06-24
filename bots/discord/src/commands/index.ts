@@ -10,7 +10,11 @@ export type Command = {
      * The function to execute when this command is triggered
      * @param interaction The interaction that triggered this command
      */
-    execute: (context: typeof import('../context'), interaction: ChatInputCommandInteraction) => Promise<void> | void
+    execute: (
+        context: typeof import('../context'),
+        interaction: ChatInputCommandInteraction,
+        info: Info,
+    ) => Promise<void> | void
     memberRequirements?: {
         /**
          * The mode to use when checking for requirements.
@@ -45,4 +49,8 @@ export type Command = {
      * @default false
      */
     global?: boolean
+}
+
+export interface Info {
+    userIsOwner: boolean
 }

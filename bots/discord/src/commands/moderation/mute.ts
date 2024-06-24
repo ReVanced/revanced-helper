@@ -24,7 +24,7 @@ export default {
 
     global: false,
 
-    async execute({ logger }, interaction) {
+    async execute({ logger }, interaction, { userIsOwner }) {
         const user = interaction.options.getUser('member', true)
         const reason = interaction.options.getString('reason') ?? 'No reason provided'
         const duration = interaction.options.getString('duration')
@@ -48,7 +48,7 @@ export default {
         if (member.manageable)
             throw new CommandError(CommandErrorType.Generic, 'This user cannot be managed by the bot.')
 
-        if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0)
+        if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0 && !userIsOwner)
             throw new CommandError(
                 CommandErrorType.InvalidUser,
                 'You cannot mute a user with a role equal to or higher than yours.',
