@@ -63,6 +63,7 @@ export const createModerationActionEmbed = (
         .setTitle(`${action} ${user.tag}`)
         .setDescription(`${user.toString()} was ${action.toLowerCase()} by ${moderator.toString()}`)
         .addFields(fields)
+        .setThumbnail(user.displayAvatarURL({ forceStatic: true }))
 
     return applyCommonEmbedStyles(embed, true, true, true)
 }
