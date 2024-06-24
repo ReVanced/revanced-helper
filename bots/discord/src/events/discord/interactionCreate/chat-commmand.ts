@@ -72,7 +72,7 @@ export default on('interactionCreate', async (context, interaction) => {
         await command.execute(context, interaction)
     } catch (err) {
         logger.error(`Error while executing command ${interaction.commandName}:`, err)
-        await interaction.reply({
+        await interaction[interaction.replied ? 'followUp' : 'reply']({
             embeds: [err instanceof CommandError ? err.toEmbed() : createStackTraceEmbed(err)],
             ephemeral: true,
         })
