@@ -45,7 +45,7 @@ export default {
                 'The provided member is not in the server or does not exist.',
             )
 
-        if (member.manageable)
+        if (!member.manageable)
             throw new CommandError(CommandErrorType.Generic, 'This user cannot be managed by the bot.')
 
         if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0 && !userIsOwner)
