@@ -52,7 +52,13 @@ export const cureNickname = async (member: GuildMember) => {
         .toString()
         .replace(/[^a-zA-Z0-9]/g, '')
 
-    if (!cured || !/^[a-zA-Z]/.test(cured)) cured = config.moderation?.cure?.defaultName ?? 'ReVanced member'
+    if (cured.length < 3 || !/^[a-zA-Z]/.test(cured))
+        cured =
+            member.user.username.length >= 3
+                ? member.user.username
+                : config.moderation?.cure?.defaultName ?? 'Server member'
+
+    if (cured.toLowerCase() === name.toLowerCase()) return
 
     await member.setNickname(cured, 'Nickname cured')
     logger.log(`Cured nickname for ${member.user.tag} (${member.id}) from "${name}"`)
