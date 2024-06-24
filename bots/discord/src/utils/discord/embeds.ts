@@ -2,7 +2,7 @@ import { DefaultEmbedColor, MessageScanHumanizedMode, ReVancedLogoURL } from '$/
 import { EmbedBuilder, type EmbedField, type User } from 'discord.js'
 import type { ConfigMessageScanResponseMessage } from '../../../config.schema'
 
-export const createErrorEmbed = (title: string, description?: string) =>
+export const createErrorEmbed = (title: string | null, description?: string) =>
     applyCommonEmbedStyles(
         new EmbedBuilder()
             .setTitle(title)
@@ -15,7 +15,7 @@ export const createStackTraceEmbed = (stack: unknown) =>
     // biome-ignore lint/style/useTemplate: shut
     createErrorEmbed('An exception was thrown', '```js\n' + stack + '```')
 
-export const createSuccessEmbed = (title: string, description?: string) =>
+export const createSuccessEmbed = (title: string | null, description?: string) =>
     applyCommonEmbedStyles(
         new EmbedBuilder()
             .setTitle(title)
