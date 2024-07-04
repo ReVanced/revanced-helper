@@ -15,7 +15,7 @@ export type Config = {
     }
     rolePresets?: {
         checkExpiredEvery: number
-        guilds: Record<string, Record<string, RolePresetData>>
+        guilds: Record<string, Record<string, RolePresetConfig>>
     }
     messageScan?: {
         allowedAttachmentMimeTypes: string[]
@@ -39,11 +39,12 @@ export type Config = {
     }
     logLevel: 'none' | 'error' | 'warn' | 'info' | 'log' | 'trace' | 'debug'
     api: {
-        websocketUrl: string
+        url: string
+        disconnectLimit?: number
     }
 }
 
-export type RolePresetData = {
+export type RolePresetConfig = {
     give: string[]
     take: string[]
 }

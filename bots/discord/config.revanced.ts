@@ -35,6 +35,7 @@ export default {
     },
     logLevel: 'debug',
     api: {
-        websocketUrl: 'ws://127.0.0.1:3000',
+        url: 'ws://127.0.0.1:3000',
+        disconnectLimit: 3,
     },
 } satisfies Config as Config
