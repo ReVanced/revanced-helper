@@ -1,6 +1,8 @@
-import { createWorker as createTesseractWorker } from 'tesseract.js'
+import { OEM, createWorker as createTesseractWorker } from 'tesseract.js'
 
+import { join as joinPath } from 'path'
 import { inspect as inspectObject } from 'util'
+import { exists as pathExists } from 'fs/promises'
 
 import Client from './classes/Client'
 
@@ -36,10 +38,6 @@ if (!['development', 'production'].includes(environment)) {
 
 logger.info(`Running in ${environment} mode...`)
 
-if (environment === 'production' && process.env['IS_USING_DOT_ENV']) {
-    logger.warn('You seem to be using .env files, this is generally not a good idea in production...')
-}
-
 if (!process.env['WIT_AI_TOKEN']) {
     logger.error('WIT_AI_TOKEN is not defined in the environment variables')
     process.exit(1)
@@ -47,7 +45,14 @@ if (!process.env['WIT_AI_TOKEN']) {
 
 // Workers and API clients
 
-const tesseract = await createTesseractWorker('eng')
+const TesseractWorkerPath = joinPath(import.meta.dir, 'worker', 'index.js')
+const TesseractCompiledWorkerExists = await pathExists(TesseractWorkerPath)
+const tesseract = await createTesseractWorker(
+    'eng',
+    OEM.DEFAULT,
+    TesseractCompiledWorkerExists ? { workerPath: TesseractWorkerPath } : undefined,
+)
+
 const wit = {
     token: process.env['WIT_AI_TOKEN']!,
     async fetch(route: string, options?: RequestInit) {

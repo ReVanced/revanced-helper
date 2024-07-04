@@ -18,8 +18,18 @@
       "$commands": ["./src/commands/index.ts"],
       "$commands/*": ["./src/commands/*"]
     },
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "transform": "typescript-transform-path-rewrite"
+      }
+    ]
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["./**/*.ts", "./*.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "./config.schema.ts",
+    "./drizzle.config.ts"
+  ],
+  "include": ["./src/**/*.ts", "./scripts/**/*.ts"]
 }

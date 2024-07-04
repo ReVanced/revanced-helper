@@ -1,41 +1,26 @@
 import { SlashCommandBuilder } from 'discord.js'
 
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder()
         .setName('exception-test')
-        .setDescription('throw up pls')
+        .setDescription('Makes the bot intentionally hate you by throwing an exception')
         .addStringOption(option =>
             option
                 .setName('type')
                 .setDescription('The type of exception to throw')
-                .addChoices({
-                    name: 'process exception',
-                    value: 'Process',
-                })
-                .addChoices({
-                    name: 'generic error',
-                    value: 'Generic',
-                })
-                .addChoices({
-                    name: 'invalid argument',
-                    value: 'InvalidArgument',
-                })
-                .addChoices({
-                    name: 'invalid channel',
-                    value: 'InvalidChannel',
-                })
-                .addChoices({
-                    name: 'invalid user',
-                    value: 'InvalidUser',
-                })
-                .addChoices({
-                    name: 'invalid duration',
-                    value: 'InvalidDuration',
-                })
-                .setRequired(true),
+                .setRequired(true)
+                .addChoices(
+                    Object.keys(CommandErrorType).map(
+                        k =>
+                            ({
+                                name: k,
+                                value: k,
+                            }) as const,
+                    ),
+                ),
         )
         .setDMPermission(true)
         .toJSON(),

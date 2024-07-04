@@ -17,17 +17,24 @@ To start developing, you'll need to set up the development environment first.
 
 3. Install dependencies
 
+   ```sh
+   bun install
+   ```
+
+4. Install Git hooks for linting (optional, but recommended)
+
     ```sh
-    bun install
+    bunx lefthook install
     ```
 
-4. Build packages/libraries
+5. Build packages/libraries
 
     ```sh
-    bun run build
+    bun run build:packages
     ```
 
-5. Change your directory to a project's root
+6. Change your directory to a project's root
+
     ```sh
     # WebSocket API
     cd apis/websocket

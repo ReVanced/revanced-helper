@@ -5,7 +5,7 @@ import { SlashCommandBuilder } from 'discord.js'
 
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
 import { config } from '$/context'
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder()

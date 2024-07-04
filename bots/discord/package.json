@@ -4,13 +4,15 @@
   "private": true,
   "version": "0.1.0",
   "description": "🤖 Discord bot assisting ReVanced",
-  "main": "dist/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "register": "bun run scripts/reload-slash-commands.ts",
-    "dev": "bun --watch src/index.ts",
-    "prepare": "drizzle-kit push",
-    "build": "tsc",
-    "watch": "bun dev"
+    "start": "bun run scripts/generate-indexes.ts && bun run src/index.ts",
+    "dev": "bun run scripts/generate-indexes.ts && bun --watch src/index.ts",
+    "build:config": "bun build config.ts --outdir=dist",
+    "build": "bun prepare && bun build:config && bun build src/index.ts -e ./config.js --target=bun --outdir=dist/src && DATABASE_URL=dist/db.sqlite3 drizzle-kit push",
+    "watch": "bun dev",
+    "prepare": "bun run scripts/generate-indexes.ts"
   },
   "repository": {
     "type": "git",
@@ -28,15 +30,18 @@
   },
   "homepage": "https://github.com/revanced/revanced-helper#readme",
   "dependencies": {
+    "@discordjs/builders": "^1.8.2",
+    "@discordjs/rest": "^2.3.0",
+    "@libsql/client": "^0.6.2",
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
     "chalk": "^5.3.0",
     "decancer": "^3.2.2",
     "discord.js": "^14.15.3",
+    "drizzle-kit": "^0.22.7",
     "drizzle-orm": "^0.31.2"
   },
   "devDependencies": {
-    "@libsql/client": "^0.6.2",
-    "drizzle-kit": "^0.22.7"
+    "discord-api-types": "^0.37.91"
   }
 }

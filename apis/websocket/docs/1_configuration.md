@@ -42,4 +42,4 @@ The possible levels (sorted by their importance descendingly) are:
 
 The next page will tell you how to run and bundle the server.
 
-Continue: [🏃🏻‍♂️ Running the server](./2_running.md)
+Continue: [🏃🏻‍♂️ Running the server](./2_running_and_deploying.md)

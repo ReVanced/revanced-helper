@@ -7,5 +7,6 @@
     "module": "ESNext",
     "composite": true,
     "noEmit": false
-  }
+  },
+  "include": ["src/**/*.ts"]
 }

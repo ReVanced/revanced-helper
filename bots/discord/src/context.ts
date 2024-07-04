@@ -4,13 +4,15 @@ import { createLogger } from '@revanced/bot-shared'
 import { ActivityType, Client as DiscordClient, Partials } from 'discord.js'
 import { drizzle } from 'drizzle-orm/bun-sqlite'
 
-import config from '../config'
+// Export config first, as commands require them
+import config from '../config.js'
+export { config }
+
+import * as commands from './commands'
 import * as schemas from './database/schemas'
 
-import { loadCommands } from '$utils/discord/commands'
-import { pathJoinCurrentDir } from '$utils/fs'
+import type { Command } from './commands/types'
 
-export { config }
 export const logger = createLogger({
     level: config.logLevel === 'none' ? Number.MAX_SAFE_INTEGER : config.logLevel,
 })
@@ -59,5 +61,5 @@ export const discord = {
             ],
         },
     }),
-    commands: await loadCommands(pathJoinCurrentDir(import.meta.url, 'commands')),
+    commands: Object.fromEntries(Object.values<Command>(commands).map((cmd) => [cmd.data.name, cmd])) as Record<string, Command>,
 } as const

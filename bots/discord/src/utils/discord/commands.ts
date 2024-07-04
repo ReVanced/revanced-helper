@@ -1,4 +1,4 @@
-import type { Command } from '$commands'
+import type { Command } from '$commands/types'
 import { listAllFilesRecursive } from '$utils/fs'
 
 export const loadCommands = async (dir: string) => {

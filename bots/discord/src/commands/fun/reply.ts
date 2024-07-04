@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, type TextBasedChannel } from 'discord.js'
 
 import { config } from '$/context'
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder()

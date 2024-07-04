@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js'
 
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
 import { applyRolePreset } from '$/utils/discord/rolePresets'
-import type { Command } from '..'
+import type { Command } from '../types'
 
 import { config } from '$/context'
 import { createModerationActionEmbed } from '$/utils/discord/embeds'

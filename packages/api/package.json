@@ -31,6 +31,7 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@types/ws": "^8.5.10",
     "typed-emitter": "^2.1.0"
   }
 }

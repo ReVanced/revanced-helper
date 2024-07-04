@@ -74,34 +74,49 @@ export default {
 
 Events are a bit different. We have 2 different event systems for both Discord API and our own bot API. This means the [`src/events`](../src/events) directory will have 2 separate directories inside. They are specific to the respective API, but the utility functions make the experience with both of them very similar.
 
-To start adding events, you can use this template:
+To start adding events, you can use these templates:
+
+##### Discord event template
 
 ```ts
-// For Discord events (remove functions you do not use)
-import { on, once } from '$utils/discord/events'
+import { on, once, withContext } from '$utils/discord/events'
 
-// You will have auto-complete and types for all of them, don't worry!
-// WARNING: The first argument is the `context` object for Discord events
-//          This is intended by design because Discord events usually always use it.
-on('eventName', async (context, arg1, arg2, ...) => {
-    // Do something in here when the event is triggered
+on('eventName', async (arg1, arg2, ...) => {
+    // Do something when the event is triggered
+})
+
+once('eventName', async (arg1, arg2, ...) => {
+    // Do something for only a single time after it's triggered, never again
+})
+
+withContext(on, 'eventName', async (context, arg1, arg2, ...) => {
+    // Do some other thing that requires the context object
 })
 ```
 
+##### API events template
+
 ```ts
-// For "Helper" events (remove functions you do not use)
 import { on, once } from '$utils/api/events'
 
-// You will have auto-complete and types for all of them, don't worry!
 on('eventName', async (arg1, arg2, ...) => {
-    // Do something in here when the event is triggered
+    // Do something when the event is triggered
+})
+
+once('eventName', async (arg1, arg2, ...) => {
+    // Do something for only a single time after it's triggered, never again
 })
 ```
 
 API events are stored in [`src/events/api`](../src/events/api), and Discord events are in [`src/events/discord`](../src/events/discord).
 
+### 📛 Event file naming conventions
+
+Since a single event file can have multiple listeners, you should name exactly what the file handles.  
+For example, when a nickname change happens, a member joins, or a member sends a message, the bot is required to cure their nickname. Therefore we would name the event file `curedRequired.ts`.
+
 > [!NOTE]  
-> If you need multiple event listeners for the same exact event, you can put them in a directory with the event name and rename the listeners to what they handle specifically. You can see how we do it in [`src/events/discord/interactionCreate`](../src/events/discord/interactionCreate).
+> If you need multiple event listeners for the same exact event **but also need more abstraction**, you can put them in a directory with the event name and rename the listeners to what they handle specifically. You can see how we do it in [`src/events/discord/interactionCreate`](../src/events/discord/interactionCreate).
 
 ## ⏭️ What's next
 

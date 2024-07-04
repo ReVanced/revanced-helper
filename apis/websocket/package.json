@@ -6,7 +6,7 @@
   "description": "🧦 WebSocket API server for bots assisting ReVanced",
   "main": "dist/index.js",
   "scripts": {
-    "bundle": "bun build src/index.ts --outdir=dist --target=bun -e tesseract.js",
+    "bundle": "bun run scripts/build.ts",
     "dev": "bun run src/index.ts --watch",
     "build": "bun bundle",
     "watch": "bun dev"
@@ -30,9 +30,11 @@
     "@revanced/bot-shared": "workspace:*",
     "@sapphire/async-queue": "^1.5.2",
     "chalk": "^5.3.0",
-    "tesseract.js": "^5.1.0"
+    "tesseract.js": "^5.1.0",
+    "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@types/ws": "^8.5.10",
     "typed-emitter": "^2.1.0"
   }
 }

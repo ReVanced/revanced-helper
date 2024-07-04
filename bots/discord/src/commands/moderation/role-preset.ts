@@ -4,7 +4,7 @@ import CommandError, { CommandErrorType } from '$/classes/CommandError'
 import { sendPresetReplyAndLogs } from '$/utils/discord/moderation'
 import { applyRolePreset, removeRolePreset } from '$/utils/discord/rolePresets'
 import { parseDuration } from '$/utils/duration'
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder()

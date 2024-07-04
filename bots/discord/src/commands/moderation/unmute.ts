@@ -7,7 +7,7 @@ import { createModerationActionEmbed } from '$/utils/discord/embeds'
 import { sendModerationReplyAndLogs } from '$/utils/discord/moderation'
 import { removeRolePreset } from '$/utils/discord/rolePresets'
 import { and, eq } from 'drizzle-orm'
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder()

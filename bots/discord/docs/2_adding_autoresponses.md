@@ -86,4 +86,4 @@ filterOverride: {
 
 The next page will tell you how to run and bundle the bot.
 
-Continue: [🏃🏻‍♂️ Running the bot](./3_running.md)
+Continue: [🏃🏻‍♂️ Running the bot](./3_running_and_deploying.md)

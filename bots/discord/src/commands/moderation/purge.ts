@@ -4,7 +4,7 @@ import CommandError, { CommandErrorType } from '$/classes/CommandError'
 import { config } from '$/context'
 import { applyCommonEmbedStyles } from '$/utils/discord/embeds'
 
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder()

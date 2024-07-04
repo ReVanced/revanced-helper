@@ -2,7 +2,7 @@ import { applyCommonEmbedStyles } from '$/utils/discord/embeds'
 
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
 
-import type { Command } from '..'
+import type { Command } from '../types'
 
 export default {
     data: new SlashCommandBuilder().setName('coinflip').setDescription('Do a coinflip!').setDMPermission(true).toJSON(),
