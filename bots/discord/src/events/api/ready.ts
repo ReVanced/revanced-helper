@@ -1,6 +1,3 @@
-import { on } from '$utils/api/events'
-import { logger } from 'src/context'
+import { on, withContext } from '$utils/api/events'
 
-on('ready', () => {
-    logger.info('Connected to the bot API')
-})
+withContext(on, 'ready', ({ logger }) => void logger.info('Connected to the bot API'))

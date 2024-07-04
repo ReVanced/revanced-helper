@@ -1,8 +1,8 @@
 import CommandError from '$/classes/CommandError'
 import { createErrorEmbed, createStackTraceEmbed } from '$utils/discord/embeds'
-import { on } from '$utils/discord/events'
+import { on, withContext } from '$utils/discord/events'
 
-export default on('interactionCreate', async (context, interaction) => {
+withContext(on, 'interactionCreate', async (context, interaction) => {
     if (!interaction.isChatInputCommand()) return
 
     const { logger, discord, config } = context

@@ -1,9 +1,9 @@
 import { appliedPresets } from '$/database/schemas'
-import { on } from '$/utils/discord/events'
+import { on, withContext } from '$/utils/discord/events'
 import { applyRolesUsingPreset } from '$/utils/discord/rolePresets'
 import { and, eq, gt } from 'drizzle-orm'
 
-on('guildMemberAdd', async ({ database }, member) => {
+withContext(on, 'guildMemberAdd', async ({ database }, member) => {
     const applieds = await database.query.appliedPresets.findMany({
         where: and(
             eq(appliedPresets.memberId, member.id),

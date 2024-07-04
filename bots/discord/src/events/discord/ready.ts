@@ -3,9 +3,9 @@ import { appliedPresets } from '$/database/schemas'
 import { removeRolePreset } from '$/utils/discord/rolePresets'
 import type { Client } from 'discord.js'
 import { lt } from 'drizzle-orm'
-import { on } from 'src/utils/discord/events'
+import { on, withContext } from 'src/utils/discord/events'
 
-export default on('ready', ({ config, logger }, client) => {
+export default withContext(on, 'ready', ({ config, logger }, client) => {
     logger.info(`Connected to Discord API, logged in as ${client.user.displayName} (@${client.user.tag})!`)
     logger.info(
         `Bot is in ${client.guilds.cache.size} guilds, if this is not expected, please run the /leave-unknowns command`,

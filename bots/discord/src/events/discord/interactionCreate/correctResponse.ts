@@ -1,13 +1,13 @@
 import { responses } from '$/database/schemas'
 import { handleUserResponseCorrection } from '$/utils/discord/messageScan'
 import { createErrorEmbed, createStackTraceEmbed, createSuccessEmbed } from '$utils/discord/embeds'
-import { on } from '$utils/discord/events'
+import { on, withContext } from '$utils/discord/events'
 
 import type { ButtonInteraction, StringSelectMenuInteraction, TextBasedChannel } from 'discord.js'
 import { eq } from 'drizzle-orm'
 
 // No permission check required as it is already done when the user reacts to a bot response
-export default on('interactionCreate', async (context, interaction) => {
+withContext(on, 'interactionCreate', async (context, interaction) => {
     const {
         logger,
         database: db,

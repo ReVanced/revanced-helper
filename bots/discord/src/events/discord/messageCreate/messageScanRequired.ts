@@ -2,15 +2,15 @@ import { MessageScanLabeledResponseReactions } from '$/constants'
 import { responses } from '$/database/schemas'
 import { getResponseFromText, shouldScanMessage } from '$/utils/discord/messageScan'
 import { createMessageScanResponseEmbed } from '$utils/discord/embeds'
-import { on } from '$utils/discord/events'
+import { on, withContext } from '$utils/discord/events'
 
-on('messageCreate', async (ctx, msg) => {
+withContext(on, 'messageCreate', async (context, msg) => {
     const {
         api,
         config: { messageScan: config },
         database: db,
         logger,
-    } = ctx
+    } = context
 
     if (!config || !config.responses) return
 
@@ -21,7 +21,7 @@ on('messageCreate', async (ctx, msg) => {
         try {
             logger.debug(`Classifying message ${msg.id}`)
 
-            const { response, label } = await getResponseFromText(msg.content, filteredResponses, ctx)
+            const { response, label } = await getResponseFromText(msg.content, filteredResponses, context)
 
             if (response) {
                 logger.debug('Response found')
@@ -59,7 +59,7 @@ on('messageCreate', async (ctx, msg) => {
 
             try {
                 const { text: content } = await api.client.parseImage(attachment.url)
-                const { response } = await getResponseFromText(content, filteredResponses, ctx, true)
+                const { response } = await getResponseFromText(content, filteredResponses, context, true)
 
                 if (response) {
                     logger.debug(`Response found for attachment: ${attachment.url}`)

@@ -1,8 +1,7 @@
-import { on } from '$utils/api/events'
+import { on, withContext } from '$utils/api/events'
 import { DisconnectReason, HumanizedDisconnectReason } from '@revanced/bot-shared'
-import { api, logger } from 'src/context'
 
-on('disconnect', (reason, msg) => {
+withContext(on, 'disconnect', ({ api, config, logger }, reason, msg) => {
     if (reason === DisconnectReason.PlannedDisconnect && api.isStopping) return
 
     const ws = api.client.ws
@@ -16,8 +15,7 @@ on('disconnect', (reason, msg) => {
         }`,
     )
 
-    // TODO: move to config
-    if (api.disconnectCount >= 3) {
+    if (api.disconnectCount >= (config.api.disconnectLimit ?? 3)) {
         console.error('Disconnected from bot API too many times')
         // We don't want the process hanging
         process.exit(1)
@@ -26,5 +24,6 @@ on('disconnect', (reason, msg) => {
     logger.info(
         `Disconnected from bot API ${++api.disconnectCount} times (this time because: ${reason}, ${msg}), reconnecting again...`,
     )
+
     setTimeout(() => api.client.connect(), 10000)
 })
