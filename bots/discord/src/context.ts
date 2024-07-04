@@ -19,7 +19,7 @@ export const api = {
     client: new APIClient({
         api: {
             websocket: {
-                url: config.api.websocketUrl,
+                url: config.api.url,
             },
         },
     }),
@@ -27,7 +27,7 @@ export const api = {
     disconnectCount: 0,
 }
 
-const db = new Database('db.sqlite')
+const db = new Database(process.env['DATABASE_URL'])
 
 export const database = drizzle(db, {
     schema: schemas,

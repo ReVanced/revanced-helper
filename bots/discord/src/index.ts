@@ -1,10 +1,9 @@
-// import { listAllFilesRecursive, pathJoinCurrentDir } from '$utils/fs'
+import { api, discord, logger } from '$/context'
+import { listAllFilesRecursive, pathJoinCurrentDir } from '$utils/fs'
 import { getMissingEnvironmentVariables } from '@revanced/bot-shared'
-import { api, discord, logger } from './context'
-import { listAllFilesRecursive, pathJoinCurrentDir } from './utils/fs'
 
 // Check if token exists
-const missingEnvs = getMissingEnvironmentVariables(['DISCORD_TOKEN'])
+const missingEnvs = getMissingEnvironmentVariables(['DISCORD_TOKEN', 'DATABASE_URL'])
 if (missingEnvs.length) {
     for (const env of missingEnvs) logger.fatal(`${env} is not defined in environment variables`)
     process.exit(1)
