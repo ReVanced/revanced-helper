@@ -180,3 +180,7 @@ config.ts
 # DB
 *.db
 *.sqlite
+
+# Auto-generated files
+src/commands/index.ts
+src/events/*/index.ts
