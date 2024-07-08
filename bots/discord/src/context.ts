@@ -29,7 +29,7 @@ export const api = {
     disconnectCount: 0,
 }
 
-const db = new Database(process.env['DATABASE_URL'])
+const db = new Database(process.env['DATABASE_PATH'])
 
 export const database = drizzle(db, {
     schema: schemas,
@@ -61,5 +61,8 @@ export const discord = {
             ],
         },
     }),
-    commands: Object.fromEntries(Object.values<Command>(commands).map((cmd) => [cmd.data.name, cmd])) as Record<string, Command>,
+    commands: Object.fromEntries(Object.values<Command>(commands).map(cmd => [cmd.data.name, cmd])) as Record<
+        string,
+        Command
+    >,
 } as const

@@ -61,10 +61,10 @@ You can set environment variables in your shell or use a `.env` file which **Bun
 
 The Discord bot token.
 
-#### `DATABASE_URL`
+#### `DATABASE_PATH`
 
-The database URL, since we're using SQLite, we'll be using the `file` protocol.  
-Example values are: `file:./revanced.db`, `file:./db.sqlite`, `file:./discord_bot.sqlite`
+The database path.
+Example values are: `./revanced.db`, `db.sqlite3`, `../some/path/discord_bot.sqlite`
 
 ## ⏭️ What's next
 

@@ -10,7 +10,7 @@
     "start": "bun run scripts/generate-indexes.ts && bun run src/index.ts",
     "dev": "bun run scripts/generate-indexes.ts && bun --watch src/index.ts",
     "build:config": "bun build config.ts --outdir=dist",
-    "build": "bun prepare && bun build:config && bun build src/index.ts -e ./config.js --target=bun --outdir=dist/src && DATABASE_URL=dist/db.sqlite3 drizzle-kit push",
+    "build": "bun prepare && bun build:config && bun build src/index.ts -e ./config.js --target=bun --outdir=dist/src && DATABASE_PATH=dist/db.sqlite3 drizzle-kit push",
     "watch": "bun dev",
     "prepare": "bun run scripts/generate-indexes.ts"
   },

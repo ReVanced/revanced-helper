@@ -8,8 +8,8 @@
   "author": "Palm <contact@palmdevs.me> (https://palmdevs.me)",
   "workspaces": ["packages/*", "apis/*", "bots/*"],
   "scripts": {
-    "build": "turbo run build",
-    "build:packages": "turbo run build --filter=\"./packages/*\"",
+    "build:all": "turbo run build",
+    "build:packages": "turbo build --filter=\"./packages/*\"",
     "watch": "turbo run watch",
     "flint": "biome check --write .",
     "flint:check": "biome check .",
@@ -27,7 +27,7 @@
     "Palm <contact@palmdevs.me> (https://palmdevs.me)",
     "ReVanced <nosupport@revanced.app> (https://revanced.app)"
   ],
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "bun@1.1.18",
   "devDependencies": {
     "@biomejs/biome": "^1.8.2",
     "@commitlint/cli": "^19.3.0",

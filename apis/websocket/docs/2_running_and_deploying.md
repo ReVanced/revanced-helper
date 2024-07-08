@@ -25,8 +25,6 @@ The distribution files will be placed inside the `dist` directory. Inside will i
 -   The default configuration for the API
 -   Compiled source files of the API
 
-You'll need to also copy the `node_modules` directory dereferenced if you want to run the distribution files somewhere else.
-
 ## ✈️ Deploying
 
 To deploy the API, you'll need to:
@@ -43,7 +41,8 @@ To deploy the API, you'll need to:
 3. Replace the default configuration *(optional)*
 
 4. Configure environment variables  
-   As seen in [`.env.example`](../.env.example). You can also optionally use a `.env` file which **Bun will automatically load**.
+   As seen in [`.env.example`](../.env.example). You can also optionally use a `.env` file which **Bun will automatically load**.  
+   It is recommended to set `NODE_ENV` to `production` when deploying production builds.
 
 5. Finally, you can run the API using these commands
 
