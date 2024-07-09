@@ -1,10 +1,12 @@
+# You should follow the instructions in the monorepo root before building this container
+# This file should be triggered inside the project's root (which is ./bots/discord)
 FROM oven/bun:latest AS base
 
 FROM base AS build
 
 WORKDIR /build
 COPY . .
-RUN bun install && bun run build:packages && cd bots/discord && bun run build
+RUN cd bots/discord && bun run build
 
 FROM base AS release
 

@@ -44,6 +44,9 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Build packages
+        run: bun run build:packages
+
       - name: Build and release
         env:
           DOCKER_REGISTRY_USER: ${{ github.actor }}
