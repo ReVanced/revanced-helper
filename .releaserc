@@ -1,0 +1,52 @@
+{
+    "branches": [
+        "main",
+        {
+            "name": "dev",
+            "prerelease": true
+        }
+    ],
+    "plugins": [
+        [
+            "@semantic-release/commit-analyzer",
+            {
+                "preset": "conventionalcommits"
+            }
+        ],
+        "@semantic-release/release-notes-generator",
+        "@semantic-release/changelog",
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    "README.md",
+                    "CHANGELOG.md",
+                    "package.json"
+                ]
+            }
+        ],
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    {
+                        "path": "dist/*"
+                    }
+                ],
+                "successComment": false
+            }
+        ],
+        [
+            "@saithodev/semantic-release-backmerge",
+            {
+                "backmergeBranches": [
+                    {
+                        "from": "main",
+                        "to": "dev"
+                    }
+                ],
+                "clearWorkspace": true
+            }
+        ]
+    ]
+}

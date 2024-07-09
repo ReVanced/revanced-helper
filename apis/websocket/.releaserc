@@ -1,0 +1,20 @@
+{
+    "plugins": [
+        [
+            "@codedependant/semantic-release-docker",
+            {
+                "dockerImage": "revanced-bot-websocket-api",
+                "dockerRegistry": "ghcr.io",
+                "dockerProject": "revanced",
+                "dockerPlatform": [
+                    "linux/amd64",
+                    "linux/arm64"
+                ],
+                "dockerArgs": {
+                    "GITHUB_ACTOR": null,
+                    "GITHUB_TOKEN": null
+                }
+            }
+        ]
+    ]
+}
