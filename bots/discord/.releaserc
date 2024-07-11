@@ -6,6 +6,7 @@
                 "dockerImage": "revanced-discord-bot",
                 "dockerRegistry": "ghcr.io",
                 "dockerProject": "revanced",
+                "dockerContext": "../..",
                 "dockerPlatform": [
                     "linux/amd64",
                     "linux/arm64"

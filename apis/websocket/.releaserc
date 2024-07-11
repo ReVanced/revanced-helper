@@ -6,6 +6,7 @@
                 "dockerImage": "revanced-bot-websocket-api",
                 "dockerRegistry": "ghcr.io",
                 "dockerProject": "revanced",
+                "dockerContext": "../..",
                 "dockerPlatform": [
                     "linux/amd64",
                     "linux/arm64"
