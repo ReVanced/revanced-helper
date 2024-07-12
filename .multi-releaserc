@@ -1,9 +1,4 @@
 {
     "ignorePrivate": false,
-    "ignorePackages": ["!packages/**"],
-    "deps": {
-        "bump": "ignore",
-        "release": "patch",
-        "prefix": "^"
-    }
+    "ignorePackages": ["!packages/**"]
 }

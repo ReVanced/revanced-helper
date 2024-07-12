@@ -69,12 +69,11 @@ jobs:
         with:
           webhook_url: ${{ env.PORTAINER_WEBHOOK_URL }}
 
-      # TODO: Figure out how to use this action for specific repositories
-      # - name: Purge outdated images
-      #   uses: snok/container-retention-policy@v3.0.0
-      #   with:
-      #     account: ${{ github.actor }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     image-names: "revanced-api"
-      #     keep-n-most-recent: 5
-      #     cut-off: 3M
+      - name: Purge outdated images
+        uses: snok/container-retention-policy@v3.0.0
+        with:
+          account: ${{ github.actor }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: "revanced-bot-*"
+          keep-n-most-recent: 5
+          cut-off: 3M
