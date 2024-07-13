@@ -29,18 +29,28 @@
   ],
   "packageManager": "bun@1.1.18",
   "devDependencies": {
+    "@anolilab/multi-semantic-release": "^1.1.3",
     "@biomejs/biome": "^1.8.2",
+    "@codedependant/semantic-release-docker": "^5.0.3",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
+    "@saithodev/semantic-release-backmerge": "^4.0.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.1.0",
     "@tsconfig/strictest": "^2.0.5",
     "@types/bun": "^1.1.5",
     "concurrently": "^8.2.2",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "lefthook": "^1.6.18",
+    "semantic-release": "^24.0.0",
     "turbo": "2",
     "typescript": "^5.5.2"
   },
-  "trustedDependencies": ["@biomejs/biome", "esbuild", "lefthook"]
+  "trustedDependencies": ["@biomejs/biome", "esbuild", "lefthook"],
+  "patchedDependencies": {
+    "@anolilab/multi-semantic-release@1.1.3": "patches/@anolilab%2Fmulti-semantic-release@1.1.3.patch"
+  }
 }
