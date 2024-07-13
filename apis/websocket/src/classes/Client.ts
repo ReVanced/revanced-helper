@@ -55,7 +55,7 @@ export default class Client {
     send<T extends ServerOperation>(packet: Omit<Packet<T>, 's'>, sequence?: number) {
         this.#throwIfDisconnected('Cannot send packet to client that has already disconnected')
         this.#socket.send(serializePacket({ ...packet, s: sequence ?? this.currentSequence++ } as Packet<T>), err => {
-            throw err
+            if (err) throw err
         })
     }
 
