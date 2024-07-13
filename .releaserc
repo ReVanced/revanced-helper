@@ -10,7 +10,9 @@
         [
             "@semantic-release/commit-analyzer",
             {
-                "preset": "conventionalcommits"
+                "releaseRules": [
+                    { "type": "build", "scope": "Needs bump", "release": "patch"}
+                ]
             }
         ],
         "@semantic-release/release-notes-generator",

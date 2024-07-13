@@ -22,10 +22,7 @@ jobs:
           # https://github.com/cycjimmy/semantic-release-action#private-packages
           persist-credentials: false
           fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
+          
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -33,6 +30,9 @@ jobs:
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: ${{ runner.os }}-bun-
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+              
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
@@ -73,7 +73,7 @@ jobs:
         uses: snok/container-retention-policy@v3.0.0
         with:
           account: ${{ github.actor }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
           image-names: "revanced-bot-*"
           keep-n-most-recent: 5
           cut-off: 3M
