@@ -3,7 +3,7 @@
         [
             "@codedependant/semantic-release-docker",
             {
-                "dockerImage": "revanced-discord-bot",
+                "dockerImage": "revanced-bot-discord",
                 "dockerRegistry": "ghcr.io",
                 "dockerProject": "revanced",
                 "dockerContext": "../..",
