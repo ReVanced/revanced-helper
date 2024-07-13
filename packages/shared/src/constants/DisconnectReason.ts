@@ -27,9 +27,13 @@ enum DisconnectReason {
      */
     NoOpenSocket = 4003,
     /**
+     * The client connected from another location
+     */
+    NewConnection = 4004,
+    /**
      * The client was not ready in time (**CLIENT-ONLY**)
      */
-    TooSlow = 4002,
+    TooSlow = 4012,
 }
 
 export default DisconnectReason

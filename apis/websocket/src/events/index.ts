@@ -2,6 +2,7 @@ import type { ClientOperation } from '@revanced/bot-shared'
 import type { Logger } from '@revanced/bot-shared'
 import type { Worker as TesseractWorker } from 'tesseract.js'
 import type { ClientPacketObject } from '../classes/Client'
+import type { WitMessageResponse } from '../context'
 import type { Config } from '../utils/config'
 
 export { default as parseTextEventHandler } from './parseText'
@@ -21,13 +22,4 @@ export type EventContext = {
     tesseract: TesseractWorker
     logger: Logger
     config: Config
-}
-
-export interface WitMessageResponse {
-    text: string
-    intents: Array<{
-        id: string
-        name: string
-        confidence: number
-    }>
 }
