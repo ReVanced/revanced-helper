@@ -1,4 +1,4 @@
 {
     "ignorePrivate": false,
-    "ignorePackages": ["!packages/**"]
+    "ignorePackages": ["packages/**"]
 }
