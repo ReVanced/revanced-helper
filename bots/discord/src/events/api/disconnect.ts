@@ -25,5 +25,5 @@ withContext(on, 'disconnect', ({ api, config, logger }, reason, msg) => {
         `Disconnected from bot API ${++api.disconnectCount} times (this time because: ${reason}, ${msg}), reconnecting again...`,
     )
 
-    setTimeout(() => api.client.connect(), 10000)
+    setTimeout(() => api.client.connect(), config.api.disconnectRetryInterval)
 })

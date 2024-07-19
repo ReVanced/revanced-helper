@@ -68,5 +68,6 @@ export default {
     api: {
         url: 'ws://127.0.0.1:3000',
         disconnectLimit: 3,
+        disconnectRetryInterval: 10000,
     },
 } satisfies Config as Config

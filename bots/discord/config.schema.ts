@@ -41,6 +41,7 @@ export type Config = {
     api: {
         url: string
         disconnectLimit?: number
+        disconnectRetryInterval?: number
     }
 }
 
