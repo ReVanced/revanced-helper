@@ -49,6 +49,17 @@ jobs:
 
       - name: Build and release
         env:
+          RELEASE_WORKFLOW_STEP: release
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
+        run: bunx multi-semantic-release
+
+        # We call multi-semantic-release twice to publish in a different step
+        # An environment variable determines which plugins in the config to run
+      - name: Trigger Portainer webhooks
+        if: github.ref == 'refs/heads/main'
+        env:
+          RELEASE_WORKFLOW_STEP: publish
           DOCKER_REGISTRY_USER: ${{ github.actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}

@@ -1,11 +1,15 @@
-import { $ } from 'execa'
-
-const branch = (await $`git rev-parse --abbrev-ref HEAD`).stdout.trim()
-
 export default {
     plugins:
-        branch === 'main'
+        process.env.RELEASE_WORKFLOW_STEP === 'publish'
             ? [
+                  [
+                      '@semantic-release/exec',
+                      {
+                          publishCmd: 'bun run scripts/trigger-portainer-webhook.ts',
+                      },
+                  ],
+              ]
+            : [
                   [
                       '@codedependant/semantic-release-docker',
                       {
@@ -20,12 +24,5 @@ export default {
                           },
                       },
                   ],
-                  [
-                      '@semantic-release/exec',
-                      {
-                          publishCmd: 'bun run scripts/trigger-portainer-webhook.ts',
-                      },
-                  ],
-              ]
-            : [],
+              ],
 }
