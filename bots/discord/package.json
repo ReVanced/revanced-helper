@@ -10,7 +10,7 @@
     "start": "bun prepare && bun run src/index.ts",
     "dev": "bun prepare && bun --watch src/index.ts",
     "build:config": "bun build config.ts --outdir=dist",
-    "build": "bun prepare && bun build:config && bun build src/index.ts -e ./config.js --target=bun --outdir=dist/src && drizzle-kit push",
+    "build": "bun prepare && bun build:config && bun build src/index.ts -e ./config.js --target=bun --outdir=dist/src",
     "watch": "bun dev",
     "prepare": "bun run scripts/generate-indexes.ts && drizzle-kit push"
   },

@@ -23,7 +23,6 @@ bun run build
 The distribution files will be placed inside the `dist` directory. Inside will include:
 
 -   The default configuration for the bot
--   An empty database for the bot with schemas configured
 -   Compiled source files of the bot
 
 ## ✈️ Deploying
@@ -49,7 +48,13 @@ To deploy the bot, you'll need to:
     cp -R ./dist/* /usr/src/discord-bot
     ```
 
-5. Replace the default empty database with your own _(optional)_
+5. Copy the empty database (or use your own existing database)
+
+    ```sh
+    # By default, the build script creates the database called "db.sqlite3"
+    # Unless you specify otherwise via the "DATABASE_PATH" environment variable
+    cp ./db.sqlite3 /usr/src/discord-bot
+    ```
 
 6. Configure environment variables  
    As seen in [`.env.example`](../.env.example). You can also optionally use a `.env` file which **Bun will automatically load**.
