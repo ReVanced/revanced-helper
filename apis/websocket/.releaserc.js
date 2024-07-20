@@ -10,13 +10,21 @@ export default {
                   ],
               ]
             : [
-                  '@codedependant/semantic-release-docker',
-                  {
-                      dockerImage: 'revanced-bot-websocket-api',
-                      dockerRegistry: 'ghcr.io',
-                      dockerProject: 'revanced',
-                      dockerContext: '../..',
-                      dockerPlatform: ['linux/amd64', 'linux/arm64'],
-                  },
+                  [
+                      '@codedependant/semantic-release-docker',
+                      {
+                          dockerImage: 'revanced-bot-websocket-api',
+                          dockerRegistry: 'ghcr.io',
+                          dockerProject: 'revanced',
+                          dockerContext: '../..',
+                          dockerPlatform: ['linux/amd64', 'linux/arm64'],
+                          dockerBuildQuiet: false,
+                          dockerTags: [
+                              '{{#if prerelease.[0]}}dev{{else}}main{{/if}}',
+                              '{{#unless prerelease.[0]}}latest{{/unless}}',
+                              '{{version}}',
+                          ],
+                      },
+                  ],
               ],
 }

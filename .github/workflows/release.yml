@@ -53,7 +53,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
           DOCKER_REGISTRY_USER: ${{ github.repository_owner }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.REPOSITORY_PUSH_ACCESS }}
-        run: bunx multi-semantic-release
+          DEBUG: semantic-release:*
+        run: bunx multi-semantic-release --debug
 
         # We call multi-semantic-release twice to publish in a different step
         # An environment variable determines which plugins in the config to run
