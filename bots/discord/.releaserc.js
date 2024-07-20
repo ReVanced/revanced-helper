@@ -18,10 +18,6 @@ export default {
                           dockerProject: 'revanced',
                           dockerContext: '../..',
                           dockerPlatform: ['linux/amd64', 'linux/arm64'],
-                          dockerArgs: {
-                              GITHUB_ACTOR: null,
-                              GITHUB_TOKEN: null,
-                          },
                       },
                   ],
               ],
