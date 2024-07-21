@@ -5,6 +5,7 @@ FROM base AS build
 
 WORKDIR /build
 COPY . .
+RUN bun install --frozen-lockfile
 RUN cd bots/discord && bun --bun run build
 
 FROM base AS release
