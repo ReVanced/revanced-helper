@@ -5,7 +5,7 @@ FROM base AS build
 
 WORKDIR /build
 COPY . .
-RUN cd apis/websocket && bun run build
+RUN cd apis/websocket && bun --bun run build
 
 FROM base AS release
 

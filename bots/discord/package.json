@@ -32,7 +32,7 @@
   "dependencies": {
     "@discordjs/builders": "^1.8.2",
     "@discordjs/rest": "^2.3.0",
-    "@libsql/client": "^0.6.2",
+    "@libsql/client": "^0.7.0",
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
     "chalk": "^5.3.0",

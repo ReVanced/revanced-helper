@@ -5,7 +5,7 @@ FROM base AS build
 
 WORKDIR /build
 COPY . .
-RUN cd bots/discord && bun run build
+RUN cd bots/discord && bun --bun run build
 
 FROM base AS release
 
