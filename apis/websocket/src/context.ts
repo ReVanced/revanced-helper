@@ -53,11 +53,14 @@ export interface WitMessageResponse {
     }>
 }
 
-const TesseractWorkerPath = joinPath(import.meta.dir, 'worker', 'index.js')
-const TesseractCompiledWorkerExists = await pathExists(TesseractWorkerPath)
+const TesseractWorkerDirPath = joinPath(import.meta.dir, 'worker')
+const TesseractWorkerPath = joinPath(TesseractWorkerDirPath, 'index.js')
+const TesseractCorePath = joinPath(TesseractWorkerDirPath, 'core')
 
 export const tesseract = await createTesseractWorker(
     'eng',
     OEM.DEFAULT,
-    TesseractCompiledWorkerExists ? { workerPath: TesseractWorkerPath } : undefined,
+    (await pathExists(TesseractWorkerDirPath))
+        ? { workerPath: TesseractWorkerPath, corePath: TesseractCorePath }
+        : undefined,
 )
