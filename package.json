@@ -52,5 +52,8 @@
     "@revanced/discord-bot",
     "esbuild",
     "lefthook"
-  ]
+  ],
+  "patchedDependencies": {
+    "@semantic-release/npm@12.0.1": "patches/@semantic-release%2Fnpm@12.0.1.patch"
+  }
 }
