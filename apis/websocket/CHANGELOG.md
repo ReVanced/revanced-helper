@@ -1,3 +1,10 @@
+# @revanced/bot-websocket-api [1.0.0-dev.2](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.1...@revanced/bot-websocket-api@1.0.0-dev.2) (2024-07-22)
+
+
+### Bug Fixes
+
+* **apis/websocket:** also include tesseract core files in build ([7dfbf6c](https://github.com/revanced/revanced-helper/commit/7dfbf6c92c49100954fa4aca471dce4ab9fd9565))
+
 # @revanced/bot-websocket-api 1.0.0-dev.1 (2024-07-22)
 
 
