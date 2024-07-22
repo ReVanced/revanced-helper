@@ -1,4 +1,9 @@
-export default {
+// @ts-check
+
+/**
+ * @type {import('semantic-release').Options}
+ */
+const Options = {
     branches: [
         'main',
         {
@@ -7,7 +12,7 @@ export default {
         },
     ],
     plugins:
-        process.env.RELEASE_WORKFLOW_STEP === 'release'
+        process.env['RELEASE_WORKFLOW_STEP'] !== 'publish'
             ? [
                   [
                       '@semantic-release/commit-analyzer',
@@ -18,9 +23,15 @@ export default {
                   '@semantic-release/release-notes-generator',
                   '@semantic-release/changelog',
                   [
+                      '@semantic-release/npm',
+                      {
+                         npmPublish: false,
+                      }
+                  ],
+                  [
                       '@semantic-release/git',
                       {
-                          assets: ['README.md', 'CHANGELOG.md', 'package.json'],
+                          assets: ['CHANGELOG.md', 'package.json'],
                       },
                   ],
                   [
@@ -34,6 +45,7 @@ export default {
                           successComment: false,
                       },
                   ],
+                  // This unfortunately has to run multiple times, even though it needs to run only once.
                   [
                       '@saithodev/semantic-release-backmerge',
                       {
@@ -45,8 +57,19 @@ export default {
                           ],
                           clearWorkspace: true,
                       },
-                      true,
                   ],
               ]
             : [],
+}
+
+/**
+ * @param {import('semantic-release').Options} subprojectOptions
+ * @returns {import('semantic-release').Options}
+ */
+export default function defineSubprojectReleaseConfig(subprojectOptions) {
+    return {
+        ...Options,
+        ...subprojectOptions,
+        plugins: [...(subprojectOptions.plugins || []), ...(Options.plugins || [])],
+    }
 }

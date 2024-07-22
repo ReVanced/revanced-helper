@@ -1,4 +1,6 @@
-export default {
+import defineSubprojectReleaseConfig from '../../semantic-release-config.js'
+
+export default defineSubprojectReleaseConfig({
     plugins:
         process.env.RELEASE_WORKFLOW_STEP === 'publish'
             ? [
@@ -27,4 +29,4 @@ export default {
                       },
                   ],
               ],
-}
+})
