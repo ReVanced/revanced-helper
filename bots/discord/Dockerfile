@@ -15,4 +15,4 @@ COPY --from=build /build/bots/discord/dist /app
 
 USER 1000:1000
 
-ENTRYPOINT [ "bun", "run", "index.js" ]
+ENTRYPOINT [ "bun", "run", "src/index.js" ]

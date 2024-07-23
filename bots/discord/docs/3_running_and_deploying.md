@@ -54,7 +54,7 @@ To deploy the bot, you'll need to:
 
     ```sh
     cd /usr/src/discord-bot
-    bun run index.js
+    bun run src/index.js
     ```
 
 ## ⏭️ What's next

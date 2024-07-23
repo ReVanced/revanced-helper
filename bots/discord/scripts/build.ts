@@ -9,7 +9,7 @@ await rm('./dist', { recursive: true })
 logger.info('Building bot...')
 await Bun.build({
     entrypoints: ['./src/index.ts'],
-    outdir: './dist',
+    outdir: './dist/src',
     target: 'bun',
     external: ['./config.js'],
     minify: true,
