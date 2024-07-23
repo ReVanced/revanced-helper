@@ -41,11 +41,11 @@
     "@tsconfig/strictest": "^2.0.5",
     "@types/bun": "^1.1.6",
     "conventional-changelog-conventionalcommits": "^7.0.2",
-    "lefthook": "^1.7.4",
+    "lefthook": "^1.7.5",
     "portainer-service-webhook": "https://github.com/newarifrh/portainer-service-webhook#v1",
     "semantic-release": "^24.0.0",
     "turbo": "^2.0.9",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "trustedDependencies": [
     "@biomejs/biome",
