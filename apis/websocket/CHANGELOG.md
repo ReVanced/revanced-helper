@@ -1,3 +1,10 @@
+# @revanced/bot-websocket-api [1.0.0-dev.3](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.2...@revanced/bot-websocket-api@1.0.0-dev.3) (2024-07-23)
+
+
+### Bug Fixes
+
+* **apis/websocket:** build and runtime issues ([89d8ab1](https://github.com/revanced/revanced-helper/commit/89d8ab1ee58278a9a96cdc31c679d0a0a0d865af))
+
 # @revanced/bot-websocket-api [1.0.0-dev.2](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.1...@revanced/bot-websocket-api@1.0.0-dev.2) (2024-07-22)
 
 
