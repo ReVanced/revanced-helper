@@ -18,6 +18,7 @@ await Bun.build({
 logger.info('Building Tesseract.js worker...')
 await Bun.build({
     entrypoints: ['../../node_modules/tesseract.js/src/worker-script/node/index.js'],
+    external: ['tesseract.js-core/*'],
     target: 'bun',
     outdir: './dist/worker',
     minify: true,
