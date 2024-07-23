@@ -1,5 +1,10 @@
 # This file should be triggered from the monorepo root
-FROM oven/bun:latest AS base
+FROM node:latest AS base
+
+# Install Bun
+RUN apt-get update && apt-get install -y curl unzip
+RUN curl -fsSL https://bun.sh/install.sh | bash
+ENV PATH="/root/.bun/bin:$PATH"
 
 FROM base AS build
 

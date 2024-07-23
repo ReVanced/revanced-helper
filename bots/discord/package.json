@@ -11,7 +11,7 @@
     "dev": "bun prepare && bun --watch src/index.ts",
     "build": "bun prepare && bun run scripts/build.ts",
     "watch": "bun dev",
-    "prepare": "bun run scripts/generate-indexes.ts && drizzle-kit generate --name=schema"
+    "prepare": "bun run scripts/generate-indexes.ts && bunx drizzle-kit generate --name=schema"
   },
   "repository": {
     "type": "git",
