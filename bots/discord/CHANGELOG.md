@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.6](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.5...@revanced/discord-bot@1.0.0-dev.6) (2024-07-23)
+
+
+### Bug Fixes
+
+* **bots/discord:** ci issues causing database to not be auto generated ([673aa18](https://github.com/revanced/revanced-helper/commit/673aa189bef1009a3e32ba3b1291a5ee84f2def3))
+
 # @revanced/discord-bot [1.0.0-dev.5](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.4...@revanced/discord-bot@1.0.0-dev.5) (2024-07-23)
 
 # @revanced/discord-bot [1.0.0-dev.4](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.3...@revanced/discord-bot@1.0.0-dev.4) (2024-07-23)
