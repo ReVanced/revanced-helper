@@ -9,6 +9,7 @@
     "composite": false,
     "exactOptionalPropertyTypes": false,
     "esModuleInterop": true,
+    "allowJs": true,
     "paths": {
       "$/*": ["./src/*"],
       "$constants": ["./src/constants"],

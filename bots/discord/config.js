@@ -1,5 +1,8 @@
-import type { Config } from './config.schema'
+// @ts-check
 
+/**
+ * @type {import('./config.schema').Config}
+ */
 export default {
     owners: ['USER_ID_HERE'],
     guilds: ['GUILD_ID_HERE'],
@@ -70,4 +73,4 @@ export default {
         disconnectLimit: 3,
         disconnectRetryInterval: 10000,
     },
-} satisfies Config as Config
+}
