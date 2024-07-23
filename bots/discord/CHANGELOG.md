@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.4](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.3...@revanced/discord-bot@1.0.0-dev.4) (2024-07-23)
+
+
+### Bug Fixes
+
+* **bots/discord:** wrong database schema path ([875bd20](https://github.com/revanced/revanced-helper/commit/875bd209b252566414bf89349839cabc01697e1c))
+
 # @revanced/discord-bot [1.0.0-dev.3](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.2...@revanced/discord-bot@1.0.0-dev.3) (2024-07-23)
 
 
