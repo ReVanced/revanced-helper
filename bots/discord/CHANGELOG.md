@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.3](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.2...@revanced/discord-bot@1.0.0-dev.3) (2024-07-23)
+
+
+### Bug Fixes
+
+* **bots/discord:** revert dist denesting, fixes config not found ([0d4898d](https://github.com/revanced/revanced-helper/commit/0d4898dae8b26f8466d3f6b8f62875866f581644))
+
 # @revanced/discord-bot [1.0.0-dev.2](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.1...@revanced/discord-bot@1.0.0-dev.2) (2024-07-23)
 
 
