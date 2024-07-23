@@ -53,23 +53,34 @@ export class ClientWebSocketManager {
                     }
                 }, this.timeout)
 
-                this.#socket.on('open', () => {
-                    this.disconnected = false
-                    clearTimeout(timeout)
-                    this.#listen()
-                    rs()
-                })
-
-                this.#socket.on('error', err => {
-                    clearTimeout(timeout)
+                const errorBeforeReadyHandler = (err: Error) => {
+                    cleanup()
                     throw err
-                })
+                }
 
-                this.#socket.on('close', (code, reason) => {
+                const closeBeforeReadyHandler = (code: number, reason: Buffer) => {
                     clearTimeout(timeout)
                     this._handleDisconnect(code, reason.toString())
                     throw new Error('WebSocket connection closed before ready')
-                })
+                }
+
+                const readyHandler = () => {
+                    this.disconnected = false
+                    cleanup()
+                    this.#listen()
+                    rs()
+                }
+
+                const cleanup = () => {
+                    this.#socket.off('open', readyHandler)
+                    this.#socket.off('close', closeBeforeReadyHandler)
+                    this.#socket.off('error', errorBeforeReadyHandler)
+                    clearTimeout(timeout)
+                }
+
+                this.#socket.on('open', readyHandler)
+                this.#socket.on('error', errorBeforeReadyHandler)
+                this.#socket.on('close', closeBeforeReadyHandler)
             } catch (e) {
                 rj(e)
             }
