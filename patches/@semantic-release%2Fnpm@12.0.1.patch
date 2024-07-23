@@ -1,8 +1,14 @@
+diff --git a/node_modules/@semantic-release/npm/.bun-tag-3853154e196b7721 b/.bun-tag-3853154e196b7721
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/node_modules/@semantic-release/npm/.bun-tag-550461f23a8ec245 b/.bun-tag-550461f23a8ec245
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/node_modules/@semantic-release/npm/.bun-tag-c9c8130945517add b/.bun-tag-c9c8130945517add
 new file mode 100644
 index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/lib/prepare.js b/lib/prepare.js
-index 3e76bec44cf595a1b4141728336bed904d4d518d..c6baf4e8de9bdf7536f9ad2e9eb9c360e031c7b5 100644
+index 3e76bec44cf595a1b4141728336bed904d4d518d..4b25ca64879bbee2a600f2b23b738c86136ad9c6 100644
 --- a/lib/prepare.js
 +++ b/lib/prepare.js
 @@ -1,6 +1,7 @@
@@ -14,7 +20,7 @@ index 3e76bec44cf595a1b4141728336bed904d4d518d..c6baf4e8de9bdf7536f9ad2e9eb9c360
  
  export default async function (
    npmrc,
-@@ -11,19 +12,12 @@ export default async function (
+@@ -11,19 +12,13 @@ export default async function (
  
    logger.log("Write version %s to package.json in %s", version, basePath);
  
@@ -36,10 +42,11 @@ index 3e76bec44cf595a1b4141728336bed904d4d518d..c6baf4e8de9bdf7536f9ad2e9eb9c360
  
 -  await versionResult;
 +  await writeFile(pkgJsonPath, JSON.stringify(pkgJson, null, detectIndent(pkgJsonRaw).indent))
++  await execa("bun", ["install"]);
  
    if (tarballDir) {
      logger.log("Creating npm package version %s", version);
-@@ -38,7 +32,7 @@ export default async function (
+@@ -38,7 +33,7 @@ export default async function (
      // Only move the tarball if we need to
      // Fixes: https://github.com/semantic-release/npm/issues/169
      if (tarballSource !== tarballDestination) {

@@ -31,7 +31,7 @@ const Options = {
                   [
                       '@semantic-release/git',
                       {
-                          assets: ['CHANGELOG.md', 'package.json'],
+                          assets: ['CHANGELOG.md', 'package.json', '../../bun.lockb'],
                       },
                   ],
                   [
