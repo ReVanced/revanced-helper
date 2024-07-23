@@ -29,9 +29,8 @@ The distribution files will be placed inside the `dist` directory. Inside will i
 
 To deploy the bot, you'll need to:
 
-1. Replace the `config.ts` file with your own configuration _(optional)_
-2. [Build the bot as seen in the previous step](#-building)
-3. Run the `reload-slash-commands` script
+1. [Build the bot as seen in the previous step](#-building)
+2. Run the `reload-slash-commands` script
    This is to ensure all commands are registered, so they can be used.  
    **It may take up to 2 hours until **global** commands are updated. This is a Discord limitation.**
 
@@ -40,7 +39,7 @@ To deploy the bot, you'll need to:
     bun run scripts/reload-slash-commands.ts
     ```
 
-4. Copy contents of the `dist` directory
+3. Copy contents of the `dist` directory
 
     ```sh
     # For instance, we'll copy them both to /usr/src/discord-bot
@@ -48,22 +47,14 @@ To deploy the bot, you'll need to:
     cp -R ./dist/* /usr/src/discord-bot
     ```
 
-5. Copy the empty database (or use your own existing database)
-
-    ```sh
-    # By default, the build script creates the database called "db.sqlite3"
-    # Unless you specify otherwise via the "DATABASE_PATH" environment variable
-    cp ./db.sqlite3 /usr/src/discord-bot
-    ```
-
-6. Configure environment variables  
+4. Configure environment variables  
    As seen in [`.env.example`](../.env.example). You can also optionally use a `.env` file which **Bun will automatically load**.
 
-7. Finally, run the bot
+5. Finally, run the bot
 
     ```sh
     cd /usr/src/discord-bot
-    bun run src/index.js
+    bun run index.js
     ```
 
 ## ⏭️ What's next
