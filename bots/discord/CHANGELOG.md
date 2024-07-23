@@ -1,3 +1,5 @@
+# @revanced/discord-bot [1.0.0-dev.5](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.4...@revanced/discord-bot@1.0.0-dev.5) (2024-07-23)
+
 # @revanced/discord-bot [1.0.0-dev.4](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.3...@revanced/discord-bot@1.0.0-dev.4) (2024-07-23)
 
 
