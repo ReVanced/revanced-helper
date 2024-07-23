@@ -32,7 +32,7 @@ export const api = {
 }
 
 const DatabasePath = process.env['DATABASE_PATH']
-const DatabaseSchemaDir = join(import.meta.dir, '.drizzle')
+const DatabaseSchemaDir = join(import.meta.dir, '..', '.drizzle')
 
 let dbSchemaFileName: string | undefined
 
