@@ -1,3 +1,10 @@
+# @revanced/bot-websocket-api [1.0.0-dev.4](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.3...@revanced/bot-websocket-api@1.0.0-dev.4) (2024-07-23)
+
+
+### Bug Fixes
+
+* **apis/websocket:** hardcoded paths in tesseract worker builds ([38e00eb](https://github.com/revanced/revanced-helper/commit/38e00eb4e59c763bd74d27b9b9b482ea66e4dcf4))
+
 # @revanced/bot-websocket-api [1.0.0-dev.3](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.2...@revanced/bot-websocket-api@1.0.0-dev.3) (2024-07-23)
 
 
