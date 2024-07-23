@@ -6,7 +6,7 @@ FROM base AS build
 WORKDIR /build
 COPY . .
 RUN bun install --frozen-lockfile
-RUN cd apis/websocket && bun --bun run build
+RUN cd apis/websocket && bun run build
 
 FROM base AS release
 
