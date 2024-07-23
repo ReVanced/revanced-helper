@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.2](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.1...@revanced/discord-bot@1.0.0-dev.2) (2024-07-23)
+
+
+### Features
+
+* **bots/discord:** don't nest builds in src directory, autogen db when missing ([4834685](https://github.com/revanced/revanced-helper/commit/48346851864c4d4b6276388644dd24ce16222b3e))
+
 # @revanced/discord-bot 1.0.0-dev.1 (2024-07-22)
 
 
