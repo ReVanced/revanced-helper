@@ -79,6 +79,11 @@ export default {
             )
         }
 
+        if (expires)
+            setTimeout(() => {
+                removeRolePreset(member, preset)
+            }, expires)
+
         await sendPresetReplyAndLogs(action, interaction, user, preset, expires)
     },
 } satisfies Command
