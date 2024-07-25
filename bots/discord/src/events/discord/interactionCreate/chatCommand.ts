@@ -1,4 +1,5 @@
 import CommandError from '$/classes/CommandError'
+import { isAdmin } from '$/utils/discord/permissions'
 import { createErrorEmbed, createStackTraceEmbed } from '$utils/discord/embeds'
 import { on, withContext } from '$utils/discord/events'
 
@@ -11,14 +12,14 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
     logger.debug(`Command ${interaction.commandName} being invoked by ${interaction.user.tag}`)
     if (!command) return void logger.error(`Command ${interaction.commandName} not implemented but registered!!!`)
 
-    const isOwner = config.owners.includes(interaction.user.id)
+    const isExecutorBotAdmin = isAdmin(await interaction.guild?.members.fetch(interaction.user.id) || interaction.user, config.admin)
 
     /**
-     * Owner check
+     * Admin check
      */
-    if (command.ownerOnly && !isOwner)
+    if (command.adminOnly && !isExecutorBotAdmin)
         return void (await interaction.reply({
-            embeds: [createErrorEmbed('Massive skill issue', 'This command can only be used by the bot owners.')],
+            embeds: [createErrorEmbed('Massive skill issue', 'This command can only be used by the bot admins.')],
             ephemeral: true,
         }))
 
@@ -39,7 +40,7 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
      */
     if (interaction.inGuild()) {
         // Bot owners get bypass
-        if (command.memberRequirements && !isOwner) {
+        if (command.memberRequirements && !isExecutorBotAdmin) {
             const { permissions = 0n, roles = [], mode } = command.memberRequirements
 
             const member = await interaction.guild!.members.fetch(interaction.user.id)
@@ -69,7 +70,7 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
 
     try {
         logger.debug(`Command ${interaction.commandName} being executed`)
-        await command.execute(context, interaction, { userIsOwner: isOwner })
+        await command.execute(context, interaction, { isExecutorBotAdmin })
     } catch (err) {
         logger.error(`Error while executing command ${interaction.commandName}:`, err)
         await interaction[interaction.replied ? 'followUp' : 'reply']({

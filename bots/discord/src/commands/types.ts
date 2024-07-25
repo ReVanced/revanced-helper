@@ -39,10 +39,10 @@ export type Command = {
         roles?: string[]
     }
     /**
-     * Whether this command can only be used by bot owners.
+     * Whether this command can only be used by bot admins.
      * @default false
      */
-    ownerOnly?: boolean
+    adminOnly?: boolean
     /**
      * Whether to register this command as a global slash command.
      * This is set to `false` and commands will be registered in allowed guilds only by default.
@@ -52,5 +52,5 @@ export type Command = {
 }
 
 export interface Info {
-    userIsOwner: boolean
+    isExecutorBotAdmin: boolean
 }

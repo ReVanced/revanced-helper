@@ -25,7 +25,7 @@ export default {
         .setDMPermission(true)
         .toJSON(),
 
-    ownerOnly: true,
+    adminOnly: true,
     global: true,
 
     async execute(_, interaction) {

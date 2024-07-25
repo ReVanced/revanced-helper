@@ -35,7 +35,7 @@ export default {
 
     global: false,
 
-    async execute({ logger }, interaction, { userIsOwner }) {
+    async execute({ logger }, interaction, { isExecutorBotAdmin: isExecutorAdmin }) {
         const action = interaction.options.getString('action', true) as 'apply' | 'remove'
         const user = interaction.options.getUser('member', true)
         const preset = interaction.options.getString('preset', true)
@@ -61,7 +61,7 @@ export default {
                     'The duration must be at least 1 millisecond long.',
                 )
 
-            if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0 && !userIsOwner)
+            if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0 && !isExecutorAdmin)
                 throw new CommandError(
                     CommandErrorType.InvalidUser,
                     'You cannot apply a role preset to a user with a role equal to or higher than yours.',

@@ -14,6 +14,7 @@ import type { ConfigMessageScanResponseLabelConfig } from '$/../config.schema'
 import { responses } from '$/database/schemas'
 import { handleUserResponseCorrection } from '$/utils/discord/messageScan'
 import { eq } from 'drizzle-orm'
+import { isAdmin } from '$/utils/discord/permissions'
 
 const PossibleReactions = Object.values(Reactions) as string[]
 
@@ -32,7 +33,7 @@ withContext(on, 'messageReactionAdd', async (context, rct, user) => {
     if (reactionMessage.author.id !== reaction.client.user!.id) return
     if (!PossibleReactions.includes(reaction.emoji.name!)) return
 
-    if (!config.owners.includes(user.id)) {
+    if (!isAdmin(reactionMessage.member || reactionMessage.author, config.admin)) {
         // User is in guild, and config has member requirements
         if (
             reactionMessage.inGuild() &&
