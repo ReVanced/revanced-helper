@@ -1,3 +1,17 @@
+# @revanced/discord-bot [1.0.0-dev.7](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.6...@revanced/discord-bot@1.0.0-dev.7) (2024-07-25)
+
+
+### Bug Fixes
+
+* **bot/discord:** start remove preset timeout for `role-preset` command ([cbf9116](https://github.com/revanced/revanced-helper/commit/cbf91162e27dd4c1ecb976927ab708f1d882abca))
+* **bots/discord:** only check for member permissions when specified while correcting responses ([b79a1c7](https://github.com/revanced/revanced-helper/commit/b79a1c7575e94c3e62654c87775cac497be4a50a))
+* **bots/discord:** set timeout for eligible mutes to unmute faster ([1f5c5a9](https://github.com/revanced/revanced-helper/commit/1f5c5a92a639973b83a1204355538936e69a4454))
+
+
+### Features
+
+* **bots/discord:** add `replyToReplied` option in response config ([27662ed](https://github.com/revanced/revanced-helper/commit/27662ed91a79bfac7d3f091834e859a7b57366ce))
+
 # @revanced/discord-bot [1.0.0-dev.6](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.5...@revanced/discord-bot@1.0.0-dev.6) (2024-07-23)
 
 
