@@ -46,7 +46,7 @@ withContext(on, 'messageReactionAdd', async (context, rct, user) => {
                 const member = await reactionMessage.guild.members.fetch(user.id)
                 const { permissions, roles } = allowedMembers
 
-                if (!(member.permissions.has(permissions ?? 0n) || roles?.some(role => member.roles.cache.has(role))))
+                if (!((permissions ? member.permissions.has(permissions) : false) || roles?.some(role => member.roles.cache.has(role))))
                     return
             } else if (allowedUsers) {
                 if (!allowedUsers.includes(user.id)) return
