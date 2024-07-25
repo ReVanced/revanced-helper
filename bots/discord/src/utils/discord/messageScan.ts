@@ -158,8 +158,10 @@ export const handleUserResponseCorrection = async (
                 correctedById: user.id,
             })
             .where(eq(responses.replyId, response.replyId))
+
         await reply.edit({
-            embeds: [createMessageScanResponseEmbed(correctLabelResponse.response, 'nlp')],
+            ...correctLabelResponse.response,
+            embeds: correctLabelResponse.response.embeds?.map(it => createMessageScanResponseEmbed(it, 'nlp')),
         })
     }
 

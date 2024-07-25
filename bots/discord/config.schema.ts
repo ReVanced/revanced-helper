@@ -1,4 +1,4 @@
-import type { APIEmbed } from 'discord.js'
+import type { BaseMessageOptions } from 'discord.js'
 
 export type Config = {
     owners: string[]
@@ -70,4 +70,4 @@ export type ConfigMessageScanResponseLabelConfig = {
     threshold: number
 }
 
-export type ConfigMessageScanResponseMessage = APIEmbed
+export type ConfigMessageScanResponseMessage = BaseMessageOptions

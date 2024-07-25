@@ -55,12 +55,16 @@ export default {
                     text: [/^regexp?$/, { label: 'label', threshold: 0.85 }],
                 },
                 response: {
-                    title: 'Embed title',
-                    description: 'Embed description',
-                    fields: [
+                    embeds: [
                         {
-                            name: 'Field name',
-                            value: 'Field value',
+                            title: 'Embed title',
+                            description: 'Embed description',
+                            fields: [
+                                {
+                                    name: 'Field name',
+                                    value: 'Field value',
+                                },
+                            ],
                         },
                     ],
                 },

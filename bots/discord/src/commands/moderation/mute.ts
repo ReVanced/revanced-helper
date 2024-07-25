@@ -60,9 +60,10 @@ export default {
             createModerationActionEmbed('Muted', user, interaction.user, reason, durationMs),
         )
 
-        if (durationMs) setTimeout(() => {
-            removeRolePreset(member, 'mute')
-        }, durationMs)
+        if (durationMs)
+            setTimeout(() => {
+                removeRolePreset(member, 'mute')
+            }, durationMs)
 
         logger.info(
             `Moderator ${interaction.user.tag} (${interaction.user.id}) muted ${user.tag} (${user.id}) until ${expires} because ${reason}`,

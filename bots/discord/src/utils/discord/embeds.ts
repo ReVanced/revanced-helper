@@ -24,16 +24,19 @@ export const createSuccessEmbed = (title: string | null, description?: string) =
     )
 
 export const createMessageScanResponseEmbed = (
-    response: ConfigMessageScanResponseMessage,
+    response: NonNullable<ConfigMessageScanResponseMessage['embeds']>[number],
     mode: 'ocr' | 'nlp' | 'match',
 ) => {
+    // biome-ignore lint/style/noParameterAssign: While this is confusing, it is fine for this purpose
+    if ('toJSON' in response) response = response.toJSON()
+
     const embed = new EmbedBuilder().setTitle(response.title ?? null)
 
     if (response.description) embed.setDescription(response.description)
     if (response.fields) embed.addFields(response.fields)
 
     embed.setFooter({
-        text: `ReVanced • Done via ${MessageScanHumanizedMode[mode]}`,
+        text: `ReVanced • Via ${MessageScanHumanizedMode[mode]}`,
         iconURL: ReVancedLogoURL,
     })
 
