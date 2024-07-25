@@ -4,19 +4,12 @@
  * @type {import('./config.schema').Config}
  */
 export default {
-    /**
-     * ? ADMIN CONFIGURATION
-     *   Bot administrators can run destructive commands like /stop, or /register.
-     * 
-     * ! The match condition is `any`: If the user ID matches or the member has a specific role in the list, it considers that user as admin.
-     */
     admin: {
         users: ['USER_ID_HERE'],
         roles: {
             GUILD_ID_HERE: ['ROLE_ID_HERE'],
         },
     },
-    guilds: ['GUILD_ID_HERE'],
     moderation: {
         cure: {
             defaultName: 'Server member',

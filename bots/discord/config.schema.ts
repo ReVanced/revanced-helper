@@ -5,7 +5,6 @@ export type Config = {
         users?: string[]
         roles?: Record<string, string[]>
     }
-    guilds: string[]
     moderation?: {
         roles: string[]
         cure?: {
