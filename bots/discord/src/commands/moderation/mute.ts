@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js'
 
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
-import { applyRolePreset } from '$/utils/discord/rolePresets'
+import { applyRolePreset, removeRolePreset } from '$/utils/discord/rolePresets'
 import type { Command } from '../types'
 
 import { config } from '$/context'
@@ -59,6 +59,10 @@ export default {
             interaction,
             createModerationActionEmbed('Muted', user, interaction.user, reason, durationMs),
         )
+
+        if (durationMs) setTimeout(() => {
+            removeRolePreset(member, 'mute')
+        }, durationMs)
 
         logger.info(
             `Moderator ${interaction.user.tag} (${interaction.user.id}) muted ${user.tag} (${user.id}) until ${expires} because ${reason}`,
