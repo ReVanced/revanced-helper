@@ -2,8 +2,7 @@ import { type Response, responses } from '$/database/schemas'
 import type {
     Config,
     ConfigMessageScanResponse,
-    ConfigMessageScanResponseLabelConfig,
-    ConfigMessageScanResponseMessage,
+    ConfigMessageScanResponseLabelConfig
 } from 'config.schema'
 import type { Message, PartialUser, User } from 'discord.js'
 import { eq } from 'drizzle-orm'
@@ -15,9 +14,12 @@ export const getResponseFromText = async (
     // Just to be safe that we will never use data from the context parameter
     { api, logger }: Omit<typeof import('src/context'), 'config'>,
     ocrMode = false,
-) => {
-    let label: string | undefined
-    let response: ConfigMessageScanResponseMessage | undefined | null
+): Promise<ConfigMessageScanResponse & { label?: string }> => {
+    let responseConfig: Awaited<ReturnType<typeof getResponseFromText>> = {
+        triggers: {},
+        response: null
+    }
+
     const firstLabelIndexes: number[] = []
 
     // Test if all regexes before a label trigger is matched
@@ -25,29 +27,28 @@ export const getResponseFromText = async (
         const trigger = responses[i]!
 
         // Filter override check is not neccessary here, we are already passing responses that match the filter
-        // from the messageCreate handler
+        // from the messageCreate handler, see line 17 of messageCreate handler
         const {
-            triggers: { text: textTriggers, image: imageTriggers },
-            response: resp,
+            triggers: { text: textTriggers, image: imageTriggers }
         } = trigger
-        if (response) break
+        if (responseConfig) break
 
         if (ocrMode) {
             if (imageTriggers)
                 for (const regex of imageTriggers)
                     if (regex.test(content)) {
                         logger.debug(`Message matched regex (OCR mode): ${regex.source}`)
-                        response = resp
+                        responseConfig = trigger
                         break
                     }
         } else
             for (let j = 0; j < textTriggers!.length; j++) {
-                const trigger = textTriggers![j]!
+                const regex = textTriggers![j]!
 
-                if (trigger instanceof RegExp) {
-                    if (trigger.test(content)) {
-                        logger.debug(`Message matched regex (before mode): ${trigger.source}`)
-                        response = resp
+                if (regex instanceof RegExp) {
+                    if (regex.test(content)) {
+                        logger.debug(`Message matched regex (before mode): ${regex.source}`)
+                        responseConfig = trigger
                         break
                     }
                 } else {
@@ -58,7 +59,7 @@ export const getResponseFromText = async (
     }
 
     // If none of the regexes match, we can search for labels immediately
-    if (!response && !ocrMode) {
+    if (!responseConfig && !ocrMode) {
         logger.debug('No match from before regexes, doing NLP')
         const scan = await api.client.parseText(content)
         if (scan.labels.length) {
@@ -76,24 +77,22 @@ export const getResponseFromText = async (
 
             if (!labelConfig) {
                 logger.warn(`No label config found for label ${matchedLabel.name}`)
-                return { response: null, label: undefined }
+                return responseConfig
             }
 
             if (matchedLabel.confidence >= triggerConfig!.threshold) {
                 logger.debug('Label confidence is enough')
-                label = matchedLabel.name
-                response = labelConfig.response
+                responseConfig = labelConfig
             }
         }
     }
 
-    // If we still don't have a label, we can match all regexes after the initial label trigger
-    if (!response) {
+    // If we still don't have a response config, we can match all regexes after the initial label trigger
+    if (!responseConfig) {
         logger.debug('No match from NLP, doing after regexes')
         for (let i = 0; i < responses.length; i++) {
             const {
-                triggers: { text: textTriggers },
-                response: resp,
+                triggers: { text: textTriggers }
             } = responses[i]!
             const firstLabelIndex = firstLabelIndexes[i] ?? -1
 
@@ -103,7 +102,7 @@ export const getResponseFromText = async (
                 if (trigger instanceof RegExp) {
                     if (trigger.test(content)) {
                         logger.debug(`Message matched regex (after mode): ${trigger.source}`)
-                        response = resp
+                        responseConfig = responses[i]!
                         break
                     }
                 }
@@ -111,10 +110,7 @@ export const getResponseFromText = async (
         }
     }
 
-    return {
-        response,
-        label,
-    }
+    return responseConfig
 }
 
 export const shouldScanMessage = (
