@@ -2,7 +2,7 @@ import { on, withContext } from '$utils/api/events'
 import { DisconnectReason, HumanizedDisconnectReason } from '@revanced/bot-shared'
 
 withContext(on, 'disconnect', ({ api, config, logger }, reason, msg) => {
-    if (reason === DisconnectReason.PlannedDisconnect && api.isStopping) return
+    if (reason === DisconnectReason.PlannedDisconnect && api.intentionallyDisconnecting) return
 
     const ws = api.client.ws
     if (!ws.disconnected) ws.disconnect()

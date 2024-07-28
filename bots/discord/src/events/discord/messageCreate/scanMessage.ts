@@ -1,6 +1,6 @@
 import { MessageScanLabeledResponseReactions } from '$/constants'
 import { responses } from '$/database/schemas'
-import { getResponseFromText, shouldScanMessage } from '$/utils/discord/messageScan'
+import { getResponseFromText, messageMatchesFilter } from '$/utils/discord/messageScan'
 import { createMessageScanResponseEmbed } from '$utils/discord/embeds'
 import { on, withContext } from '$utils/discord/events'
 
@@ -13,8 +13,11 @@ withContext(on, 'messageCreate', async (context, msg) => {
     } = context
 
     if (!config || !config.responses) return
+    if (msg.author.bot && !config.scanBots)
+    if (!msg.inGuild() && !config.scanOutsideGuilds) return
+    if (msg.inGuild() && msg.member?.partial) await msg.member.fetch()
 
-    const filteredResponses = config.responses.filter(x => shouldScanMessage(msg, x.filterOverride ?? config.filter))
+    const filteredResponses = config.responses.filter(x => messageMatchesFilter(msg, x.filterOverride ?? config.filter))
     if (!filteredResponses.length) return
 
     if (msg.content.length) {

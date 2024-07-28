@@ -33,7 +33,7 @@ withContext(on, 'messageReactionAdd', async (context, rct, user) => {
     if (reactionMessage.author.id !== reaction.client.user!.id) return
     if (!PossibleReactions.includes(reaction.emoji.name!)) return
 
-    if (!isAdmin(reactionMessage.member || reactionMessage.author, config.admin)) {
+    if (!isAdmin(reactionMessage.member || reactionMessage.author)) {
         // User is in guild, and config has member requirements
         if (
             reactionMessage.inGuild() &&

@@ -37,11 +37,19 @@ export default {
         checkExpiredEvery: 3600,
     },
     messageScan: {
+        scanBots: false,
+        scanOutsideGuilds: false,
         filter: {
-            channels: ['CHANNEL_ID_HERE'],
-            roles: ['ROLE_ID_HERE'],
-            users: ['USER_ID_HERE'],
-            whitelist: false,
+            whitelist: {
+                channels: ['CHANNEL_ID_HERE'],
+                roles: ['ROLE_ID_HERE'],
+                users: ['USER_ID_HERE'],
+            },
+            blacklist: {
+                channels: ['CHANNEL_ID_HERE'],
+                roles: ['ROLE_ID_HERE'],
+                users: ['USER_ID_HERE'],
+            },
         },
         humanCorrections: {
             falsePositiveLabel: 'false_positive',
@@ -55,6 +63,18 @@ export default {
         allowedAttachmentMimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
         responses: [
             {
+                filterOverride: {
+                    whitelist: {
+                        channels: ['CHANNEL_ID_HERE'],
+                        roles: ['ROLE_ID_HERE'],
+                        users: ['USER_ID_HERE'],
+                    },
+                    blacklist: {
+                        channels: ['CHANNEL_ID_HERE'],
+                        roles: ['ROLE_ID_HERE'],
+                        users: ['USER_ID_HERE'],
+                    },
+                },
                 triggers: {
                     text: [/^regexp?$/, { label: 'label', threshold: 0.85 }],
                 },

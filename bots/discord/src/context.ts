@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { Client as APIClient } from '@revanced/bot-api'
 import { createLogger } from '@revanced/bot-shared'
-import { ActivityType, Client as DiscordClient, Partials } from 'discord.js'
+import { Client as DiscordClient, Partials } from 'discord.js'
 import { drizzle } from 'drizzle-orm/bun-sqlite'
 
 // Export config first, as commands require them
@@ -13,7 +13,7 @@ export { config }
 import * as commands from './commands'
 import * as schemas from './database/schemas'
 
-import type { Command } from './commands/types'
+import type Command from './classes/Command'
 
 export const logger = createLogger({
     level: config.logLevel === 'none' ? Number.MAX_SAFE_INTEGER : config.logLevel,
@@ -27,7 +27,7 @@ export const api = {
             },
         },
     }),
-    isStopping: false,
+    intentionallyDisconnecting: false,
     disconnectCount: 0,
 }
 
@@ -80,16 +80,8 @@ export const discord = {
             repliedUser: true,
         },
         partials: [Partials.Message, Partials.Reaction],
-        presence: {
-            activities: [
-                {
-                    type: ActivityType.Watching,
-                    name: 'cat videos',
-                },
-            ],
-        },
     }),
-    commands: Object.fromEntries(Object.values<Command>(commands).map(cmd => [cmd.data.name, cmd])) as Record<
+    commands: Object.fromEntries(Object.values<Command>(commands).map(cmd => [cmd.name, cmd])) as Record<
         string,
         Command
     >,

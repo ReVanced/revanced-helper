@@ -1,11 +1,11 @@
 import { GuildMember, type User } from 'discord.js'
-import type { Config } from 'config.schema'
+import config from '../../../config'
 
-export const isAdmin = (userOrMember: User | GuildMember, adminConfig: Config['admin']) => {
-    return adminConfig?.users?.includes(userOrMember.id) || (userOrMember instanceof GuildMember && isMemberAdmin(userOrMember, adminConfig))
+export const isAdmin = (userOrMember: User | GuildMember) => {
+    return config.admin?.users?.includes(userOrMember.id) || (userOrMember instanceof GuildMember && isMemberAdmin(userOrMember))
 }
 
-export const isMemberAdmin = (member: GuildMember, adminConfig: Config['admin']) => {
+export const isMemberAdmin = (member: GuildMember) => {
     const roles = new Set(member.roles.cache.keys())
-    return Boolean(adminConfig?.roles?.[member.guild.id]?.some(role => roles.has(role)))
+    return Boolean(config?.admin?.roles?.[member.guild.id]?.some(role => roles.has(role)))
 }

@@ -20,12 +20,12 @@ export type Config = {
         guilds: Record<string, Record<string, RolePresetConfig>>
     }
     messageScan?: {
+        scanBots?: boolean
+        scanOutsideGuilds?: boolean
         allowedAttachmentMimeTypes: string[]
-        filter: {
-            roles?: string[]
-            users?: string[]
-            channels?: string[]
-            whitelist: boolean
+        filter?: {
+            whitelist?: Filter
+            blacklist?: Filter
         }
         humanCorrections: {
             falsePositiveLabel: string
@@ -71,6 +71,12 @@ export type ConfigMessageScanResponseLabelConfig = {
      * Confidence threshold
      */
     threshold: number
+}
+
+export type Filter = {
+    roles?: string[]
+    users?: string[]
+    channels?: string[]
 }
 
 export type ConfigMessageScanResponseMessage = BaseMessageOptions

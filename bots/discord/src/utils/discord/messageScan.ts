@@ -113,24 +113,18 @@ export const getResponseFromText = async (
     return responseConfig
 }
 
-export const shouldScanMessage = (
+export const messageMatchesFilter = (
     message: Message,
     filter: NonNullable<Config['messageScan']>['filter'],
-): message is Message<true> => {
-    if (message.author.bot) return false
-    if (!message.guild) return false
+) => {
     if (!filter) return true
 
-    const filters = [
-        filter.users?.includes(message.author.id),
-        message.member?.roles.cache.some(x => filter.roles?.includes(x.id)),
-        filter.channels?.includes(message.channel.id),
-    ]
+    const memberRoles = new Set(message.member?.roles.cache.keys())
+    const blFilter = filter.blacklist
 
-    if (filter.whitelist && filters.every(x => !x)) return false
-    if (!filter.whitelist && filters.some(x => x)) return false
-
-    return true
+    // If matches blacklist, will return false
+    // Any other case, will return true
+    return !(blFilter && (blFilter.channels?.includes(message.channelId) || blFilter.roles?.some(role => memberRoles.has(role)) || blFilter.users?.includes(message.author.id)))
 }
 
 export const handleUserResponseCorrection = async (
