@@ -1,3 +1,15 @@
+# @revanced/discord-bot [1.0.0-dev.8](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.7...@revanced/discord-bot@1.0.0-dev.8) (2024-07-28)
+
+
+### Bug Fixes
+
+* **bots/discord:** cross-device link build errors ([38c0699](https://github.com/revanced/revanced-helper/commit/38c06997b4d0f7bb3f1e62618a5e3f088c522e30))
+
+
+### Features
+
+* **bots/discord:** blacklist and whitelist for filters ([cdb6001](https://github.com/revanced/revanced-helper/commit/cdb600195520dba33110c40841629259e317055e))
+
 # @revanced/discord-bot [1.0.0-dev.7](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.6...@revanced/discord-bot@1.0.0-dev.7) (2024-07-25)
 
 
