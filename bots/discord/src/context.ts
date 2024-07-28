@@ -13,7 +13,7 @@ export { config }
 import * as commands from './commands'
 import * as schemas from './database/schemas'
 
-import type Command from './classes/Command'
+import type { Command } from './commands/types'
 
 export const logger = createLogger({
     level: config.logLevel === 'none' ? Number.MAX_SAFE_INTEGER : config.logLevel,
@@ -81,7 +81,7 @@ export const discord = {
         },
         partials: [Partials.Message, Partials.Reaction],
     }),
-    commands: Object.fromEntries(Object.values<Command>(commands).map(cmd => [cmd.name, cmd])) as Record<
+    commands: Object.fromEntries(Object.values<Command>(commands).map(cmd => [cmd.data.name, cmd])) as Record<
         string,
         Command
     >,
