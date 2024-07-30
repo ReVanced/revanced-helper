@@ -113,15 +113,24 @@ export const messageMatchesFilter = (message: Message, filter: NonNullable<Confi
     if (!filter) return true
 
     const memberRoles = new Set(message.member?.roles.cache.keys())
-    const blFilter = filter.blacklist
+    const { blacklist, whitelist } = filter
 
-    // If matches blacklist, will return false
-    // Any other case, will return true
-    return !(
-        blFilter &&
-        (blFilter.channels?.includes(message.channelId) ||
-            blFilter.roles?.some(role => memberRoles.has(role)) ||
-            blFilter.users?.includes(message.author.id))
+    // If matches only blacklist, will return false
+    // If matches whitelist but also matches blacklist, will return false
+    // If matches only whitelist, will return true
+    // If matches neither, will return true
+    return (
+        (whitelist
+            ? whitelist.channels?.includes(message.channelId) ||
+              whitelist.roles?.some(role => memberRoles.has(role)) ||
+              whitelist.users?.includes(message.author.id)
+            : true) &&
+        !(
+            blacklist &&
+            (blacklist.channels?.includes(message.channelId) ||
+                blacklist.roles?.some(role => memberRoles.has(role)) ||
+                blacklist.users?.includes(message.author.id))
+        )
     )
 }
 
