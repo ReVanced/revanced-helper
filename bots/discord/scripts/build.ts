@@ -12,11 +12,6 @@ await Bun.build({
     outdir: './dist/src',
     target: 'bun',
     external: ['./config.js'],
-    minify: {
-        syntax: true,
-        whitespace: true,
-        identifiers: false,
-    },
     sourcemap: 'external',
 })
 
