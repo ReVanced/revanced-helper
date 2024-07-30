@@ -8,7 +8,9 @@ withContext(on, 'messageCreate', async (context, msg) => {
 
     if (msg.author.bot) return
 
-    const regex = new RegExp(`^(?:${config.prefix}|${msg.client.user.toString()}\\s*)([a-zA-Z-_]+)(?:\\s+)?(.+)?`)
+    const regex = new RegExp(
+        `^(?:${config.prefix ? `${escapeRegexSpecials(config.prefix)}|` : ''}${msg.client.user.toString()}\\s*)([a-zA-Z-_]+)(?:\\s+)?(.+)?`,
+    )
     const matches = msg.content.match(regex)
 
     if (!matches) return
@@ -51,3 +53,12 @@ withContext(on, 'messageCreate', async (context, msg) => {
         await msg.reply({ embeds: [err instanceof CommandError ? err.toEmbed() : createStackTraceEmbed(err)] })
     }
 })
+
+const escapeRegexSpecials = (str: string): string => {
+    let escapedStr = ''
+    for (const char of str) {
+        if (['.', '+', '*', '?', '$', '(', ')', '[', ']', '{', '}', '|', '\\'].includes(char)) escapedStr += `\\${char}`
+        else escapedStr += char
+    }
+    return escapedStr
+}
