@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.10](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.9...@revanced/discord-bot@1.0.0-dev.10) (2024-07-30)
+
+
+### Bug Fixes
+
+* **bots/discord:** hanging process when disconnecting from API too many times ([d31616e](https://github.com/revanced/revanced-helper/commit/d31616ebcba6f1dcd8bde183bcb8d1adb1501b61))
+
 # @revanced/discord-bot [1.0.0-dev.9](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.8...@revanced/discord-bot@1.0.0-dev.9) (2024-07-30)
 
 
