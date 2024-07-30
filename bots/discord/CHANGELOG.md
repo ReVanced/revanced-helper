@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.9](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.8...@revanced/discord-bot@1.0.0-dev.9) (2024-07-30)
+
+
+### Features
+
+* **bots/discord:** framework changes and new features ([646ec8d](https://github.com/revanced/revanced-helper/commit/646ec8da87617e6c8f48a89e8054e2cba91da549))
+
 # @revanced/discord-bot [1.0.0-dev.8](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.7...@revanced/discord-bot@1.0.0-dev.8) (2024-07-28)
 
 
