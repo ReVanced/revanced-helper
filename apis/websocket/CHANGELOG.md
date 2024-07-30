@@ -1,3 +1,5 @@
+# @revanced/bot-websocket-api [1.0.0-dev.7](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.6...@revanced/bot-websocket-api@1.0.0-dev.7) (2024-07-30)
+
 # @revanced/bot-websocket-api [1.0.0-dev.6](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.5...@revanced/bot-websocket-api@1.0.0-dev.6) (2024-07-30)
 
 
