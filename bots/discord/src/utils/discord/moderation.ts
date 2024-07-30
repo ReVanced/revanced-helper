@@ -1,6 +1,6 @@
 import { config, logger } from '$/context'
 import decancer from 'decancer'
-import type { ChatInputCommandInteraction, EmbedBuilder, Guild, GuildMember, User } from 'discord.js'
+import type { ChatInputCommandInteraction, EmbedBuilder, Guild, GuildMember, Message, User } from 'discord.js'
 import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from './embeds'
 
 const PresetLogAction = {
@@ -10,19 +10,23 @@ const PresetLogAction = {
 
 export const sendPresetReplyAndLogs = (
     action: keyof typeof PresetLogAction,
-    interaction: ChatInputCommandInteraction,
+    interaction: ChatInputCommandInteraction | Message,
+    executor: GuildMember,
     user: User,
     preset: string,
     expires?: number | null,
 ) =>
     sendModerationReplyAndLogs(
         interaction,
-        createModerationActionEmbed(PresetLogAction[action], user, interaction.user, undefined, expires, [
+        createModerationActionEmbed(PresetLogAction[action], user, executor.user, undefined, expires, [
             [{ name: 'Preset', value: preset, inline: true }],
         ]),
     )
 
-export const sendModerationReplyAndLogs = async (interaction: ChatInputCommandInteraction, embed: EmbedBuilder) => {
+export const sendModerationReplyAndLogs = async (
+    interaction: ChatInputCommandInteraction | Message,
+    embed: EmbedBuilder,
+) => {
     const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())
     const logChannel = await getLogChannel(interaction.guild!)
     await logChannel?.send({ embeds: [applyReferenceToModerationActionEmbed(embed, reply.url)] })
@@ -46,7 +50,7 @@ export const getLogChannel = async (guild: Guild) => {
 }
 
 export const cureNickname = async (member: GuildMember) => {
-    if (!member.manageable) throw new Error('Member is not manageable')
+    if (!member.manageable) return
     const name = member.displayName
     let cured = decancer(name)
         .toString()

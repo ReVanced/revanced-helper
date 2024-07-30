@@ -6,18 +6,18 @@ import { createLogger } from '@revanced/bot-shared'
 import { Client as DiscordClient, Partials } from 'discord.js'
 import { drizzle } from 'drizzle-orm/bun-sqlite'
 
-// Export config first, as commands require them
+// Export some things first, as commands require them
 import config from '../config.js'
 export { config }
-
-import * as commands from './commands'
-import * as schemas from './database/schemas'
-
-import type { Command } from './commands/types'
 
 export const logger = createLogger({
     level: config.logLevel === 'none' ? Number.MAX_SAFE_INTEGER : config.logLevel,
 })
+
+import * as commands from './commands'
+import * as schemas from './database/schemas'
+
+import type { default as Command, CommandOptionsOptions } from './classes/Command'
 
 export const api = {
     client: new APIClient({
@@ -81,8 +81,8 @@ export const discord = {
         },
         partials: [Partials.Message, Partials.Reaction],
     }),
-    commands: Object.fromEntries(Object.values<Command>(commands).map(cmd => [cmd.data.name, cmd])) as Record<
+    commands: Object.fromEntries(Object.values(commands).map(cmd => [cmd.name, cmd])) as Record<
         string,
-        Command
+        Command<boolean, CommandOptionsOptions | undefined, boolean>
     >,
 } as const

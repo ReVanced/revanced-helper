@@ -7,9 +7,7 @@ import { on, withContext } from 'src/utils/discord/events'
 
 export default withContext(on, 'ready', ({ config, logger }, client) => {
     logger.info(`Connected to Discord API, logged in as ${client.user.displayName} (@${client.user.tag})!`)
-    logger.info(
-        `Bot is in ${client.guilds.cache.size} guilds, if this is not expected, please run the /leave-unknowns command`,
-    )
+    logger.info(`Bot is in ${client.guilds.cache.size} guilds`)
 
     if (config.rolePresets) {
         removeExpiredPresets(client)

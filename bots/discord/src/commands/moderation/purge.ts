@@ -1,37 +1,32 @@
-import { EmbedBuilder, GuildChannel, SlashCommandBuilder } from 'discord.js'
+import { EmbedBuilder, GuildChannel } from 'discord.js'
 
+import { ModerationCommand } from '$/classes/Command'
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
-import { config } from '$/context'
 import { applyCommonEmbedStyles } from '$/utils/discord/embeds'
 
-import type { Command } from '../types'
-
-export default {
-    data: new SlashCommandBuilder()
-        .setName('purge')
-        .setDescription('Purge messages from a channel')
-        .addIntegerOption(option =>
-            option.setName('amount').setDescription('The amount of messages to remove').setMaxValue(100).setMinValue(1),
-        )
-        .addUserOption(option =>
-            option.setName('user').setDescription('The user to remove messages from (needs `until`)'),
-        )
-        .addStringOption(option =>
-            option.setName('until').setDescription('The message ID to remove messages until (overrides `amount`)'),
-        )
-        .toJSON(),
-
-    memberRequirements: {
-        roles: config.moderation?.roles ?? [],
+export default new ModerationCommand({
+    name: 'purge',
+    description: 'Purge messages from a channel',
+    options: {
+        amount: {
+            description: 'The amount of messages to remove',
+            required: false,
+            type: ModerationCommand.OptionType.Integer,
+            min: 1,
+            max: 100,
+        },
+        user: {
+            description: 'The user to remove messages from (needs `until`)',
+            required: false,
+            type: ModerationCommand.OptionType.User,
+        },
+        until: {
+            description: 'The message ID to remove messages until (overrides `amount`)',
+            required: false,
+            type: ModerationCommand.OptionType.String,
+        },
     },
-
-    global: false,
-
-    async execute({ logger }, interaction) {
-        const amount = interaction.options.getInteger('amount')
-        const user = interaction.options.getUser('user')
-        const until = interaction.options.getString('until')
-
+    async execute({ logger, executor }, interaction, { amount, user, until }) {
         if (!amount && !until)
             throw new CommandError(CommandErrorType.MissingArgument, 'Either `amount` or `until` must be provided.')
 
@@ -59,8 +54,9 @@ export default {
         await channel.bulkDelete(messages, true)
 
         logger.info(
-            `Moderator ${interaction.user.tag} (${interaction.user.id}) purged ${messages.size} messages in #${channel.name} (${channel.id})`,
+            `Moderator ${executor.user.tag} (${executor.id}) purged ${messages.size} messages in #${channel.name} (${channel.id})`,
         )
+
         await reply.edit({
             embeds: [
                 embed.setTitle('Purged messages').setDescription(null).addFields({
@@ -70,4 +66,4 @@ export default {
             ],
         })
     },
-} satisfies Command
+})

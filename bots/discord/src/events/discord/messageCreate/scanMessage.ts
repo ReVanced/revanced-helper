@@ -13,7 +13,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
     } = context
 
     if (!config || !config.responses) return
-    if (msg.author.bot && !config.scanBots)
+    if (msg.author.bot && !config.scanBots) return
     if (!msg.inGuild() && !config.scanOutsideGuilds) return
     if (msg.inGuild() && msg.member?.partial) await msg.member.fetch()
 
@@ -24,7 +24,11 @@ withContext(on, 'messageCreate', async (context, msg) => {
         try {
             logger.debug(`Classifying message ${msg.id}`)
 
-            const { response, label, replyToReplied } = await getResponseFromText(msg.content, filteredResponses, context)
+            const { response, label, replyToReplied } = await getResponseFromText(
+                msg.content,
+                filteredResponses,
+                context,
+            )
 
             if (response) {
                 logger.debug('Response found')

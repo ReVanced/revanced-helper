@@ -1,9 +1,5 @@
 import { type Response, responses } from '$/database/schemas'
-import type {
-    Config,
-    ConfigMessageScanResponse,
-    ConfigMessageScanResponseLabelConfig
-} from 'config.schema'
+import type { Config, ConfigMessageScanResponse, ConfigMessageScanResponseLabelConfig } from 'config.schema'
 import type { Message, PartialUser, User } from 'discord.js'
 import { eq } from 'drizzle-orm'
 import { createMessageScanResponseEmbed } from './embeds'
@@ -17,7 +13,7 @@ export const getResponseFromText = async (
 ): Promise<ConfigMessageScanResponse & { label?: string }> => {
     let responseConfig: Awaited<ReturnType<typeof getResponseFromText>> = {
         triggers: {},
-        response: null
+        response: null,
     }
 
     const firstLabelIndexes: number[] = []
@@ -29,7 +25,7 @@ export const getResponseFromText = async (
         // Filter override check is not neccessary here, we are already passing responses that match the filter
         // from the messageCreate handler, see line 17 of messageCreate handler
         const {
-            triggers: { text: textTriggers, image: imageTriggers }
+            triggers: { text: textTriggers, image: imageTriggers },
         } = trigger
         if (responseConfig) break
 
@@ -92,7 +88,7 @@ export const getResponseFromText = async (
         logger.debug('No match from NLP, doing after regexes')
         for (let i = 0; i < responses.length; i++) {
             const {
-                triggers: { text: textTriggers }
+                triggers: { text: textTriggers },
             } = responses[i]!
             const firstLabelIndex = firstLabelIndexes[i] ?? -1
 
@@ -113,10 +109,7 @@ export const getResponseFromText = async (
     return responseConfig
 }
 
-export const messageMatchesFilter = (
-    message: Message,
-    filter: NonNullable<Config['messageScan']>['filter'],
-) => {
+export const messageMatchesFilter = (message: Message, filter: NonNullable<Config['messageScan']>['filter']) => {
     if (!filter) return true
 
     const memberRoles = new Set(message.member?.roles.cache.keys())
@@ -124,7 +117,12 @@ export const messageMatchesFilter = (
 
     // If matches blacklist, will return false
     // Any other case, will return true
-    return !(blFilter && (blFilter.channels?.includes(message.channelId) || blFilter.roles?.some(role => memberRoles.has(role)) || blFilter.users?.includes(message.author.id)))
+    return !(
+        blFilter &&
+        (blFilter.channels?.includes(message.channelId) ||
+            blFilter.roles?.some(role => memberRoles.has(role)) ||
+            blFilter.users?.includes(message.author.id))
+    )
 }
 
 export const handleUserResponseCorrection = async (

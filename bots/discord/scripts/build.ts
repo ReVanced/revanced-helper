@@ -1,5 +1,5 @@
 import { createLogger } from '@revanced/bot-shared'
-import { cp, rename, rm } from 'fs/promises'
+import { cp, rm } from 'fs/promises'
 
 const logger = createLogger()
 

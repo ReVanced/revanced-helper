@@ -1,31 +1,24 @@
-import { SlashCommandBuilder } from 'discord.js'
-
-import type { Command } from '../types'
-
-import { config } from '$/context'
+import { ModerationCommand } from '$/classes/Command'
 import { createSuccessEmbed } from '$/utils/discord/embeds'
 import { cureNickname } from '$/utils/discord/moderation'
 
-export default {
-    data: new SlashCommandBuilder()
-        .setName('cure')
-        .setDescription("Cure a member's nickname")
-        .addUserOption(option => option.setName('member').setRequired(true).setDescription('The member to cure'))
-        .toJSON(),
-
-    memberRequirements: {
-        roles: config.moderation?.roles ?? [],
+export default new ModerationCommand({
+    name: 'cure',
+    description: "Cure a member's nickname",
+    options: {
+        member: {
+            description: 'The member to cure',
+            required: true,
+            type: ModerationCommand.OptionType.User,
+        },
     },
-
-    global: false,
-
-    async execute(_, interaction) {
-        const user = interaction.options.getUser('member', true)
-        const member = await interaction.guild!.members.fetch(user.id)
+    async execute(_, interaction, { member: user }) {
+        const guild = await interaction.client.guilds.fetch(interaction.guildId)
+        const member = await guild.members.fetch(user)
         await cureNickname(member)
         await interaction.reply({
             embeds: [createSuccessEmbed(null, `Cured nickname for ${member.toString()}`)],
             ephemeral: true,
         })
     },
-} satisfies Command
+})

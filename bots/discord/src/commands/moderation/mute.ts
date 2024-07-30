@@ -1,44 +1,47 @@
-import { SlashCommandBuilder } from 'discord.js'
-
+import { ModerationCommand } from '$/classes/Command'
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
-import { applyRolePreset, removeRolePreset } from '$/utils/discord/rolePresets'
-import type { Command } from '../types'
-
-import { config } from '$/context'
 import { createModerationActionEmbed } from '$/utils/discord/embeds'
 import { sendModerationReplyAndLogs } from '$/utils/discord/moderation'
+import { applyRolePreset, removeRolePreset } from '$/utils/discord/rolePresets'
 import { parseDuration } from '$/utils/duration'
 
-export default {
-    data: new SlashCommandBuilder()
-        .setName('mute')
-        .setDescription('Mute a member')
-        .addUserOption(option => option.setName('member').setRequired(true).setDescription('The member to mute'))
-        .addStringOption(option => option.setName('reason').setDescription('The reason for muting the member'))
-        .addStringOption(option => option.setName('duration').setDescription('The duration of the mute'))
-        .toJSON(),
-
-    memberRequirements: {
-        roles: config.moderation?.roles ?? [],
+export default new ModerationCommand({
+    name: 'mute',
+    description: 'Mute a member',
+    options: {
+        member: {
+            description: 'The member to mute',
+            required: true,
+            type: ModerationCommand.OptionType.User,
+        },
+        reason: {
+            description: 'The reason for muting the member',
+            required: false,
+            type: ModerationCommand.OptionType.String,
+        },
+        duration: {
+            description: 'The duration of the mute',
+            required: false,
+            type: ModerationCommand.OptionType.String,
+        },
     },
+    async execute(
+        { logger, executor },
+        interaction,
+        { member: user, reason = 'No reason provided', duration: durationInput },
+    ) {
+        const guild = await interaction.client.guilds.fetch(interaction.guildId)
+        const member = await guild.members.fetch(user.id)
+        const moderator = await guild.members.fetch(executor.id)
+        const duration = durationInput ? parseDuration(durationInput) : Infinity
 
-    global: false,
-
-    async execute({ logger }, interaction, { isExecutorBotAdmin: isExecutorAdmin }) {
-        const user = interaction.options.getUser('member', true)
-        const reason = interaction.options.getString('reason') ?? 'No reason provided'
-        const duration = interaction.options.getString('duration')
-        const durationMs = duration ? parseDuration(duration) : null
-
-        if (Number.isInteger(durationMs) && durationMs! < 1)
+        if (Number.isInteger(duration) && duration! < 1)
             throw new CommandError(
                 CommandErrorType.InvalidDuration,
                 'The duration must be at least 1 millisecond long.',
             )
 
-        const expires = durationMs ? Date.now() + durationMs : null
-        const moderator = await interaction.guild!.members.fetch(interaction.user.id)
-        const member = await interaction.guild!.members.fetch(user.id)
+        const expires = Math.max(duration, Date.now() + duration)
         if (!member)
             throw new CommandError(
                 CommandErrorType.InvalidUser,
@@ -48,25 +51,25 @@ export default {
         if (!member.manageable)
             throw new CommandError(CommandErrorType.Generic, 'This user cannot be managed by the bot.')
 
-        if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0 && !isExecutorAdmin)
+        if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0)
             throw new CommandError(
                 CommandErrorType.InvalidUser,
                 'You cannot mute a user with a role equal to or higher than yours.',
             )
 
-        await applyRolePreset(member, 'mute', durationMs ? Date.now() + durationMs : null)
+        await applyRolePreset(member, 'mute', expires)
         await sendModerationReplyAndLogs(
             interaction,
-            createModerationActionEmbed('Muted', user, interaction.user, reason, durationMs),
+            createModerationActionEmbed('Muted', user, executor.user, reason, duration),
         )
 
-        if (durationMs)
+        if (duration)
             setTimeout(() => {
                 removeRolePreset(member, 'mute')
-            }, durationMs)
+            }, duration)
 
         logger.info(
-            `Moderator ${interaction.user.tag} (${interaction.user.id}) muted ${user.tag} (${user.id}) until ${expires} because ${reason}`,
+            `Moderator ${executor.user.tag} (${executor.user.id}) muted ${user.tag} (${user.id}) until ${expires} because ${reason}`,
         )
     },
-} satisfies Command
+})

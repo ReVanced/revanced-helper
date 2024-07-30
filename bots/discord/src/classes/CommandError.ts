@@ -17,6 +17,7 @@ export default class CommandError extends Error {
 export enum CommandErrorType {
     Generic,
     MissingArgument,
+    InvalidArgument,
     InvalidUser,
     InvalidChannel,
     InvalidDuration,
@@ -25,6 +26,7 @@ export enum CommandErrorType {
 const ErrorTitleMap: Record<CommandErrorType, string> = {
     [CommandErrorType.Generic]: 'An exception was thrown',
     [CommandErrorType.MissingArgument]: 'Missing argument',
+    [CommandErrorType.InvalidArgument]: 'Invalid argument',
     [CommandErrorType.InvalidUser]: 'Invalid user',
     [CommandErrorType.InvalidChannel]: 'Invalid channel',
     [CommandErrorType.InvalidDuration]: 'Invalid duration',

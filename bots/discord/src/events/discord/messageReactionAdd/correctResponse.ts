@@ -13,8 +13,8 @@ import {
 import type { ConfigMessageScanResponseLabelConfig } from '$/../config.schema'
 import { responses } from '$/database/schemas'
 import { handleUserResponseCorrection } from '$/utils/discord/messageScan'
-import { eq } from 'drizzle-orm'
 import { isAdmin } from '$/utils/discord/permissions'
+import { eq } from 'drizzle-orm'
 
 const PossibleReactions = Object.values(Reactions) as string[]
 

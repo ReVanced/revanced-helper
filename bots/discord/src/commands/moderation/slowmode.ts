@@ -1,39 +1,31 @@
 import { createSuccessEmbed } from '$/utils/discord/embeds'
 import { durationToString, parseDuration } from '$/utils/duration'
 
-import { SlashCommandBuilder } from 'discord.js'
-
+import { ModerationCommand } from '$/classes/Command'
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
-import { config } from '$/context'
-import type { Command } from '../types'
+import { ChannelType } from 'discord.js'
 
-export default {
-    data: new SlashCommandBuilder()
-        .setName('slowmode')
-        .setDescription('Set a slowmode for the current channel')
-        .addStringOption(option => option.setName('duration').setDescription('The duration to set').setRequired(true))
-        .addStringOption(option =>
-            option
-                .setName('channel')
-                .setDescription('The channel to set the slowmode on (defaults to current channel)')
-                .setRequired(false),
-        )
-        .toJSON(),
-
-    memberRequirements: {
-        roles: config.moderation?.roles ?? [],
+export default new ModerationCommand({
+    name: 'slowmode',
+    description: 'Set a slowmode for a channel',
+    options: {
+        duration: {
+            description: 'The duration to set',
+            required: true,
+            type: ModerationCommand.OptionType.String,
+        },
+        channel: {
+            description: 'The channel to set the slowmode on (defaults to current channel)',
+            required: false,
+            type: ModerationCommand.OptionType.Channel,
+            types: [ChannelType.GuildText],
+        },
     },
+    async execute({ logger, executor }, interaction, { duration: durationInput, channel: channelInput }) {
+        const channel = channelInput ?? (await interaction.guild!.channels.fetch(interaction.channelId))
+        const duration = parseDuration(durationInput)
 
-    global: false,
-
-    async execute({ logger }, interaction) {
-        const durationStr = interaction.options.getString('duration', true)
-        const id = interaction.options.getChannel('channel')?.id ?? interaction.channelId
-
-        const duration = parseDuration(durationStr)
-        const channel = await interaction.guild!.channels.fetch(id)
-
-        if (!channel?.isTextBased())
+        if (!channel?.isTextBased() || channel.isDMBased())
             throw new CommandError(
                 CommandErrorType.InvalidChannel,
                 'The supplied channel is not a text channel or does not exist.',
@@ -46,10 +38,7 @@ export default {
                 'Duration out of range, must be between 0s and 6h.',
             )
 
-        logger.info(`Setting slowmode to ${duration}ms on ${channel.id}`)
-
-        await channel.setRateLimitPerUser(duration / 1000, `Set by ${interaction.user.tag} (${interaction.user.id})`)
-
+        await channel.setRateLimitPerUser(duration / 1000, `Set by ${executor.user.tag} (${executor.id})`)
         await interaction.reply({
             embeds: [
                 createSuccessEmbed(
@@ -59,7 +48,7 @@ export default {
         })
 
         logger.info(
-            `${interaction.user.tag} (${interaction.user.id}) set the slowmode on ${channel.name} (${channel.id}) to ${duration}ms`,
+            `${executor.user.tag} (${executor.id}) set the slowmode on ${channel.name} (${channel.id}) to ${duration}ms`,
         )
     },
-} satisfies Command
+})

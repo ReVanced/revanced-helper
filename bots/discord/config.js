@@ -4,6 +4,7 @@
  * @type {import('./config.schema').Config}
  */
 export default {
+    prefix: '!',
     admin: {
         users: ['USER_ID_HERE'],
         roles: {

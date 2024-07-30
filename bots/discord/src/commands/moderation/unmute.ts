@@ -1,29 +1,22 @@
-import { SlashCommandBuilder } from 'discord.js'
-
+import { ModerationCommand } from '$/classes/Command'
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
-import { config } from '$/context'
 import { appliedPresets } from '$/database/schemas'
 import { createModerationActionEmbed } from '$/utils/discord/embeds'
 import { sendModerationReplyAndLogs } from '$/utils/discord/moderation'
 import { removeRolePreset } from '$/utils/discord/rolePresets'
 import { and, eq } from 'drizzle-orm'
-import type { Command } from '../types'
 
-export default {
-    data: new SlashCommandBuilder()
-        .setName('unmute')
-        .setDescription('Unmute a member')
-        .addUserOption(option => option.setName('member').setRequired(true).setDescription('The member to unmute'))
-        .toJSON(),
-
-    memberRequirements: {
-        roles: config.moderation?.roles ?? [],
+export default new ModerationCommand({
+    name: 'unmute',
+    description: 'Unmute a member',
+    options: {
+        member: {
+            description: 'The member to unmute',
+            required: true,
+            type: ModerationCommand.OptionType.User,
+        },
     },
-
-    global: false,
-
-    async execute({ logger, database }, interaction) {
-        const user = interaction.options.getUser('member', true)
+    async execute({ logger, database, executor }, interaction, { member: user }) {
         const member = await interaction.guild!.members.fetch(user.id)
         if (!member)
             throw new CommandError(
@@ -39,8 +32,8 @@ export default {
             throw new CommandError(CommandErrorType.Generic, 'This user is not muted.')
 
         await removeRolePreset(member, 'mute')
-        await sendModerationReplyAndLogs(interaction, createModerationActionEmbed('Unmuted', user, interaction.user))
+        await sendModerationReplyAndLogs(interaction, createModerationActionEmbed('Unmuted', user, executor.user))
 
-        logger.info(`Moderator ${interaction.user.tag} (${interaction.user.id}) unmuted ${user.tag} (${user.id})`)
+        logger.info(`Moderator ${executor.user.tag} (${executor.id}) unmuted ${user.tag} (${user.id})`)
     },
-} satisfies Command
+})

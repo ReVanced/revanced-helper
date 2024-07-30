@@ -6,9 +6,9 @@ import { and, eq } from 'drizzle-orm'
 // TODO: Fix this type
 type PresetKey = string
 
-export const applyRolePreset = async (member: GuildMember, presetName: PresetKey, untilMs: number | null) => {
+export const applyRolePreset = async (member: GuildMember, presetName: PresetKey, untilMs: number) => {
     const afterInsert = await applyRolesUsingPreset(presetName, member, true)
-    const until = untilMs ? Math.ceil(untilMs / 1000) : null
+    const until = untilMs === Infinity ? null : Math.ceil(untilMs / 1000)
 
     await database
         .insert(appliedPresets)

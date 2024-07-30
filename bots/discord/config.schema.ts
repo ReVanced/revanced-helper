@@ -1,6 +1,7 @@
 import type { BaseMessageOptions } from 'discord.js'
 
 export type Config = {
+    prefix?: string
     admin?: {
         users?: string[]
         roles?: Record<string, string[]>
