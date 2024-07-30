@@ -163,12 +163,16 @@ export default class Client {
     /**
      * Disconnects the client from the API
      */
-    disconnect() {
-        this.ws.disconnect()
+    disconnect(force?: boolean) {
+        this.ws.disconnect(force)
     }
 
     #throwIfNotReady() {
         if (!this.isReady()) throw new Error('Client is not ready')
+    }
+
+    get disconnected() {
+        return this.ws.disconnected
     }
 }
 

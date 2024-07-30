@@ -137,8 +137,8 @@ export class ClientWebSocketManager {
     /**
      * Disconnects from the WebSocket API
      */
-    disconnect() {
-        this.#throwIfDisconnected('Cannot disconnect when already disconnected from the server')
+    disconnect(force?: boolean) {
+        if (!force) this.#throwIfDisconnected('Cannot disconnect when already disconnected from the server')
         this._handleDisconnect(DisconnectReason.PlannedDisconnect)
     }
 
