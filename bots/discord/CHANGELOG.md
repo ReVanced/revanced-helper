@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.11](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.10...@revanced/discord-bot@1.0.0-dev.11) (2024-07-30)
+
+
+### Bug Fixes
+
+* **bots/discord:** reset counter when reconnected to api, redo message scan filter logic ([d234d79](https://github.com/revanced/revanced-helper/commit/d234d79310caed9c43e14a905f9ef46a110e071d))
+
 # @revanced/discord-bot [1.0.0-dev.10](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.9...@revanced/discord-bot@1.0.0-dev.10) (2024-07-30)
 
 
