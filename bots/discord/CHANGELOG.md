@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.12](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.11...@revanced/discord-bot@1.0.0-dev.12) (2024-07-30)
+
+
+### Bug Fixes
+
+* **bots/discord:** deployment runtime errors due to minification ([a60c60c](https://github.com/revanced/revanced-helper/commit/a60c60c0f994a4c256b7d0582e99a1731209cf49))
+
 # @revanced/discord-bot [1.0.0-dev.11](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.10...@revanced/discord-bot@1.0.0-dev.11) (2024-07-30)
 
 
