@@ -25,8 +25,8 @@ const Options = {
                   [
                       '@semantic-release/npm',
                       {
-                         npmPublish: false,
-                      }
+                          npmPublish: false,
+                      },
                   ],
                   [
                       '@semantic-release/git',

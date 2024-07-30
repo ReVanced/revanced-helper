@@ -21,6 +21,9 @@
         },
         "useNodejsImportProtocol": {
           "level": "off"
+        },
+        "useNumberNamespace": {
+          "level": "off"
         }
       }
     }

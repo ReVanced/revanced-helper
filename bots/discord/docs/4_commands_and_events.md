@@ -35,8 +35,6 @@ export default {
     data: new SlashCommandBuilder()
         .setName("my-command")
         .setDescription("My cool command")
-        // Allowing this command to be used in DMs
-        .setDMPermission(true)
         // DO NOT forget this line!
         .toJSON(),
 

@@ -49,19 +49,13 @@ export class ClientWebSocketManager {
                 const timeout = setTimeout(() => {
                     if (!this.ready) {
                         this.#socket?.close(DisconnectReason.TooSlow)
-                        throw new Error('WebSocket connection was not readied in time')
+                        this._handleDisconnect(DisconnectReason.TooSlow, 'WebSocket connection was not readied in time')
                     }
                 }, this.timeout)
 
-                const errorBeforeReadyHandler = (err: Error) => {
-                    cleanup()
-                    throw err
-                }
-
                 const closeBeforeReadyHandler = (code: number, reason: Buffer) => {
-                    clearTimeout(timeout)
                     this._handleDisconnect(code, reason.toString())
-                    throw new Error('WebSocket connection closed before ready')
+                    cleanup()
                 }
 
                 const readyHandler = () => {
@@ -71,15 +65,14 @@ export class ClientWebSocketManager {
                     rs()
                 }
 
+                const socket = this.#socket
                 const cleanup = () => {
-                    this.#socket.off('open', readyHandler)
-                    this.#socket.off('close', closeBeforeReadyHandler)
-                    this.#socket.off('error', errorBeforeReadyHandler)
+                    socket.off('open', readyHandler)
+                    socket.off('close', closeBeforeReadyHandler)
                     clearTimeout(timeout)
                 }
 
                 this.#socket.on('open', readyHandler)
-                this.#socket.on('error', errorBeforeReadyHandler)
                 this.#socket.on('close', closeBeforeReadyHandler)
             } catch (e) {
                 rj(e)

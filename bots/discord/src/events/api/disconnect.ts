@@ -16,7 +16,7 @@ withContext(on, 'disconnect', ({ api, config, logger }, reason, msg) => {
     )
 
     if (api.disconnectCount >= (config.api.disconnectLimit ?? 3)) {
-        console.error('Disconnected from bot API too many times')
+        logger.fatal('Disconnected from bot API too many times')
         // We don't want the process hanging
         process.exit(1)
     }
