@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.13](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.12...@revanced/discord-bot@1.0.0-dev.13) (2024-07-30)
+
+
+### Bug Fixes
+
+* **bots/discord:** broken regex when prefix set to special characters ([ab62e55](https://github.com/revanced/revanced-helper/commit/ab62e55e76005f5999d7413d1158e54053f28d1f))
+
 # @revanced/discord-bot [1.0.0-dev.12](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.11...@revanced/discord-bot@1.0.0-dev.12) (2024-07-30)
 
 
