@@ -1,5 +1,5 @@
 import { GuildMember, type User } from 'discord.js'
-import config from '../../../config'
+import { config } from '../../context'
 
 export const isAdmin = (userOrMember: User | GuildMember) => {
     return (
