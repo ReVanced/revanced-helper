@@ -1,3 +1,15 @@
+# @revanced/discord-bot [1.0.0-dev.15](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.14...@revanced/discord-bot@1.0.0-dev.15) (2024-07-31)
+
+
+### Bug Fixes
+
+* **bots/discord:** import `config` from context ([763ef25](https://github.com/revanced/revanced-helper/commit/763ef253f9d4ff70a8b79969a7f4f41cba7f3c59))
+
+
+### Features
+
+* **bots/discord:** add sticky messages ([bf66155](https://github.com/revanced/revanced-helper/commit/bf661556e131bf0ef24e47f658fbcd701960e312))
+
 # @revanced/discord-bot [1.0.0-dev.14](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.13...@revanced/discord-bot@1.0.0-dev.14) (2024-07-31)
 
 
