@@ -291,6 +291,9 @@ export default class Command<
     async canExecute(executor: User | GuildMember, channelId: string): Promise<boolean> {
         if (!this.requirements) return false
 
+        const isExecutorAdmin = isAdmin(executor)
+        if (isExecutorAdmin) return true
+
         const {
             adminOnly,
             channels,
@@ -307,7 +310,7 @@ export default class Command<
         const bMemReqForUsers = memberRequirementsForUsers !== 'fail'
 
         const conditions = [
-            adminOnly ? isAdmin(executor) : bDefCond,
+            adminOnly ? isExecutorAdmin : bDefCond,
             channels ? channels.includes(channelId) : bDefCond,
             member ? (roles ? roles.some(role => member.roles.cache.has(role)) : bDefCond) : bMemReqForUsers,
             member ? (permissions ? member.permissions.has(permissions) : bDefCond) : bMemReqForUsers,
