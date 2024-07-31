@@ -10,9 +10,12 @@ export const getResponseFromText = async (
     // Just to be safe that we will never use data from the context parameter
     { api, logger }: Omit<typeof import('src/context'), 'config'>,
     ocrMode = false,
-): Promise<ConfigMessageScanResponse & { label?: string }> => {
-    let responseConfig: Awaited<ReturnType<typeof getResponseFromText>> = {
-        triggers: {},
+): Promise<
+    Omit<ConfigMessageScanResponse, 'triggers'> & { label?: string; triggers?: ConfigMessageScanResponse['triggers'] }
+> => {
+    type ResponseConfig = Awaited<ReturnType<typeof getResponseFromText>>
+    let responseConfig: Omit<ResponseConfig, 'triggers'> & { triggers?: ResponseConfig['triggers'] } = {
+        triggers: undefined,
         response: null,
     }
 
@@ -27,7 +30,6 @@ export const getResponseFromText = async (
         const {
             triggers: { text: textTriggers, image: imageTriggers },
         } = trigger
-        if (responseConfig) break
 
         if (ocrMode) {
             if (imageTriggers)
@@ -55,7 +57,7 @@ export const getResponseFromText = async (
     }
 
     // If none of the regexes match, we can search for labels immediately
-    if (!responseConfig && !ocrMode) {
+    if (!responseConfig.triggers && !ocrMode) {
         logger.debug('No match from before regexes, doing NLP')
         const scan = await api.client.parseText(content)
         if (scan.labels.length) {
@@ -84,7 +86,7 @@ export const getResponseFromText = async (
     }
 
     // If we still don't have a response config, we can match all regexes after the initial label trigger
-    if (!responseConfig) {
+    if (!responseConfig.triggers) {
         logger.debug('No match from NLP, doing after regexes')
         for (let i = 0; i < responses.length; i++) {
             const {
@@ -119,19 +121,17 @@ export const messageMatchesFilter = (message: Message, filter: NonNullable<Confi
     // If matches whitelist but also matches blacklist, will return false
     // If matches only whitelist, will return true
     // If matches neither, will return true
-    return (
-        (whitelist
-            ? whitelist.channels?.includes(message.channelId) ||
-              whitelist.roles?.some(role => memberRoles.has(role)) ||
-              whitelist.users?.includes(message.author.id)
-            : true) &&
-        !(
-            blacklist &&
-            (blacklist.channels?.includes(message.channelId) ||
-                blacklist.roles?.some(role => memberRoles.has(role)) ||
-                blacklist.users?.includes(message.author.id))
-        )
-    )
+    return whitelist
+        ? (whitelist.channels?.includes(message.channelId) ?? true) ||
+              (whitelist.roles?.some(role => memberRoles.has(role)) ?? true) ||
+              (whitelist.users?.includes(message.author.id) ?? true)
+        : true &&
+              !(
+                  blacklist &&
+                  (blacklist.channels?.includes(message.channelId) ||
+                      blacklist.roles?.some(role => memberRoles.has(role)) ||
+                      blacklist.users?.includes(message.author.id))
+              )
 }
 
 export const handleUserResponseCorrection = async (
