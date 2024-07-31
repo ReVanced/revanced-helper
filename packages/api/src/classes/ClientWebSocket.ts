@@ -123,7 +123,7 @@ export class ClientWebSocketManager {
         this.currentSequence++
 
         this.#socket.send(serializePacket(packet), err => {
-            throw err
+            if (err) throw err
         })
     }
 
