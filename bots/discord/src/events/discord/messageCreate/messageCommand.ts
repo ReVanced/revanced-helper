@@ -19,7 +19,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
 
     const command = discord.commands[commandName]
     logger.debug(`Command ${commandName} being invoked by ${msg.author.id}`)
-    if (!command) return void logger.error(`Command ${commandName} not implemented`)
+    if (!command) return void logger.debug(`Message command ${commandName} not implemented`)
 
     const argsRegex: RegExp = /[^\s"]+|"([^"]*)"/g
     const args: CommandArguments = []

@@ -33,7 +33,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
             if (response) {
                 logger.debug('Response found')
 
-                const toReply = replyToReplied ? await msg.fetchReference() : msg
+                const toReply = replyToReplied ? (msg.reference?.messageId ? await msg.fetchReference() : msg) : msg
                 const reply = await toReply.reply({
                     ...response,
                     embeds: response.embeds?.map(it => createMessageScanResponseEmbed(it, label ? 'nlp' : 'match')),

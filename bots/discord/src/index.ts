@@ -10,5 +10,10 @@ if (missingEnvs.length) {
     process.exit(1)
 }
 
+// Handle uncaught exceptions
+
+process.on('uncaughtException', error => console.error('Uncaught exception:', error))
+process.on('unhandledRejection', reason => console.error('Unhandled rejection:', reason))
+
 api.client.connect()
 discord.client.login()

@@ -9,7 +9,8 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
     const command = discord.commands[interaction.commandName]
 
     logger.debug(`Command ${interaction.commandName} being invoked by ${interaction.user.tag}`)
-    if (!command) return void logger.error(`Command ${interaction.commandName} not implemented but registered!!!`)
+    if (!command)
+        return void logger.error(`Interaction command ${interaction.commandName} not implemented but registered!!!`)
 
     try {
         logger.debug(`Command ${interaction.commandName} being executed`)
