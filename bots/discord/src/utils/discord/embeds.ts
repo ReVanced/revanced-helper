@@ -1,5 +1,5 @@
 import { DefaultEmbedColor, MessageScanHumanizedMode, ReVancedLogoURL } from '$/constants'
-import { EmbedBuilder, type EmbedField, type User } from 'discord.js'
+import { type APIEmbed, EmbedBuilder, type EmbedField, type JSONEncodable, type User } from 'discord.js'
 import type { ConfigMessageScanResponseMessage } from '../../../config.schema'
 
 export const createErrorEmbed = (title: string | null, description?: string) =>
@@ -26,22 +26,11 @@ export const createSuccessEmbed = (title: string | null, description?: string) =
 export const createMessageScanResponseEmbed = (
     response: NonNullable<ConfigMessageScanResponseMessage['embeds']>[number],
     mode: 'ocr' | 'nlp' | 'match',
-) => {
-    // biome-ignore lint/style/noParameterAssign: While this is confusing, it is fine for this purpose
-    if ('toJSON' in response) response = response.toJSON()
-
-    const embed = new EmbedBuilder().setTitle(response.title ?? null)
-
-    if (response.description) embed.setDescription(response.description)
-    if (response.fields) embed.addFields(response.fields)
-
-    embed.setFooter({
+) =>
+    applyCommonEmbedStyles(response, true, true, true).setFooter({
         text: `ReVanced • Via ${MessageScanHumanizedMode[mode]}`,
         iconURL: ReVancedLogoURL,
     })
-
-    return applyCommonEmbedStyles(embed, true, true, true)
-}
 
 export const createModerationActionEmbed = (
     action: string,
@@ -77,19 +66,23 @@ export const applyReferenceToModerationActionEmbed = (embed: EmbedBuilder, refer
 }
 
 export const applyCommonEmbedStyles = (
-    embed: EmbedBuilder,
+    embed: EmbedBuilder | JSONEncodable<APIEmbed> | APIEmbed,
     setThumbnail = false,
     setFooter = false,
     setColor = false,
 ) => {
+    // biome-ignore lint/style/noParameterAssign: While this is confusing, it is fine for this purpose
+    if ('toJSON' in embed) embed = embed.toJSON()
+    const builder = new EmbedBuilder(embed)
+
     if (setFooter)
-        embed.setFooter({
+        builder.setFooter({
             text: 'ReVanced',
             iconURL: ReVancedLogoURL,
         })
 
-    if (setColor) embed.setColor(DefaultEmbedColor)
-    if (setThumbnail) embed.setThumbnail(ReVancedLogoURL)
+    if (setColor) builder.setColor(DefaultEmbedColor)
+    if (setThumbnail) builder.setThumbnail(ReVancedLogoURL)
 
-    return embed
+    return builder
 }

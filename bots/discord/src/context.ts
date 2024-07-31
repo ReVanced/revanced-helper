@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { Client as APIClient } from '@revanced/bot-api'
 import { createLogger } from '@revanced/bot-shared'
-import { Client as DiscordClient, Partials } from 'discord.js'
+import { Client as DiscordClient, type Message, Partials } from 'discord.js'
 import { drizzle } from 'drizzle-orm/bun-sqlite'
 
 // Export some things first, as commands require them
@@ -84,5 +84,20 @@ export const discord = {
     commands: Object.fromEntries(Object.values(commands).map(cmd => [cmd.name, cmd])) as Record<
         string,
         Command<boolean, CommandOptionsOptions | undefined, boolean>
+    >,
+    stickyMessages: {} as Record<
+        string,
+        Record<
+            string,
+            {
+                forceSendTimerActive?: boolean
+                timeoutMs: number
+                forceSendMs?: number
+                send: (forced?: boolean) => Promise<void>
+                currentMessage?: Message<true>
+                interval?: NodeJS.Timeout
+                forceSendInterval?: NodeJS.Timeout
+            }
+        >
     >,
 } as const

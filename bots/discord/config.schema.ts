@@ -6,6 +6,7 @@ export type Config = {
         users?: string[]
         roles?: Record<string, string[]>
     }
+    stickyMessages?: Record<string, Record<string, StickyMessageConfig>>
     moderation?: {
         roles: string[]
         cure?: {
@@ -48,6 +49,12 @@ export type Config = {
         disconnectLimit?: number
         disconnectRetryInterval?: number
     }
+}
+
+export type StickyMessageConfig = {
+    timeout: number
+    forceSendTimeout?: number
+    message: BaseMessageOptions
 }
 
 export type RolePresetConfig = {

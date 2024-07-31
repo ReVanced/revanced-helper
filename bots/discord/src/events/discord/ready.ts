@@ -1,13 +1,67 @@
 import { database, logger } from '$/context'
 import { appliedPresets } from '$/database/schemas'
+import { applyCommonEmbedStyles } from '$/utils/discord/embeds'
+import { on, withContext } from '$/utils/discord/events'
 import { removeRolePreset } from '$/utils/discord/rolePresets'
-import type { Client } from 'discord.js'
 import { lt } from 'drizzle-orm'
-import { on, withContext } from 'src/utils/discord/events'
 
-export default withContext(on, 'ready', ({ config, logger }, client) => {
+import type { Client } from 'discord.js'
+
+export default withContext(on, 'ready', async ({ config, discord, logger }, client) => {
     logger.info(`Connected to Discord API, logged in as ${client.user.displayName} (@${client.user.tag})!`)
     logger.info(`Bot is in ${client.guilds.cache.size} guilds`)
+
+    if (config.stickyMessages)
+        for (const [guildId, channels] of Object.entries(config.stickyMessages)) {
+            const guild = await client.guilds.fetch(guildId)
+            discord.stickyMessages[guildId] = {}
+
+            for (const [channelId, { message, timeout, forceSendTimeout }] of Object.entries(channels)) {
+                const channel = await guild.channels.fetch(channelId)
+                if (!channel?.isTextBased()) return
+
+                const send = async (forced = false) => {
+                    try {
+                        const msg = await channel.send({
+                            ...message,
+                            embeds: message.embeds?.map(it => applyCommonEmbedStyles(it, true, true, true)),
+                        })
+
+                        const store = discord.stickyMessages[guildId]![channelId]
+                        if (!store) return
+
+                        await store.currentMessage?.delete().catch()
+                        store.currentMessage = msg
+
+                        if (!forced) {
+                            clearTimeout(store.forceSendInterval)
+                            logger.debug(
+                                `Timeout ended for sticky message in channel ${channelId} in guild ${guildId}, channel is inactive`,
+                            )
+                        } else {
+                            clearTimeout(store.interval)
+                            logger.debug(
+                                `Forced send timeout for sticky message in channel ${channelId} in guild ${guildId} ended, channel is too active`,
+                            )
+                        }
+
+                        logger.debug(`Sent sticky message to channel ${channelId} in guild ${guildId}`)
+                    } catch (e) {
+                        logger.error(
+                            `Error while sending sticky message to channel ${channelId} in guild ${guildId}:`,
+                            e,
+                        )
+                    }
+                }
+
+                discord.stickyMessages[guildId]![channelId] = {
+                    forceSendMs: forceSendTimeout,
+                    timeoutMs: timeout,
+                    send,
+                    forceSendTimerActive: false,
+                }
+            }
+        }
 
     if (config.rolePresets) {
         removeExpiredPresets(client)
