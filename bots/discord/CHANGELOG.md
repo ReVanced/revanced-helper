@@ -1,3 +1,17 @@
+# @revanced/discord-bot [1.0.0-dev.14](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.13...@revanced/discord-bot@1.0.0-dev.14) (2024-07-31)
+
+
+### Bug Fixes
+
+* **bots/discord:** always true check causing no messages to be scanned ([98ec37b](https://github.com/revanced/revanced-helper/commit/98ec37b5d18cade85270ab83b0ed0abe41244dd9))
+* other small issues ([bc437a5](https://github.com/revanced/revanced-helper/commit/bc437a5ec7ce1d339094d608e2a61ac5f460c163))
+
+
+### Features
+
+* **bots/discord:** add more options for curing, fix default regex ([1a4ec1e](https://github.com/revanced/revanced-helper/commit/1a4ec1ece80becd9156582cc490f6681cb2a1f39))
+* **bots/discord:** allow admins to bypass permission checks ([620f933](https://github.com/revanced/revanced-helper/commit/620f9339f0737b79d72c66d90ffa42ea3f987710))
+
 # @revanced/discord-bot [1.0.0-dev.13](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.12...@revanced/discord-bot@1.0.0-dev.13) (2024-07-30)
 
 
