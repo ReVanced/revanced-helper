@@ -52,17 +52,20 @@ export default class Client {
         // But if we add anything similar, this will cause another race condition
         // To fix this, we can try adding a instanced function that would return the currentSequence
         // and it would be updated every time a "heartbeat ack" packet is received
-        return Promise.race([
+        const packet = await Promise.race([
             this.#awaiter.await(ServerOperation.ParsedText, this.ws.currentSequence),
-            this.#awaiter.await(ServerOperation.ParseTextFailed, this.ws.timeout + 5000),
+            this.#awaiter.await(ServerOperation.ParseTextFailed, this.ws.currentSequence, this.ws.timeout + 5000),
         ])
             .then(pkt => {
                 if (pkt.op === ServerOperation.ParsedText) return pkt.d
-                throw new Error('Failed to parse text, the API encountered an error')
+                return null
             })
             .catch(() => {
                 throw new Error('Failed to parse text, the API did not respond in time')
             })
+
+        if (!packet) throw new Error('Failed to parse text, the API encountered an error')
+        return packet
     }
 
     /**
@@ -82,17 +85,20 @@ export default class Client {
 
         // See line 50
 
-        return Promise.race([
+        const packet = await Promise.race([
             this.#awaiter.await(ServerOperation.ParsedImage, this.ws.currentSequence),
-            this.#awaiter.await(ServerOperation.ParseImageFailed, this.ws.timeout + 5000),
+            this.#awaiter.await(ServerOperation.ParseImageFailed, this.ws.currentSequence, this.ws.timeout + 5000),
         ])
             .then(pkt => {
                 if (pkt.op === ServerOperation.ParsedImage) return pkt.d
-                throw new Error('Failed to parse image, the API encountered an error')
+                return null
             })
             .catch(() => {
                 throw new Error('Failed to parse image, the API did not respond in time')
             })
+
+        if (!packet) throw new Error('Failed to parse image, the API encountered an error')
+        return packet
     }
 
     async trainMessage(text: string, label: string) {
@@ -107,17 +113,20 @@ export default class Client {
         })
 
         // See line 50
-        return Promise.race([
+        const packet = await Promise.race([
             this.#awaiter.await(ServerOperation.TrainedMessage, this.ws.currentSequence),
-            this.#awaiter.await(ServerOperation.TrainMessageFailed, this.ws.timeout + 5000),
+            this.#awaiter.await(ServerOperation.TrainMessageFailed, this.ws.currentSequence, this.ws.timeout + 5000),
         ])
             .then(pkt => {
                 if (pkt.op === ServerOperation.TrainedMessage) return pkt.d
-                throw new Error('Failed to train message, the API encountered an error')
+                return null
             })
             .catch(() => {
                 throw new Error('Failed to train message, the API did not respond in time')
             })
+
+        if (!packet) throw new Error('Failed to train message, the API encountered an error')
+        return packet
     }
 
     /**
