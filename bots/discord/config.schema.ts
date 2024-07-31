@@ -9,6 +9,8 @@ export type Config = {
     moderation?: {
         roles: string[]
         cure?: {
+            minimumNameLength?: number
+            removeCharactersRegex?: RegExp
             defaultName: string
         }
         log?: {

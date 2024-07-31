@@ -54,9 +54,9 @@ export const cureNickname = async (member: GuildMember) => {
     const name = member.displayName
     let cured = decancer(name)
         .toString()
-        .replace(/[^a-zA-Z0-9]/g, '')
+        .replace(new RegExp(config.moderation?.cure?.removeCharactersRegex ?? '[^a-zA-Z0-9 \\-_]', 'g'), '')
 
-    if (cured.length < 3 || !/^[a-zA-Z]/.test(cured))
+    if (cured.length < (config?.moderation?.cure?.minimumNameLength ?? 3))
         cured =
             member.user.username.length >= 3
                 ? member.user.username
