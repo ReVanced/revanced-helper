@@ -39,7 +39,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
                     embeds: response.embeds?.map(createMessageScanResponseEmbed),
                 })
 
-                if (label)
+                if (label) {
                     db.insert(responses).values({
                         replyId: reply.id,
                         channelId: reply.channel.id,
@@ -49,7 +49,6 @@ withContext(on, 'messageCreate', async (context, msg) => {
                         content: msg.content,
                     })
 
-                if (label) {
                     for (const reaction of Object.values(MessageScanLabeledResponseReactions)) {
                         await reply.react(reaction)
                     }
@@ -60,11 +59,22 @@ withContext(on, 'messageCreate', async (context, msg) => {
         }
     }
 
-    if (msg.attachments.size > 0) {
+    if (msg.attachments.size > 0 && config.attachments?.scanAttachments) {
         logger.debug(`Classifying message attachments for ${msg.id}`)
 
         for (const attachment of msg.attachments.values()) {
-            if (attachment.contentType && !config.allowedAttachmentMimeTypes.includes(attachment.contentType)) continue
+            if (
+                config.attachments.allowedMimeTypes &&
+                !config.attachments.allowedMimeTypes.includes(attachment.contentType!)
+            ) {
+                logger.debug(`Disallowed MIME type for attachment: ${attachment.url}, ${attachment.contentType}`)
+                continue
+            }
+
+            if (attachment.contentType?.startsWith('text/') && attachment.size > (config.attachments.maxTextFileSize ?? 512 * 1000)) {
+                logger.debug(`Attachment ${attachment.url} is too large be to scanned, size is ${attachment.size}`)   
+                continue
+            }
 
             try {
                 const { text: content } = await api.client.parseImage(attachment.url)

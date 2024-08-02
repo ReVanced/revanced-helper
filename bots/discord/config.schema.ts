@@ -26,7 +26,11 @@ export type Config = {
     messageScan?: {
         scanBots?: boolean
         scanOutsideGuilds?: boolean
-        allowedAttachmentMimeTypes: string[]
+        attachments?: {
+            scanAttachments?: boolean
+            allowedMimeTypes?: string[]
+            maxTextFileSize?: number
+        }
         filter?: {
             whitelist?: Filter
             blacklist?: Filter
