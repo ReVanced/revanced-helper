@@ -1,5 +1,5 @@
 import { inspect } from 'util'
-import { runInNewContext } from 'vm'
+import { runInThisContext } from 'vm'
 import { ApplicationCommandOptionType } from 'discord.js'
 
 import { AdminCommand } from '$/classes/Command'
@@ -20,13 +20,13 @@ export default new AdminCommand({
             required: false,
         },
     },
-    async execute(context, trigger, { code, 'show-hidden': showHidden }) {
+    async execute(_, trigger, { code, 'show-hidden': showHidden }) {
         await trigger.reply({
             ephemeral: true,
             embeds: [
                 createSuccessEmbed('Evaluate', `\`\`\`js\n${code}\`\`\``).addFields({
                     name: 'Result',
-                    value: `\`\`\`js\n${inspect(runInNewContext(code, { client: trigger.client, context, trigger }), { depth: 1, showHidden, getters: true, numericSeparator: true, showProxy: true })}\`\`\``,
+                    value: `\`\`\`js\n${inspect(runInThisContext(code), { depth: 1, showHidden, getters: true, numericSeparator: true, showProxy: true })}\`\`\``,
                 }),
             ],
         })
