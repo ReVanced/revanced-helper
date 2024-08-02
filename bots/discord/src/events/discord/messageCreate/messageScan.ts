@@ -36,7 +36,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
                 const toReply = respondToReply ? (msg.reference?.messageId ? await msg.fetchReference() : msg) : msg
                 const reply = await toReply.reply({
                     ...response,
-                    embeds: response.embeds?.map(it => createMessageScanResponseEmbed(it, label ? 'nlp' : 'match')),
+                    embeds: response.embeds?.map(createMessageScanResponseEmbed),
                 })
 
                 if (label)
@@ -74,7 +74,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
                     logger.debug(`Response found for attachment: ${attachment.url}`)
                     await msg.reply({
                         ...response,
-                        embeds: response.embeds?.map(it => createMessageScanResponseEmbed(it, 'ocr')),
+                        embeds: response.embeds?.map(createMessageScanResponseEmbed),
                     })
 
                     break

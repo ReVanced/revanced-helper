@@ -1,4 +1,4 @@
-import { DefaultEmbedColor, MessageScanHumanizedMode, ReVancedLogoURL } from '$/constants'
+import { DefaultEmbedColor, ReVancedLogoURL } from '$/constants'
 import { type APIEmbed, EmbedBuilder, type EmbedField, type JSONEncodable, type User } from 'discord.js'
 import type { ConfigMessageScanResponseMessage } from '../../../config.schema'
 
@@ -25,12 +25,7 @@ export const createSuccessEmbed = (title: string | null, description?: string) =
 
 export const createMessageScanResponseEmbed = (
     response: NonNullable<ConfigMessageScanResponseMessage['embeds']>[number],
-    mode: 'ocr' | 'nlp' | 'match',
-) =>
-    applyCommonEmbedStyles(response, true, true, true).setFooter({
-        text: `ReVanced • Via ${MessageScanHumanizedMode[mode]}`,
-        iconURL: ReVancedLogoURL,
-    })
+) => applyCommonEmbedStyles(response, true, true, true)
 
 export const createModerationActionEmbed = (
     action: string,

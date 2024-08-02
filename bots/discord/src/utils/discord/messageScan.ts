@@ -64,23 +64,26 @@ export const getResponseFromText = async (
             const matchedLabel = scan.labels[0]!
             logger.debug(`Message matched label with confidence: ${matchedLabel.name}, ${matchedLabel.confidence}`)
 
-            let triggerConfig: ConfigMessageScanResponseLabelConfig | undefined
-            const labelConfig = responses.find(x => {
+            let trigger: ConfigMessageScanResponseLabelConfig | undefined
+            const response = responses.find(x => {
                 const config = x.triggers.text!.find(
                     (x): x is ConfigMessageScanResponseLabelConfig => 'label' in x && x.label === matchedLabel.name,
                 )
-                if (config) triggerConfig = config
+                if (config) trigger = config
                 return config
             })
 
-            if (!labelConfig) {
-                logger.warn(`No label config found for label ${matchedLabel.name}`)
+            if (!response) {
+                logger.warn(`No response config found for label ${matchedLabel.name}`)
+                // This returns the default value set in line 17, which means no response matched
                 return responseConfig
             }
 
-            if (matchedLabel.confidence >= triggerConfig!.threshold) {
+            responseConfig.label = trigger!.label
+
+            if (matchedLabel.confidence >= trigger!.threshold) {
                 logger.debug('Label confidence is enough')
-                responseConfig = labelConfig
+                responseConfig = response
             }
         }
     }
@@ -158,7 +161,7 @@ export const handleUserResponseCorrection = async (
 
         await reply.edit({
             ...correctLabelResponse.response,
-            embeds: correctLabelResponse.response.embeds?.map(it => createMessageScanResponseEmbed(it, 'nlp')),
+            embeds: correctLabelResponse.response.embeds?.map(createMessageScanResponseEmbed),
         })
     }
 
