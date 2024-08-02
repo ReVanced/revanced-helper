@@ -1,3 +1,17 @@
+# @revanced/discord-bot [1.0.0-dev.16](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.15...@revanced/discord-bot@1.0.0-dev.16) (2024-08-02)
+
+
+### Bug Fixes
+
+* **bots/discord:** open database as read-write ([c366840](https://github.com/revanced/revanced-helper/commit/c36684091dddf67880505dc459e4334a8a5492f4))
+* **bots/discord:** remove bad text channel checks ([f5939e2](https://github.com/revanced/revanced-helper/commit/f5939e25288fea2022fdeec9085ecb9ffada6111))
+* **bots/discord:** remove redundant footer for response embeds ([412e003](https://github.com/revanced/revanced-helper/commit/412e00317d1eaca23e9c1375e16f94a5f2fa8d86))
+
+
+### Features
+
+* **bots/discord/commands:** add `reload` command ([6875b32](https://github.com/revanced/revanced-helper/commit/6875b32fd0c6ce3034da9dc6c704d425afb26f2e))
+
 # @revanced/discord-bot [1.0.0-dev.15](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.14...@revanced/discord-bot@1.0.0-dev.15) (2024-07-31)
 
 
