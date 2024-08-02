@@ -69,7 +69,7 @@ export type ConfigMessageScanResponse = {
     }
     filterOverride?: NonNullable<Config['messageScan']>['filter']
     response: ConfigMessageScanResponseMessage | null
-    replyToReplied?: boolean
+    respondToReply?: boolean
 }
 
 export type ConfigMessageScanResponseLabelConfig = {

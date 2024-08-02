@@ -24,7 +24,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
         try {
             logger.debug(`Classifying message ${msg.id}`)
 
-            const { response, label, replyToReplied } = await getResponseFromText(
+            const { response, label, respondToReply } = await getResponseFromText(
                 msg.content,
                 filteredResponses,
                 context,
@@ -33,7 +33,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
             if (response) {
                 logger.debug('Response found')
 
-                const toReply = replyToReplied ? (msg.reference?.messageId ? await msg.fetchReference() : msg) : msg
+                const toReply = respondToReply ? (msg.reference?.messageId ? await msg.fetchReference() : msg) : msg
                 const reply = await toReply.reply({
                     ...response,
                     embeds: response.embeds?.map(it => createMessageScanResponseEmbed(it, label ? 'nlp' : 'match')),
