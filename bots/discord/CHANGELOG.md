@@ -1,3 +1,16 @@
+# @revanced/discord-bot [1.0.0-dev.17](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.16...@revanced/discord-bot@1.0.0-dev.17) (2024-08-02)
+
+
+### Bug Fixes
+
+* **bots/discord/commands/eval:** evaluate in current context ([5925d90](https://github.com/revanced/revanced-helper/commit/5925d902095acef5f6396ca03583a9cbb0862498))
+* **bots/discord:** send right response for after regexes ([a7688fa](https://github.com/revanced/revanced-helper/commit/a7688fa9b91919a87f74071b502cd0a87cd1c1fa))
+
+
+### Features
+
+* **bots/discord:** update example config file ([bc9951c](https://github.com/revanced/revanced-helper/commit/bc9951c9b5e007c3e1b3076aa0966ccf29bb18bc))
+
 # @revanced/discord-bot [1.0.0-dev.16](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.15...@revanced/discord-bot@1.0.0-dev.16) (2024-08-02)
 
 
