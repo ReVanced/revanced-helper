@@ -38,7 +38,7 @@ export const getLogChannel = async (guild: Guild) => {
 
     try {
         const channel = await guild.channels.fetch(logConfig.thread ?? logConfig.channel)
-        if (!channel || !channel.isTextBased())
+        if (!channel?.isTextBased())
             return void logger.warn('The moderation log channel does not exist, skipping logging')
 
         return channel

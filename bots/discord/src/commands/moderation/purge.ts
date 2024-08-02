@@ -1,4 +1,4 @@
-import { EmbedBuilder, GuildChannel } from 'discord.js'
+import { EmbedBuilder } from 'discord.js'
 
 import { ModerationCommand } from '$/classes/Command'
 import CommandError, { CommandErrorType } from '$/classes/CommandError'
@@ -31,7 +31,7 @@ export default new ModerationCommand({
             throw new CommandError(CommandErrorType.MissingArgument, 'Either `amount` or `until` must be provided.')
 
         const channel = interaction.channel!
-        if (!(channel.isTextBased() && channel instanceof GuildChannel))
+        if (!channel.isTextBased())
             throw new CommandError(CommandErrorType.InvalidChannel, 'The supplied channel is not a text channel.')
 
         const embed = applyCommonEmbedStyles(

@@ -28,7 +28,7 @@ export default new ModerationCommand({
         if (!channel?.isTextBased() || channel.isDMBased())
             throw new CommandError(
                 CommandErrorType.InvalidChannel,
-                'The supplied channel is not a text channel or does not exist.',
+                'The supplied channel is not a text channel.',
             )
 
         if (Number.isNaN(duration)) throw new CommandError(CommandErrorType.InvalidDuration, 'Invalid duration.')
