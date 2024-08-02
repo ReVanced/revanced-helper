@@ -97,8 +97,8 @@ export const getResponseFromText = async (
             } = responses[i]!
             const firstLabelIndex = firstLabelIndexes[i] ?? -1
 
-            for (let i = firstLabelIndex + 1; i < textTriggers!.length; i++) {
-                const trigger = textTriggers![i]!
+            for (let j = firstLabelIndex + 1; j < textTriggers!.length; j++) {
+                const trigger = textTriggers![j]!
 
                 if (trigger instanceof RegExp) {
                     if (trigger.test(content)) {
