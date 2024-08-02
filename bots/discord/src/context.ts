@@ -56,7 +56,7 @@ if (DatabasePath && !existsSync(DatabasePath)) {
     }
 }
 
-const db = new Database(DatabasePath)
+const db = new Database(DatabasePath, { readwrite: true, create: true })
 if (dbSchemaFileName) db.run(readFileSync(join(DatabaseSchemaDir, dbSchemaFileName)).toString())
 
 export const database = drizzle(db, {
