@@ -11,8 +11,21 @@ export default {
             GUILD_ID_HERE: ['ROLE_ID_HERE'],
         },
     },
+    stickyMessages: {
+        GUILD_ID_HERE: {
+            CHANNEL_ID_HERE: {
+                message: {
+                    content: 'This is a sticky message!',
+                },
+                timeout: 60000,
+                forceSendTimeout: 300000,
+            }
+        }
+    },
     moderation: {
         cure: {
+            minimumNameLength: 3,
+            removeCharactersRegex: /[^a-zA-Z0-9 \-_]/g,
             defaultName: 'Server member',
         },
         roles: ['ROLE_ID_HERE'],
@@ -61,7 +74,11 @@ export default {
                 },
             },
         },
-        allowedAttachmentMimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        attachments: {
+            scanAttachments: true,
+            allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'text/plain'],
+            maxTextFileSize: 512000
+        },
         responses: [
             {
                 filterOverride: {
