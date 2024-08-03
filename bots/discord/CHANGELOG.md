@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.20](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.19...@revanced/discord-bot@1.0.0-dev.20) (2024-08-03)
+
+
+### Bug Fixes
+
+* **bots/discord:** await when putting entries into db ([4da6175](https://github.com/revanced/revanced-helper/commit/4da6175cf58b1fa6144bdc71ec806766d32c1025))
+
 # @revanced/discord-bot [1.0.0-dev.19](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.18...@revanced/discord-bot@1.0.0-dev.19) (2024-08-03)
 
 
