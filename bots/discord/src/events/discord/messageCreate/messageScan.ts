@@ -40,7 +40,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
                 })
 
                 if (label) {
-                    db.insert(responses).values({
+                    await db.insert(responses).values({
                         replyId: reply.id,
                         channelId: reply.channel.id,
                         guildId: reply.guild!.id,

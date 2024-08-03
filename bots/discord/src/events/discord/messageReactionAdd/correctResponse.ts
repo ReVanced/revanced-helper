@@ -20,7 +20,8 @@ const PossibleReactions = Object.values(Reactions) as string[]
 
 withContext(on, 'messageReactionAdd', async (context, rct, user) => {
     if (user.bot) return
-
+    await rct.users.remove(user.id)
+    
     const { database: db, logger, config } = context
     const { messageScan: msConfig } = config
 
@@ -35,10 +36,7 @@ withContext(on, 'messageReactionAdd', async (context, rct, user) => {
 
     if (!isAdmin(reactionMessage.member || reactionMessage.author)) {
         // User is in guild, and config has member requirements
-        if (
-            reactionMessage.inGuild() &&
-            (msConfig.humanCorrections.allow?.members || msConfig.humanCorrections.allow?.users)
-        ) {
+        if (reactionMessage.inGuild() && msConfig.humanCorrections.allow) {
             const {
                 allow: { users: allowedUsers, members: allowedMembers },
             } = msConfig.humanCorrections
@@ -54,19 +52,18 @@ withContext(on, 'messageReactionAdd', async (context, rct, user) => {
                     )
                 )
                     return
-            } else if (allowedUsers) {
-                if (!allowedUsers.includes(user.id)) return
-            } else {
-                return void logger.warn(
-                    'No member or user requirements set for human corrections, all requests will be ignored',
-                )
-            }
-        }
+            } else if (!allowedUsers?.includes(user.id)) return
+        } else
+            return void logger.warn(
+                'No member or user requirements set for human corrections, all requests will be ignored',
+            )
     }
 
     // Sanity check
     const response = await db.query.responses.findFirst({ where: eq(responses.replyId, rct.message.id) })
     if (!response || response.correctedById) return
+
+    logger.debug(`User ${user.id} is trying to correct the response ${rct.message.id}`)
 
     const handleCorrection = (label: string) =>
         handleUserResponseCorrection(context, response, reactionMessage, label, user)
