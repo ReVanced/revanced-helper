@@ -77,9 +77,13 @@ export class ClientWebSocketManager {
             } catch (e) {
                 rj(e)
             }
-        }).finally(() => {
-            this.connecting = false
         })
+            .then(() => {
+                this.#socket.on('close', (code, reason) => this._handleDisconnect(code, reason.toString()))
+            })
+            .finally(() => {
+                this.connecting = false
+            })
     }
 
     /**
