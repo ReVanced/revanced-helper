@@ -79,11 +79,9 @@ export const getResponseFromText = async (
                 return responseConfig
             }
 
-            responseConfig.label = trigger!.label
-
             if (matchedLabel.confidence >= trigger!.threshold) {
                 logger.debug('Label confidence is enough')
-                responseConfig = response
+                responseConfig = { ...responseConfig, ...response, label: trigger!.label }
             }
         }
     }
