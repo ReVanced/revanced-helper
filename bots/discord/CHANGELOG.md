@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.19](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.18...@revanced/discord-bot@1.0.0-dev.19) (2024-08-03)
+
+
+### Bug Fixes
+
+* **bots/discord:** correct whitelist logic ([49c29be](https://github.com/revanced/revanced-helper/commit/49c29bebfbe348ae4e2cc1b3a83bfa41eb26ccd1))
+
 # @revanced/discord-bot [1.0.0-dev.18](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.17...@revanced/discord-bot@1.0.0-dev.18) (2024-08-03)
 
 
