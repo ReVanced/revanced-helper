@@ -18,7 +18,7 @@ const trainMessageEventHandler: EventHandler<ClientOperation.TrainMessage> = asy
         client.send(
             {
                 op: ServerOperation.TrainedMessage,
-                d: null,
+                d: true,
             },
             nextSeq,
         )

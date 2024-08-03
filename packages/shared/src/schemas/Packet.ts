@@ -1,9 +1,9 @@
 import {
-    url,
     type AnySchema,
     type NullSchema,
     type ObjectSchema,
     type Output,
+    type BooleanSchema,
     array,
     enum_,
     null_,
@@ -11,6 +11,8 @@ import {
     parse,
     special,
     string,
+    boolean,
+    url,
     // merge
 } from 'valibot'
 import DisconnectReason from '../constants/DisconnectReason'
@@ -26,8 +28,7 @@ export const PacketSchema = special<Packet>(input => {
         'op' in input &&
         typeof input.op === 'number' &&
         input.op in Operation &&
-        'd' in input &&
-        typeof input.d === 'object'
+        'd' in input
     ) {
         if (input.op in ServerOperation && !('s' in input && typeof input.s === 'number')) return false
 
@@ -62,7 +63,7 @@ export const PacketDataSchemas = {
     [ServerOperation.Disconnect]: object({
         reason: enum_(DisconnectReason),
     }),
-    [ServerOperation.TrainedMessage]: null_(),
+    [ServerOperation.TrainedMessage]: boolean(),
     [ServerOperation.TrainMessageFailed]: null_(),
 
     [ClientOperation.ParseText]: object({
@@ -78,7 +79,7 @@ export const PacketDataSchemas = {
 } as const satisfies Record<
     Operation,
     // biome-ignore lint/suspicious/noExplicitAny: This is a schema, it's not possible to type it
-    ObjectSchema<any> | AnySchema | NullSchema
+    ObjectSchema<any> | AnySchema | NullSchema | BooleanSchema
 >
 
 export type Packet<TOp extends Operation = Operation> = TOp extends ServerOperation
