@@ -1,3 +1,10 @@
+# @revanced/bot-websocket-api [1.0.0-dev.9](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.8...@revanced/bot-websocket-api@1.0.0-dev.9) (2024-08-03)
+
+
+### Features
+
+* **apis/websocket:** return `true` for data on a `TrainedMessage` packet ([65add4d](https://github.com/revanced/revanced-helper/commit/65add4dfeed2fa067c2c8e2377f7d01d505ade54))
+
 # @revanced/bot-websocket-api [1.0.0-dev.8](https://github.com/revanced/revanced-helper/compare/@revanced/bot-websocket-api@1.0.0-dev.7...@revanced/bot-websocket-api@1.0.0-dev.8) (2024-07-31)
 
 
