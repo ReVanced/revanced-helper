@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.18](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.17...@revanced/discord-bot@1.0.0-dev.18) (2024-08-03)
+
+
+### Bug Fixes
+
+* **bots/discord:** set the `label` property correctly for message scans ([6d463df](https://github.com/revanced/revanced-helper/commit/6d463df586dee5dd8fe8d6cff1c5316f7809b32a))
+
 # @revanced/discord-bot [1.0.0-dev.17](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.16...@revanced/discord-bot@1.0.0-dev.17) (2024-08-02)
 
 
