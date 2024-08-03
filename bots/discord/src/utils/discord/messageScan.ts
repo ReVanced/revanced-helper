@@ -87,7 +87,7 @@ export const getResponseFromText = async (
     }
 
     // If we still don't have a response config, we can match all regexes after the initial label trigger
-    if (!responseConfig.triggers) {
+    if (!responseConfig.triggers && ocrMode) {
         logger.debug('No match from NLP, doing after regexes')
         for (let i = 0; i < responses.length; i++) {
             const {
@@ -122,17 +122,19 @@ export const messageMatchesFilter = (message: Message, filter: NonNullable<Confi
     // If matches whitelist but also matches blacklist, will return false
     // If matches only whitelist, will return true
     // If matches neither, will return true
-    return whitelist
-        ? (whitelist.channels?.includes(message.channelId) ?? true) ||
-              (whitelist.roles?.some(role => memberRoles.has(role)) ?? true) ||
-              (whitelist.users?.includes(message.author.id) ?? true)
-        : true &&
-              !(
-                  blacklist &&
-                  (blacklist.channels?.includes(message.channelId) ||
-                      blacklist.roles?.some(role => memberRoles.has(role)) ||
-                      blacklist.users?.includes(message.author.id))
-              )
+    return (
+        (whitelist
+            ? whitelist.channels?.includes(message.channelId) ||
+              whitelist.roles?.some(role => memberRoles.has(role)) ||
+              whitelist.users?.includes(message.author.id)
+            : true) &&
+        !(
+            blacklist &&
+            (blacklist.channels?.includes(message.channelId) ||
+                blacklist.roles?.some(role => memberRoles.has(role)) ||
+                blacklist.users?.includes(message.author.id))
+        )
+    )
 }
 
 export const handleUserResponseCorrection = async (
