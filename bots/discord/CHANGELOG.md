@@ -1,3 +1,12 @@
+# @revanced/discord-bot [1.0.0-dev.21](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.20...@revanced/discord-bot@1.0.0-dev.21) (2024-08-04)
+
+
+### Bug Fixes
+
+* **bots/discord:** correct sticky messages logic ([de8bef6](https://github.com/revanced/revanced-helper/commit/de8bef6520d53a1299f0478458320a7eb75c5e1d))
+* **bots/discord:** make `/eval` work ([eaa25f2](https://github.com/revanced/revanced-helper/commit/eaa25f2eb58a9e2d25bb98633ad668485e099714))
+* **bots/discord:** some configuration values not applying after running `/reload` ([a976dd2](https://github.com/revanced/revanced-helper/commit/a976dd2accc4b74914651245acde0979c30c92f5))
+
 # @revanced/discord-bot [1.0.0-dev.20](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.19...@revanced/discord-bot@1.0.0-dev.20) (2024-08-03)
 
 
