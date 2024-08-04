@@ -90,13 +90,20 @@ export const discord = {
         Record<
             string,
             {
-                forceSendTimerActive?: boolean
-                timeoutMs: number
-                forceSendMs?: number
+                /**
+                 * Chat is active, so force send timer is also active
+                 */
+                forceTimerActive: boolean
+                /**
+                 * There was a message sent, so the timer is active
+                 */
+                timerActive: boolean
+                timerMs: number
+                forceTimerMs?: number
                 send: (forced?: boolean) => Promise<void>
                 currentMessage?: Message<true>
-                interval?: NodeJS.Timeout
-                forceSendInterval?: NodeJS.Timeout
+                timer?: NodeJS.Timeout
+                forceTimer?: NodeJS.Timeout
             }
         >
     >,

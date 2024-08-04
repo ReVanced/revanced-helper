@@ -14,11 +14,16 @@ export default withContext(on, 'ready', async ({ config, discord, logger }, clie
     if (config.stickyMessages)
         for (const [guildId, channels] of Object.entries(config.stickyMessages)) {
             const guild = await client.guilds.fetch(guildId)
+            // In case of configuration refresh, this will not be nullable
+            const oldStore = discord.stickyMessages[guildId]
             discord.stickyMessages[guildId] = {}
 
             for (const [channelId, { message, timeout, forceSendTimeout }] of Object.entries(channels)) {
                 const channel = await guild.channels.fetch(channelId)
-                if (!channel?.isTextBased()) return
+                if (!channel?.isTextBased())
+                    return void logger.warn(
+                        `Channel ${channelId} in guild ${guildId} is not a text channel, sticky messages will not be sent`,
+                    )
 
                 const send = async (forced = false) => {
                     try {
@@ -33,17 +38,19 @@ export default withContext(on, 'ready', async ({ config, discord, logger }, clie
                         await store.currentMessage?.delete().catch()
                         store.currentMessage = msg
 
-                        if (!forced) {
-                            clearTimeout(store.forceSendInterval)
+                        // Clear any remaining timers
+                        clearTimeout(store.timer)
+                        clearTimeout(store.forceTimer)
+                        store.forceTimerActive = store.timerActive = false
+
+                        if (!forced)
                             logger.debug(
                                 `Timeout ended for sticky message in channel ${channelId} in guild ${guildId}, channel is inactive`,
                             )
-                        } else {
-                            clearTimeout(store.interval)
+                        else
                             logger.debug(
                                 `Forced send timeout for sticky message in channel ${channelId} in guild ${guildId} ended, channel is too active`,
                             )
-                        }
 
                         logger.debug(`Sent sticky message to channel ${channelId} in guild ${guildId}`)
                     } catch (e) {
@@ -53,13 +60,20 @@ export default withContext(on, 'ready', async ({ config, discord, logger }, clie
                         )
                     }
                 }
-
+                
+                // Set up the store
                 discord.stickyMessages[guildId]![channelId] = {
-                    forceSendMs: forceSendTimeout,
-                    timeoutMs: timeout,
+                    forceTimerActive: false,
+                    timerActive: false,
+                    forceTimerMs: forceSendTimeout,
+                    timerMs: timeout,
                     send,
-                    forceSendTimerActive: false,
+                    // If the store exists before the configuration refresh, take its current message
+                    currentMessage: oldStore?.[channelId]?.currentMessage
                 }
+
+                // Send a new sticky message immediately, as well as deleting the old/outdated message, if it exists
+                await send()
             }
         }
 

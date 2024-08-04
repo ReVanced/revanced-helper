@@ -7,24 +7,31 @@ withContext(on, 'messageCreate', async ({ discord, logger }, msg) => {
     const store = discord.stickyMessages[msg.guildId]?.[msg.channelId]
     if (!store) return
 
-    if (!store.interval) store.interval = setTimeout(store.send, store.timeoutMs) as NodeJS.Timeout
+    // If there isn't a timer, start it up
+    store.timerActive = true
+    if (!store.timer) store.timer = setTimeout(store.send, store.timerMs) as NodeJS.Timeout
     else {
-        store.interval.refresh()
+        // If there is a timer, but it isn't active, restart it
+        if (!store.timerActive) store.timer.refresh()
+        // If there is a timer and it is active, but the force timer isn't active...
+        else if (!store.forceTimerActive && store.forceTimerMs) {
+            logger.debug(`Channel ${msg.channelId} in guild ${msg.guildId} is active, starting force send timer and clearing existing timer`)
 
-        if (!store.forceSendTimerActive && store.forceSendMs) {
-            logger.debug(`Channel ${msg.channelId} in guild ${msg.guildId} is active, starting force send timer`)
+            // Clear the timer
+            clearTimeout(store.timer)
+            store.timerActive = false
+            store.forceTimerActive = true
 
-            store.forceSendTimerActive = true
-
-            if (!store.forceSendInterval)
-                store.forceSendInterval = setTimeout(
+            // (Re)start the force timer
+            if (!store.forceTimer)
+                store.forceTimer = setTimeout(
                     () =>
                         store.send(true).then(() => {
-                            store.forceSendTimerActive = false
+                            store.forceTimerActive = false
                         }),
-                    store.forceSendMs,
+                    store.forceTimerMs,
                 ) as NodeJS.Timeout
-            else store.forceSendInterval.refresh()
+            else store.forceTimer.refresh()
         }
     }
 })
