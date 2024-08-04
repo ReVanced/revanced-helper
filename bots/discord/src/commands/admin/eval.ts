@@ -1,5 +1,4 @@
 import { inspect } from 'util'
-import { runInThisContext } from 'vm'
 import { ApplicationCommandOptionType } from 'discord.js'
 
 import { AdminCommand } from '$/classes/Command'
@@ -26,7 +25,14 @@ export default new AdminCommand({
             embeds: [
                 createSuccessEmbed('Evaluate', `\`\`\`js\n${code}\`\`\``).addFields({
                     name: 'Result',
-                    value: `\`\`\`js\n${inspect(runInThisContext(code), { depth: 1, showHidden, getters: true, numericSeparator: true, showProxy: true })}\`\`\``,
+                    // biome-ignore lint/security/noGlobalEval: This is fine as it's an admin command
+                    value: `\`\`\`js\n${inspect(eval(code), {
+                        depth: 1,
+                        showHidden,
+                        getters: true,
+                        numericSeparator: true,
+                        showProxy: true,
+                    })}\`\`\``,
                 }),
             ],
         })
