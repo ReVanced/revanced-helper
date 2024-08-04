@@ -17,7 +17,7 @@ import { type RawData, WebSocket } from 'ws'
  * This is the only relevant class for the time being. But in the future, there may be more classes to handle different protocols of the API.
  */
 export class ClientWebSocketManager {
-    readonly url: string
+    url: string
     timeout: number
 
     connecting = false
@@ -31,6 +31,21 @@ export class ClientWebSocketManager {
     constructor(options: ClientWebSocketManagerOptions) {
         this.url = options.url
         this.timeout = options.timeout ?? 10000
+    }
+
+    /**
+     * Sets the URL to connect to
+     * 
+     * **Requires a reconnect to take effect**
+     */
+    async setOptions({ url, timeout }: Partial<ClientWebSocketManagerOptions>, autoReconnect = true) {
+        if (url) this.url = url
+        this.timeout = timeout ?? this.timeout
+
+        if (autoReconnect) {
+            this.disconnect(true)
+            await this.connect()
+        }
     }
 
     /**
