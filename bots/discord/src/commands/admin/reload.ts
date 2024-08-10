@@ -27,7 +27,9 @@ export default new AdminCommand({
 
         logger.info('Reinitializing Discord client to reload configuration...')
         await discord.client.destroy()
-        await discord.client.login()
+        // discord.client.token only gets set whenever a new Client is intialized
+        // so that's why we need to provide the token here :/
+        await discord.client.login(process.env['DISCORD_TOKEN'])
 
         // @ts-expect-error: TypeScript dum
         await trigger[('deferReply' in trigger ? 'editReply' : 'reply')]({ content: 'Reloaded configuration' })
