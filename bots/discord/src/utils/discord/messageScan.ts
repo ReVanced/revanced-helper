@@ -9,7 +9,7 @@ export const getResponseFromText = async (
     responses: ConfigMessageScanResponse[],
     // Just to be safe that we will never use data from the context parameter
     { api, logger }: Omit<typeof import('src/context'), 'config'>,
-    ocrMode = false,
+    flags: { onlyImageTriggers?: boolean; skipApiRequest?: boolean } = {}
 ): Promise<
     Omit<ConfigMessageScanResponse, 'triggers'> & { label?: string; triggers?: ConfigMessageScanResponse['triggers'] }
 > => {
@@ -31,7 +31,7 @@ export const getResponseFromText = async (
             triggers: { text: textTriggers, image: imageTriggers },
         } = trigger
 
-        if (ocrMode) {
+        if (flags.onlyImageTriggers) {
             if (imageTriggers)
                 for (const regex of imageTriggers)
                     if (regex.test(content)) {
@@ -57,7 +57,7 @@ export const getResponseFromText = async (
     }
 
     // If none of the regexes match, we can search for labels immediately
-    if (!responseConfig.triggers && !ocrMode) {
+    if (!responseConfig.triggers && !flags.onlyImageTriggers && !flags.skipApiRequest) {
         logger.debug('No match from before regexes, doing NLP')
         const scan = await api.client.parseText(content)
         if (scan.labels.length) {
@@ -87,7 +87,7 @@ export const getResponseFromText = async (
     }
 
     // If we still don't have a response config, we can match all regexes after the initial label trigger
-    if (!responseConfig.triggers && ocrMode) {
+    if (!responseConfig.triggers && flags.onlyImageTriggers) {
         logger.debug('No match from NLP, doing after regexes')
         for (let i = 0; i < responses.length; i++) {
             const {

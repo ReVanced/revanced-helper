@@ -59,26 +59,38 @@ withContext(on, 'messageCreate', async (context, msg) => {
         }
     }
 
-    if (msg.attachments.size > 0 && config.attachments?.scanAttachments) {
+    if (msg.attachments.size && config.attachments?.scanAttachments) {
         logger.debug(`Classifying message attachments for ${msg.id}`)
 
         for (const attachment of msg.attachments.values()) {
+            const mimeType = attachment.contentType?.split(';')?.[0]
+            if (!mimeType) return void logger.warn(`No MIME type for attachment: ${attachment.url}`)
+
             if (
                 config.attachments.allowedMimeTypes &&
-                !config.attachments.allowedMimeTypes.includes(attachment.contentType!)
+                !config.attachments.allowedMimeTypes.includes(mimeType)
             ) {
-                logger.debug(`Disallowed MIME type for attachment: ${attachment.url}, ${attachment.contentType}`)
+                logger.debug(`Disallowed MIME type for attachment: ${attachment.url}, ${mimeType}`)
                 continue
             }
 
-            if (attachment.contentType?.startsWith('text/') && attachment.size > (config.attachments.maxTextFileSize ?? 512 * 1000)) {
-                logger.debug(`Attachment ${attachment.url} is too large be to scanned, size is ${attachment.size}`)   
+            const isTextFile = mimeType.startsWith('text/')
+
+            if (isTextFile && attachment.size > (config.attachments.maxTextFileSize ?? 512 * 1000)) {
+                logger.debug(`Attachment ${attachment.url} is too large be to scanned, size is ${attachment.size}`)
                 continue
             }
 
             try {
-                const { text: content } = await api.client.parseImage(attachment.url)
-                const { response } = await getResponseFromText(content, filteredResponses, context, true)
+                let response: Awaited<ReturnType<typeof getResponseFromText>>['response'] | undefined
+
+                if (isTextFile) {
+                    const content = await (await fetch(attachment.url)).text()
+                    response = await getResponseFromText(content, filteredResponses, context, { skipApiRequest: true }).then(it => it.response)
+                } else {
+                    const { text: content } = await api.client.parseImage(attachment.url)
+                    response = await getResponseFromText(content, filteredResponses, context, { onlyImageTriggers: true }).then(it => it.response)
+                }
 
                 if (response) {
                     logger.debug(`Response found for attachment: ${attachment.url}`)
@@ -89,8 +101,8 @@ withContext(on, 'messageCreate', async (context, msg) => {
 
                     break
                 }
-            } catch {
-                logger.error(`Failed to parse image: ${attachment.url}`)
+            } catch (e) {
+                logger.error(`Failed to parse attachment: ${attachment.url}`, e)
             }
         }
     }
