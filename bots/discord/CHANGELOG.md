@@ -1,3 +1,16 @@
+# @revanced/discord-bot [1.0.0-dev.22](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.21...@revanced/discord-bot@1.0.0-dev.22) (2024-08-10)
+
+
+### Bug Fixes
+
+* **bots/discord:** parse larger units of durations, fix wrong timestamp in mod embed ([6c8dce0](https://github.com/revanced/revanced-helper/commit/6c8dce059366a6ef85f5b8b1794c056515b9f5b6))
+* **bots/discord:** provide discord token for `reload` command ([dd21a5a](https://github.com/revanced/revanced-helper/commit/dd21a5abad560f3d00b8c58912786d4b6bd520e9))
+
+
+### Features
+
+* **bots/discord:** add code to actually scan text files correctly ([80aeb19](https://github.com/revanced/revanced-helper/commit/80aeb1902063140a2e78cfaed9424e5101ab03f1))
+
 # @revanced/discord-bot [1.0.0-dev.21](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.20...@revanced/discord-bot@1.0.0-dev.21) (2024-08-04)
 
 
