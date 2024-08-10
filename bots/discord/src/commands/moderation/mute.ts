@@ -60,7 +60,7 @@ export default new ModerationCommand({
         await applyRolePreset(member, 'mute', expires)
         await sendModerationReplyAndLogs(
             interaction,
-            createModerationActionEmbed('Muted', user, executor.user, reason, duration),
+            createModerationActionEmbed('Muted', user, executor.user, reason, Math.ceil(expires / 1000)),
         )
 
         if (duration)

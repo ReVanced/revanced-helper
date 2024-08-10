@@ -1,6 +1,6 @@
 import { config, logger } from '$/context'
 import decancer from 'decancer'
-import type { ChatInputCommandInteraction, EmbedBuilder, Guild, GuildMember, Message, User } from 'discord.js'
+import type { CommandInteraction, EmbedBuilder, Guild, GuildMember, Message, User } from 'discord.js'
 import { applyReferenceToModerationActionEmbed, createModerationActionEmbed } from './embeds'
 
 const PresetLogAction = {
@@ -10,7 +10,7 @@ const PresetLogAction = {
 
 export const sendPresetReplyAndLogs = (
     action: keyof typeof PresetLogAction,
-    interaction: ChatInputCommandInteraction | Message,
+    interaction: CommandInteraction | Message,
     executor: GuildMember,
     user: User,
     preset: string,
@@ -24,7 +24,7 @@ export const sendPresetReplyAndLogs = (
     )
 
 export const sendModerationReplyAndLogs = async (
-    interaction: ChatInputCommandInteraction | Message,
+    interaction: CommandInteraction | Message,
     embed: EmbedBuilder,
 ) => {
     const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())

@@ -83,6 +83,6 @@ export default new ModerationCommand({
                 removeRolePreset(member, preset)
             }, expires)
 
-        await sendPresetReplyAndLogs(apply ? 'apply' : 'remove', trigger, executor, user, preset, expires)
+        await sendPresetReplyAndLogs(apply ? 'apply' : 'remove', trigger, executor, user, preset, expires ? Math.ceil(expires / 1000) : undefined)
     },
 })

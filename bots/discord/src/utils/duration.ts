@@ -1,13 +1,16 @@
 export const parseDuration = (duration: string) => {
     if (!duration.length) return Number.NaN
-    const matches = duration.match(/(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?/)!
+    const matches = duration.match(/(?:(\d+y)?(\d+M)?(\d+w)?(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)/)!
 
-    const [, days, hours, minutes, seconds] = matches.map(Number)
+    const [, years, months, weeks, days, hours, minutes, seconds] = matches.map(Number)
     return (
-        (days || 0) * 24 * 60 * 60 * 1000 +
-        (hours || 0) * 60 * 60 * 1000 +
-        (minutes || 0) * 60 * 1000 +
-        (seconds || 0) * 1000
+        (years || 0) * 290304e5 +
+        (months || 0) * 24192e5 +
+        (weeks || 0) * 6048e5 +
+        (days || 0) * 864e5 +
+        (hours || 0) * 36e5 +
+        (minutes || 0) * 6e4 +
+        (seconds || 0) * 1e3
     )
 }
 
