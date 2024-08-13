@@ -1,3 +1,11 @@
+# @revanced/discord-bot [1.0.0-dev.23](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.22...@revanced/discord-bot@1.0.0-dev.23) (2024-08-13)
+
+
+### Features
+
+* **bots/discord:** add `train` commands ([ee90ef2](https://github.com/revanced/revanced-helper/commit/ee90ef247b4bf2b3c0698606b947116f2dc1b868))
+* **bots/discord:** update to newer command definition framework ([97f2795](https://github.com/revanced/revanced-helper/commit/97f2795df4ede4d12a08193dba453c1bc765a4c2))
+
 # @revanced/discord-bot [1.0.0-dev.22](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.21...@revanced/discord-bot@1.0.0-dev.22) (2024-08-10)
 
 
