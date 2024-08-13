@@ -18,10 +18,10 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
     if (!interaction.isStringSelectMenu() && !interaction.isButton()) return
     if (!interaction.customId.startsWith('cr_')) return
 
-    const [, key, action] = interaction.customId.split('_') as ['cr', string, 'select' | 'cancel' | 'delete']
-    if (!key || !action) return
+    const [, msgId, action] = interaction.customId.split('_') as ['cr', string, 'select' | 'cancel' | 'delete']
+    if (!msgId || !action) return
 
-    const response = await db.query.responses.findFirst({ where: eq(responses.replyId, key) })
+    const response = await db.query.responses.findFirst({ where: eq(responses.replyId, msgId) })
     // If the message isn't saved in my DB (unrelated message)
     if (!response)
         return void (await interaction.reply({
@@ -32,11 +32,11 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
     try {
         // We're gonna pretend reactionChannel is a text-based channel, but it can be many more
         // But `messages` should always exist as a property
-        const reactionGuild = await interaction.client.guilds.fetch(response.guildId)
-        const reactionChannel = (await reactionGuild.channels.fetch(response.channelId)) as TextBasedChannel | null
-        const reactionMessage = await reactionChannel?.messages.fetch(key)
+        const guild = await interaction.client.guilds.fetch(response.guildId)
+        const channel = (await guild.channels.fetch(response.channelId)) as TextBasedChannel | null
+        const msg = await channel?.messages.fetch(msgId)
 
-        if (!reactionMessage) {
+        if (!msg) {
             await interaction.deferUpdate()
             await interaction.message.edit({
                 content: null,
@@ -53,9 +53,9 @@ withContext(on, 'interactionCreate', async (context, interaction) => {
         }
 
         const editMessage = (content: string, description?: string) =>
-            editInteractionMessage(interaction, reactionMessage.url, content, description)
+            editInteractionMessage(interaction, msg.url, content, description)
         const handleCorrection = (label: string) =>
-            handleUserResponseCorrection(context, response, reactionMessage, label, interaction.user)
+            handleUserResponseCorrection(context, response, msg, label, interaction.user)
 
         if (response.correctedById)
             return await editMessage(
