@@ -32,7 +32,7 @@ export default new ModerationCommand({
 
         const channel = interaction.channel!
         if (!channel.isTextBased())
-            throw new CommandError(CommandErrorType.InvalidChannel, 'The supplied channel is not a text channel.')
+            throw new CommandError(CommandErrorType.InvalidArgument, 'The supplied channel is not a text channel.')
 
         const embed = applyCommonEmbedStyles(
             new EmbedBuilder({

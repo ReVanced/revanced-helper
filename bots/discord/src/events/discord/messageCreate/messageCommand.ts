@@ -18,7 +18,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
     if (!commandName) return
 
     const command = discord.commands[commandName]
-    logger.debug(`Command ${commandName} being invoked by ${msg.author.id}`)
+    logger.debug(`Command ${commandName} being invoked by ${msg.author.id} via message`)
     if (!command) return void logger.debug(`Message command ${commandName} not implemented`)
 
     const argsRegex: RegExp = /[^\s"]+|"([^"]*)"/g
@@ -46,7 +46,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
     }
 
     try {
-        logger.debug(`Command ${commandName} being executed`)
+        logger.debug(`Command ${commandName} being executed via message`)
         await command.onMessage(context, msg, args)
     } catch (err) {
         if (!(err instanceof CommandError)) logger.error(`Error while executing command ${commandName}:`, err)

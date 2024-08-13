@@ -37,14 +37,14 @@ export default new ModerationCommand({
 
         if (Number.isInteger(duration) && duration! < 1)
             throw new CommandError(
-                CommandErrorType.InvalidDuration,
+                CommandErrorType.InvalidArgument,
                 'The duration must be at least 1 millisecond long.',
             )
 
         const expires = Math.max(duration, Date.now() + duration)
         if (!member)
             throw new CommandError(
-                CommandErrorType.InvalidUser,
+                CommandErrorType.InvalidArgument,
                 'The provided member is not in the server or does not exist.',
             )
 
@@ -53,7 +53,7 @@ export default new ModerationCommand({
 
         if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0)
             throw new CommandError(
-                CommandErrorType.InvalidUser,
+                CommandErrorType.InvalidArgument,
                 'You cannot mute a user with a role equal to or higher than yours.',
             )
 

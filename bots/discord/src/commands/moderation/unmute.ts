@@ -20,7 +20,7 @@ export default new ModerationCommand({
         const member = await interaction.guild!.members.fetch(user.id)
         if (!member)
             throw new CommandError(
-                CommandErrorType.InvalidUser,
+                CommandErrorType.InvalidArgument,
                 'The provided member is not in the server or does not exist.',
             )
 

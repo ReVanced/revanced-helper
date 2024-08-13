@@ -3,29 +3,24 @@ import { createStackTraceEmbed } from '$utils/discord/embeds'
 import { on, withContext } from '$utils/discord/events'
 
 withContext(on, 'interactionCreate', async (context, interaction) => {
-    if (!interaction.isChatInputCommand()) return
+    if (!interaction.isContextMenuCommand()) return
 
     const { logger, discord } = context
     const command = discord.commands[interaction.commandName]
 
-    logger.debug(`Command ${interaction.commandName} being invoked by ${interaction.user.tag} via chat`)
+    logger.debug(`Command ${interaction.commandName} being invoked by ${interaction.user.tag} via context menu`)
     if (!command)
-        return void logger.error(`Chat command ${interaction.commandName} not implemented but registered!!!`)
+        return void logger.error(`Context menu command ${interaction.commandName} not implemented but registered!!!`)
 
     try {
-        logger.debug(`Command ${interaction.commandName} being executed via chat`)
-        await command.onInteraction(context, interaction)
+        logger.debug(`Command ${interaction.commandName} being executed via context menu`)
+        await command.onContextMenuInteraction(context, interaction)
     } catch (err) {
         if (!(err instanceof CommandError))
             logger.error(`Error while executing command ${interaction.commandName}:`, err)
-
         await interaction[interaction.replied ? 'followUp' : 'reply']({
             embeds: [err instanceof CommandError ? err.toEmbed() : createStackTraceEmbed(err)],
             ephemeral: true,
         })
-
-        // 100 and up are user errors
-        if (err instanceof CommandError && err.type < 100)
-            logger.error(`Command ${interaction.commandName} internally failed with error:`, err)
     }
 })

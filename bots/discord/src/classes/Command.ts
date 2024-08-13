@@ -1,76 +1,145 @@
-import { ApplicationCommandOptionType } from 'discord.js'
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js'
+import { isAdmin } from '../utils/discord/permissions'
 
-import { createErrorEmbed } from '$/utils/discord/embeds'
-import { isAdmin } from '$/utils/discord/permissions'
-
-import { config } from '../context'
 import CommandError, { CommandErrorType } from './CommandError'
 
-import type { Filter } from 'config.schema'
 import type {
     APIApplicationCommandChannelOption,
     CacheType,
     Channel,
     ChatInputCommandInteraction,
+    CommandInteraction,
     CommandInteractionOption,
     GuildMember,
     Message,
+    MessageContextMenuCommandInteraction,
+    RESTPostAPIApplicationCommandsJSONBody,
     RESTPostAPIChatInputApplicationCommandsJSONBody,
     Role,
     User,
+    UserContextMenuCommandInteraction,
+    UserResolvable,
 } from 'discord.js'
+import { config } from '../context'
+
+export enum CommandType {
+    ChatGlobal = 1,
+    ChatGuild,
+    ContextMenuUser,
+    ContextMenuMessage,
+    ContextMenuGuildMessage,
+    ContextMenuGuildMember,
+}
 
 export default class Command<
-    Global extends boolean = false,
-    Options extends CommandOptionsOptions | undefined = undefined,
-    AllowMessageCommand extends boolean = false,
+    const Type extends CommandType = CommandType.ChatGuild,
+    const Options extends If<IsContextMenu<Type>, undefined, CommandOptionsOptions | undefined> = undefined,
+    const AllowMessageCommand extends If<IsContextMenu<Type>, false, boolean> = false,
 > {
     name: string
     description: string
     requirements?: CommandRequirements
     options?: Options
-    global?: Global
-    #execute: CommandExecuteFunction<Global, Options, AllowMessageCommand>
+    type: Type
+    allowMessageCommand: AllowMessageCommand
+    #execute: CommandExecuteFunction<Type, Options, AllowMessageCommand>
 
     static OptionType = ApplicationCommandOptionType
+    static Type = CommandType
 
     constructor({
         name,
         description,
         requirements,
         options,
-        global,
+        type,
+        allowMessageCommand,
         execute,
-    }: CommandOptions<Global, Options, AllowMessageCommand>) {
+    }: CommandOptions<Type, Options, AllowMessageCommand>) {
         this.name = name
-        this.description = description
+        this.description = description!
         this.requirements = requirements
         this.options = options
-        this.global = global
+        // @ts-expect-error: Default is `CommandType.GuildOnly`, it makes sense
+        this.type = type ?? CommandType.ChatGuild
+        // @ts-expect-error: Default is `false`, it makes sense
+        this.allowMessageCommand = allowMessageCommand ?? false
         this.#execute = execute
+    }
+
+    isGuildSpecific(): this is Command<
+        CommandType.ChatGuild | CommandType.ContextMenuGuildMember | CommandType.ContextMenuGuildMessage,
+        Options,
+        AllowMessageCommand
+    > {
+        return [
+            CommandType.ChatGuild,
+            CommandType.ContextMenuGuildMessage,
+            CommandType.ContextMenuGuildMember,
+        ].includes(this.type)
+    }
+
+    isContextMenuSpecific(): this is Command<
+        | CommandType.ContextMenuGuildMessage
+        | CommandType.ContextMenuGuildMember
+        | CommandType.ContextMenuUser
+        | CommandType.ContextMenuMessage,
+        undefined,
+        false
+    > {
+        return [
+            CommandType.ContextMenuMessage,
+            CommandType.ContextMenuUser,
+            CommandType.ContextMenuGuildMessage,
+            CommandType.ContextMenuGuildMember,
+        ].includes(this.type)
+    }
+
+    isGuildContextMenuSpecific(): this is Command<
+        CommandType.ContextMenuGuildMessage | CommandType.ContextMenuGuildMember,
+        undefined,
+        false
+    > {
+        return [CommandType.ContextMenuGuildMessage, CommandType.ContextMenuGuildMember].includes(this.type)
+    }
+
+    async onContextMenuInteraction(
+        context: typeof import('../context'),
+        interaction: If<
+            Extends<Type, CommandType.ContextMenuGuildMessage>,
+            MessageContextMenuCommandInteraction<ToCacheType<Type>>,
+            UserContextMenuCommandInteraction<ToCacheType<Type>>
+        >,
+    ): Promise<unknown> {
+        if (!this.isGuildSpecific() && !interaction.inGuild())
+            throw new CommandError(CommandErrorType.InteractionNotInGuild)
+
+        const executor = await this.#fetchInteractionExecutor(interaction)
+        const target =
+            this.type === CommandType.ContextMenuGuildMember
+                ? this.isGuildSpecific()
+                    ? fetchMember(interaction as CommandInteraction<'raw' | 'cached'>, interaction.targetId)
+                    : interaction.client.users.fetch(interaction.targetId)
+                : interaction.channel?.messages.fetch(interaction.targetId)
+
+        if (!target) throw new CommandError(CommandErrorType.FetchManagerNotFound)
+
+        // @ts-expect-error: Type mismatch (again!) because TypeScript is not smart enough
+        return await this.#execute({ ...context, executor, target }, interaction, undefined)
     }
 
     async onMessage(
         context: typeof import('../context'),
-        msg: Message<If<Global, false, true>>,
+        msg: Message<IsGuildSpecific<Type>>,
         args: CommandArguments,
     ): Promise<unknown> {
-        if (!this.global && !msg.inGuild())
-            return await msg.reply({
-                embeds: [createErrorEmbed('Cannot run this command', 'This command can only be used in a server.')],
-            })
+        if (!this.allowMessageCommand) return
+        if (!this.isGuildSpecific() && !msg.guildId) throw new CommandError(CommandErrorType.InteractionNotInGuild)
 
-        const executor = this.global ? msg.author : await msg.guild?.members.fetch(msg.author.id)!
-
-        if (!(await this.canExecute(executor, msg.channelId)))
-            return await msg.reply({
-                embeds: [
-                    createErrorEmbed(
-                        'Cannot run this command',
-                        'You do not meet the requirements to run this command.',
-                    ),
-                ],
-            })
+        const executor = this.isGuildSpecific()
+            ? await msg.guild?.members.fetch(msg.author)!
+            : await msg.client.users.fetch(msg.author)
+        if (!(await this.canExecute(executor))) throw new CommandError(CommandErrorType.RequirementsNotMet)
 
         const options = this.options
             ? ((await this.#resolveMessageOptions(msg, this.options, args)) as CommandExecuteFunctionOptionsParameter<
@@ -120,13 +189,17 @@ export default class Command<
                     `Invalid type for argument **${name}**.${argExplainationString}\n\nExpected type: **${expectedType}**\nGot type: **${ApplicationCommandOptionType[arg.type]}**${choicesString}`,
                 )
 
-            if ('choices' in option && option.choices && !option.choices.some(({ value }) => value === arg))
+            const argValue = typeof arg === 'string' ? arg : arg?.id
+
+            if (
+                'choices' in option &&
+                option.choices &&
+                !option.choices.some(({ value }) => value === (typeof value === 'number' ? Number(argValue) : argValue))
+            )
                 throw new CommandError(
                     CommandErrorType.InvalidArgument,
-                    `Invalid choice for argument **${name}**.\n${argExplainationString}\n\n${choicesString}\n`,
+                    `Invalid choice for argument **${name}**.\n${argExplainationString}${choicesString}\n`,
                 )
-
-            const argValue = typeof arg === 'string' ? arg : arg?.id
 
             if (argValue && arg) {
                 if (isSubcommandLikeOption) {
@@ -143,6 +216,16 @@ export default class Command<
                 }
 
                 if (
+                    type === ApplicationCommandOptionType.String &&
+                    ((typeof option.minLength === 'number' && argValue.length < option.minLength) ||
+                        (typeof option.maxLength === 'number' && argValue.length > option.maxLength))
+                )
+                    throw new CommandError(
+                        CommandErrorType.InvalidArgument,
+                        `Invalid string length for argument **${name}**.\nLengths allowed: ${option.minLength ?? '(any)'} - ${option.maxLength ?? '(any)'}.${argExplainationString}`,
+                    )
+
+                if (
                     (type === ApplicationCommandOptionType.Channel ||
                         type === ApplicationCommandOptionType.User ||
                         type === ApplicationCommandOptionType.Role) &&
@@ -153,14 +236,21 @@ export default class Command<
                         `Malformed ID for argument **${name}**.${argExplainationString}`,
                     )
 
-                if (
-                    (type === ApplicationCommandOptionType.Number || type === ApplicationCommandOptionType.Integer) &&
-                    Number.isNaN(Number(argValue))
-                ) {
-                    throw new CommandError(
-                        CommandErrorType.InvalidArgument,
-                        `Invalid number for argument **${name}**.${argExplainationString}`,
+                if (type === ApplicationCommandOptionType.Number || type === ApplicationCommandOptionType.Integer) {
+                    if (Number.isNaN(Number(argValue)))
+                        throw new CommandError(
+                            CommandErrorType.InvalidArgument,
+                            `Invalid number for argument **${name}**.${argExplainationString}`,
+                        )
+
+                    if (
+                        (typeof option.min === 'number' && Number(argValue) < option.min) ||
+                        (typeof option.max === 'number' && Number(argValue) > option.max)
                     )
+                        throw new CommandError(
+                            CommandErrorType.InvalidArgument,
+                            `Number out of range for argument **${name}**.\nRange allowed: ${option.min ?? '(any)'} - ${option.max ?? '(any)'}.${argExplainationString}`,
+                        )
                 }
 
                 if (
@@ -177,7 +267,7 @@ export default class Command<
                     type === ApplicationCommandOptionType.Number || type === ApplicationCommandOptionType.Integer
                         ? Number(argValue)
                         : type === ApplicationCommandOptionType.Boolean
-                          ? argValue[0] === 't' || argValue[0] === 'y'
+                          ? ['t', 'y', 'yes', 'true'].some(value => value === argValue.toLowerCase())
                           : type === ApplicationCommandOptionType.Channel
                             ? await msg.client.channels.fetch(argValue)
                             : type === ApplicationCommandOptionType.User
@@ -191,44 +281,27 @@ export default class Command<
         return _options
     }
 
+    #fetchInteractionExecutor(interaction: CommandInteraction) {
+        return this.isGuildSpecific()
+            ? fetchMember(interaction as CommandInteraction<'raw' | 'cached'>)
+            : fetchUser(interaction)
+    }
+
     async onInteraction(
         context: typeof import('../context'),
         interaction: ChatInputCommandInteraction,
     ): Promise<unknown> {
-        const { logger } = context
+        if (interaction.commandName !== this.name)
+            throw new CommandError(
+                CommandErrorType.InteractionDataMismatch,
+                'The interaction command name does not match the expected command name.',
+            )
 
-        if (interaction.commandName !== this.name) {
-            logger.warn(`Command name mismatch, expected ${this.name}, but got ${interaction.commandName}!`)
-            return await interaction.reply({
-                embeds: [
-                    createErrorEmbed(
-                        'Internal command name mismatch',
-                        'The interaction command name does not match the expected command name.',
-                    ),
-                ],
-            })
-        }
+        if (!this.isGuildSpecific() && !interaction.inGuild())
+            throw new CommandError(CommandErrorType.InteractionNotInGuild)
 
-        if (!this.global && !interaction.inGuild()) {
-            logger.error(`Command ${this.name} cannot be run in DMs, but was registered as global`)
-            return await interaction.reply({
-                embeds: [createErrorEmbed('Cannot run this command', 'This command can only be used in a server.')],
-                ephemeral: true,
-            })
-        }
-
-        const executor = this.global ? interaction.user : await interaction.guild?.members.fetch(interaction.user.id)!
-
-        if (!(await this.canExecute(executor, interaction.channelId)))
-            return await interaction.reply({
-                embeds: [
-                    createErrorEmbed(
-                        'Cannot run this command',
-                        'You do not meet the requirements to run this command.',
-                    ),
-                ],
-                ephemeral: true,
-            })
+        const executor = await this.#fetchInteractionExecutor(interaction)
+        if (!(await this.canExecute(executor))) throw new CommandError(CommandErrorType.RequirementsNotMet)
 
         const options = this.options
             ? ((await this.#resolveInteractionOptions(interaction)) as CommandExecuteFunctionOptionsParameter<
@@ -237,14 +310,10 @@ export default class Command<
             : undefined
 
         if (options === null)
-            return await interaction.reply({
-                embeds: [
-                    createErrorEmbed(
-                        'Internal command option type mismatch',
-                        'The interaction command option type does not match the expected command option type.',
-                    ),
-                ],
-            })
+            throw new CommandError(
+                CommandErrorType.InteractionDataMismatch,
+                'The registered interaction command option type does not match the expected command option type.',
+            )
 
         // @ts-expect-error: Type mismatch (again!) because TypeScript is not smart enough
         return await this.#execute({ ...context, executor }, interaction, options)
@@ -288,7 +357,7 @@ export default class Command<
         return _options
     }
 
-    async canExecute(executor: User | GuildMember, channelId: string): Promise<boolean> {
+    async canExecute(executor: User | GuildMember): Promise<boolean> {
         if (!this.requirements) return false
 
         const isExecutorAdmin = isAdmin(executor)
@@ -296,7 +365,6 @@ export default class Command<
 
         const {
             adminOnly,
-            channels,
             roles,
             permissions,
             users,
@@ -305,16 +373,23 @@ export default class Command<
             memberRequirementsForUsers = 'pass',
         } = this.requirements
 
-        const member = this.global ? null : (executor as GuildMember)
-        const bDefCond = defaultCondition !== 'fail'
-        const bMemReqForUsers = memberRequirementsForUsers !== 'fail'
+        const member = this.isGuildSpecific() ? null : (executor as GuildMember)
+        const boolDefaultCondition = defaultCondition !== 'fail'
+        const boolMemberRequirementsForUsers = memberRequirementsForUsers !== 'fail'
 
         const conditions = [
-            adminOnly ? isExecutorAdmin : bDefCond,
-            channels ? channels.includes(channelId) : bDefCond,
-            member ? (roles ? roles.some(role => member.roles.cache.has(role)) : bDefCond) : bMemReqForUsers,
-            member ? (permissions ? member.permissions.has(permissions) : bDefCond) : bMemReqForUsers,
-            users ? users.includes(executor.id) : bDefCond,
+            adminOnly ? isExecutorAdmin : boolDefaultCondition,
+            users ? users.includes(executor.id) : boolDefaultCondition,
+            member
+                ? roles
+                    ? roles.some(role => member.roles.cache.has(role))
+                    : boolDefaultCondition
+                : boolMemberRequirementsForUsers,
+            member
+                ? permissions
+                    ? member.permissions.has(permissions)
+                    : boolDefaultCondition
+                : boolMemberRequirementsForUsers,
         ]
 
         if (mode === 'all' && conditions.some(condition => !condition)) return false
@@ -323,14 +398,27 @@ export default class Command<
         return true
     }
 
-    get json(): RESTPostAPIChatInputApplicationCommandsJSONBody & { contexts: Array<0 | 1 | 2> } {
-        return {
+    get json(): RESTPostAPIApplicationCommandsJSONBody {
+        // @ts-expect-error: I hate union types in TypeScript
+        const base: RESTPostAPIApplicationCommandsJSONBody = {
             name: this.name,
+            type:
+                this.type === CommandType.ContextMenuGuildMessage || this.type === CommandType.ContextMenuMessage
+                    ? ApplicationCommandType.Message
+                    : this.type === CommandType.ContextMenuGuildMember || this.type === CommandType.ContextMenuUser
+                      ? ApplicationCommandType.User
+                      : ApplicationCommandType.ChatInput,
+        }
+
+        if (this.isContextMenuSpecific()) return base
+
+        return {
+            ...base,
             description: this.description,
             options: this.options ? this.#transformOptions(this.options) : undefined,
             // https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types
-            contexts: this.global ? [0] : [0, 1],
-        }
+            contexts: this.isGuildSpecific() ? [0] : [0, 1, 2],
+        } as RESTPostAPIChatInputApplicationCommandsJSONBody & { contexts: Array<0 | 1 | 2> }
     }
 
     #transformOptions(optionsObject: Record<string, CommandOption>) {
@@ -377,8 +465,8 @@ export default class Command<
 export class ModerationCommand<
     Options extends CommandOptionsOptions,
     AllowMessageCommand extends boolean = true,
-> extends Command<false, Options, AllowMessageCommand> {
-    constructor(options: ExtendedCommandOptions<false, Options, AllowMessageCommand>) {
+> extends Command<CommandType.ChatGuild, Options, AllowMessageCommand> {
+    constructor(options: ExtendedCommandOptions<CommandType.ChatGuild, Options, AllowMessageCommand>) {
         super({
             ...options,
             requirements: {
@@ -388,17 +476,16 @@ export class ModerationCommand<
             },
             // @ts-expect-error: No thanks
             allowMessageCommand: options.allowMessageCommand ?? true,
-            global: false,
+            type: CommandType.ChatGuild,
         })
     }
 }
 
-export class AdminCommand<Options extends CommandOptionsOptions, AllowMessageCommand extends boolean> extends Command<
-    true,
-    Options,
-    AllowMessageCommand
-> {
-    constructor(options: ExtendedCommandOptions<true, Options, AllowMessageCommand>) {
+export class AdminCommand<
+    Options extends CommandOptionsOptions,
+    AllowMessageCommand extends boolean = true,
+> extends Command<CommandType.ChatGlobal, Options, AllowMessageCommand> {
+    constructor(options: ExtendedCommandOptions<CommandType.ChatGlobal, Options, AllowMessageCommand>) {
         super({
             ...options,
             requirements: {
@@ -406,9 +493,24 @@ export class AdminCommand<Options extends CommandOptionsOptions, AllowMessageCom
                 adminOnly: true,
                 defaultCondition: 'pass',
             },
-            global: true,
+            allowMessageCommand: options.allowMessageCommand ?? (true as AllowMessageCommand),
+            type: CommandType.ChatGlobal,
         })
     }
+}
+
+const fetchMember = async (
+    interaction: CommandInteraction<'raw' | 'cached'>,
+    source: UserResolvable = interaction.user,
+    manager = interaction.guild?.members,
+) => {
+    const _manager = manager ?? (await interaction.client.guilds.fetch(interaction.guildId).then(it => it.members))
+    if (!_manager) throw new CommandError(CommandErrorType.FetchManagerNotFound, 'Cannot fetch member.')
+    return await _manager.fetch(source)
+}
+
+const fetchUser = (interaction: CommandInteraction, source: UserResolvable = interaction.user) => {
+    return interaction.client.users.fetch(source)
 }
 
 /* TODO: 
@@ -417,27 +519,26 @@ export class AdminCommand<Options extends CommandOptionsOptions, AllowMessageCom
     APIApplicationCommandRoleOption
 */
 
-export interface CommandOptions<
-    Global extends boolean,
+export type CommandOptions<
+    Type extends CommandType,
     Options extends CommandOptionsOptions | undefined,
     AllowMessageCommand extends boolean,
-> {
+> = {
     name: string
-    description: string
     requirements?: CommandRequirements
     options?: Options
-    execute: CommandExecuteFunction<Global, Options, AllowMessageCommand>
-    global?: Global
+    execute: CommandExecuteFunction<Type, Options, AllowMessageCommand>
+    type?: Type
     allowMessageCommand?: AllowMessageCommand
-}
+} & If<IsContextMenu<Type>, { description?: never }, { description: string }>
 
 export type CommandArguments = Array<string | CommandSpecialArgument>
-
 export type CommandSpecialArgument = {
     type: (typeof CommandSpecialArgumentType)[keyof typeof CommandSpecialArgumentType]
     id: string
 }
 
+//! If things ever get minified, this will most likely break property access via string names
 export const CommandSpecialArgumentType = {
     Channel: ApplicationCommandOptionType.Channel,
     Role: ApplicationCommandOptionType.Role,
@@ -445,31 +546,56 @@ export const CommandSpecialArgumentType = {
 }
 
 type ExtendedCommandOptions<
-    Global extends boolean,
+    Type extends CommandType,
     Options extends CommandOptionsOptions,
     AllowMessageCommand extends boolean,
-> = Omit<CommandOptions<Global, Options, AllowMessageCommand>, 'global'> & {
-    requirements?: Omit<CommandOptions<false, Options, AllowMessageCommand>['requirements'], 'defaultCondition'>
+> = Omit<CommandOptions<Type, Options, AllowMessageCommand>, 'type'> & {
+    requirements?: Omit<CommandOptions<Type, Options, AllowMessageCommand>['requirements'], 'defaultCondition'>
 }
 
 export type CommandOptionsOptions = Record<string, CommandOption>
 
+type ToCacheType<Type extends CommandType> = If<IsGuildSpecific<Type>, 'raw' | 'cached', CacheType>
+
 type CommandExecuteFunction<
-    Global extends boolean,
+    Type extends CommandType,
     Options extends CommandOptionsOptions | undefined,
     AllowMessageCommand extends boolean,
 > = (
-    context: CommandContext<Global>,
+    context: CommandContext<Type>,
     trigger: If<
         AllowMessageCommand,
-        Message<InvertBoolean<Global>> | ChatInputCommandInteraction<If<Global, CacheType, 'raw' | 'cached'>>,
-        ChatInputCommandInteraction<If<Global, CacheType, 'raw' | 'cached'>>
+        Message<IsGuildSpecific<Type>> | CommandTypeToInteractionMap<ToCacheType<Type>>[Type],
+        CommandTypeToInteractionMap<ToCacheType<Type>>[Type]
     >,
     options: Options extends CommandOptionsOptions ? CommandExecuteFunctionOptionsParameter<Options> : never,
 ) => Promise<unknown> | unknown
 
+type CommandTypeToInteractionMap<CT extends CacheType> = {
+    [CommandType.ChatGlobal]: ChatInputCommandInteraction<CT>
+    [CommandType.ChatGuild]: ChatInputCommandInteraction<CT>
+    [CommandType.ContextMenuUser]: UserContextMenuCommandInteraction<CT>
+    [CommandType.ContextMenuMessage]: MessageContextMenuCommandInteraction<CT>
+    [CommandType.ContextMenuGuildMessage]: MessageContextMenuCommandInteraction<CT>
+    [CommandType.ContextMenuGuildMember]: MessageContextMenuCommandInteraction<CT>
+}
+
+type IsContextMenu<Type extends CommandType> = Extends<
+    Type,
+    | CommandType.ContextMenuGuildMessage
+    | CommandType.ContextMenuGuildMember
+    | CommandType.ContextMenuMessage
+    | CommandType.ContextMenuUser
+>
+
+type IsGuildSpecific<Type extends CommandType> = Extends<
+    Type,
+    CommandType.ChatGuild | CommandType.ContextMenuGuildMember | CommandType.ContextMenuGuildMessage
+>
+
+type Extends<T, U> = T extends U ? true : false
 type If<T extends boolean | undefined, U, V> = T extends true ? U : V
-type InvertBoolean<T extends boolean> = If<T, false, true>
+// type InvertBoolean<T extends boolean> = If<T, false, true>
 
 type CommandExecuteFunctionOptionsParameter<Options extends CommandOptionsOptions> = {
     [K in keyof Options]: Options[K]['type'] extends
@@ -484,8 +610,13 @@ type CommandExecuteFunctionOptionsParameter<Options extends CommandOptionsOption
           >
 }
 
-type CommandContext<Global extends boolean> = typeof import('../context') & {
-    executor: CommandExecutor<Global>
+type CommandContext<Type extends CommandType> = typeof import('../context') & {
+    executor: CommandExecutor<Type>
+    target: If<
+        Extends<Type, CommandType.ContextMenuGuildMember>,
+        GuildMember,
+        If<Extends<Type, CommandType.ContextMenuGuildMessage>, Message<true>, never>
+    >
 }
 
 type CommandOptionValueMap = {
@@ -511,7 +642,7 @@ type CommandOption =
     | CommandSubcommandOption
     | CommandSubcommandGroupOption
 
-type CommandExecutor<Global extends boolean> = If<Global, User, GuildMember>
+type CommandExecutor<Type extends CommandType> = If<IsGuildSpecific<Type>, GuildMember, User>
 
 type CommandOptionBase<Type extends ApplicationCommandOptionType> = {
     type: Type
@@ -585,10 +716,12 @@ interface CommandSubcommandLikeOption<
 type CommandSubcommandOption = CommandSubcommandLikeOption<ApplicationCommandOptionType.Subcommand>
 type CommandSubcommandGroupOption = CommandSubcommandLikeOption<ApplicationCommandOptionType.SubcommandGroup>
 
-export type CommandRequirements = Filter & {
-    mode?: 'all' | 'any'
-    adminOnly?: boolean
+export type CommandRequirements = {
+    users?: string[]
+    roles?: string[]
     permissions?: bigint
+    adminOnly?: boolean
     defaultCondition?: 'fail' | 'pass'
-    memberRequirementsForUsers?: 'pass' | 'fail'
+    memberRequirementsForUsers?: 'fail' | 'pass'
+    mode?: 'all' | 'any'
 }

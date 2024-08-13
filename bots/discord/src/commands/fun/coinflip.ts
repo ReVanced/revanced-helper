@@ -6,7 +6,7 @@ import { applyCommonEmbedStyles } from '$/utils/discord/embeds'
 export default new Command({
     name: 'coinflip',
     description: 'Do a coinflip!',
-    global: true,
+    type: Command.Type.ChatGlobal,
     requirements: {
         defaultCondition: 'pass',
     },

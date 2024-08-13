@@ -17,7 +17,7 @@ export const logger = createLogger({
 import * as commands from './commands'
 import * as schemas from './database/schemas'
 
-import type { default as Command, CommandOptionsOptions } from './classes/Command'
+import type { default as Command, CommandOptionsOptions, CommandType } from './classes/Command'
 
 export const api = {
     client: new APIClient({
@@ -83,7 +83,7 @@ export const discord = {
     }),
     commands: Object.fromEntries(Object.values(commands).map(cmd => [cmd.name, cmd])) as Record<
         string,
-        Command<boolean, CommandOptionsOptions | undefined, boolean>
+        Command<CommandType, CommandOptionsOptions | undefined, boolean>
     >,
     stickyMessages: {} as Record<
         string,

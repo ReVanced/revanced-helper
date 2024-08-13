@@ -35,7 +35,7 @@ export default new ModerationCommand({
 
             if (moderator.roles.highest.comparePositionTo(member.roles.highest) <= 0)
                 throw new CommandError(
-                    CommandErrorType.InvalidUser,
+                    CommandErrorType.InvalidArgument,
                     'You cannot ban a user with a role equal to or higher than yours.',
                 )
         }

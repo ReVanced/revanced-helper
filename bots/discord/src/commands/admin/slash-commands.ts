@@ -42,7 +42,7 @@ export default new AdminCommand({
 
         const { global: globalCommands, guild: guildCommands } = Object.groupBy(
             Object.values(context.discord.commands),
-            cmd => (cmd.global ? 'global' : 'guild'),
+            cmd => (cmd.isGuildSpecific() ? 'guild' : 'global'),
         )
 
         const {

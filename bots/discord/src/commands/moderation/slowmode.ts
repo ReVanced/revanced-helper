@@ -27,14 +27,14 @@ export default new ModerationCommand({
 
         if (!channel?.isTextBased() || channel.isDMBased())
             throw new CommandError(
-                CommandErrorType.InvalidChannel,
+                CommandErrorType.InvalidArgument,
                 'The supplied channel is not a text channel.',
             )
 
-        if (Number.isNaN(duration)) throw new CommandError(CommandErrorType.InvalidDuration, 'Invalid duration.')
+        if (Number.isNaN(duration)) throw new CommandError(CommandErrorType.InvalidArgument, 'Invalid duration.')
         if (duration < 0 || duration > 36e4)
             throw new CommandError(
-                CommandErrorType.InvalidDuration,
+                CommandErrorType.InvalidArgument,
                 'Duration out of range, must be between 0s and 6h.',
             )
 
