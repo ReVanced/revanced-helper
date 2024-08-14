@@ -20,11 +20,10 @@ const PossibleReactions = Object.values(Reactions) as string[]
 
 withContext(on, 'messageReactionAdd', async (context, rct, user) => {
     if (user.bot) return
-    await rct.users.remove(user.id)
     
     const { database: db, logger, config } = context
     const { messageScan: msConfig } = config
-
+    
     // If there's no config, we can't do anything
     if (!msConfig?.humanCorrections) return
 
@@ -33,6 +32,7 @@ withContext(on, 'messageReactionAdd', async (context, rct, user) => {
 
     if (reactionMessage.author.id !== reaction.client.user!.id) return
     if (!PossibleReactions.includes(reaction.emoji.name!)) return
+    await rct.users.remove(user.id)
 
     if (!isAdmin(reactionMessage.member || reactionMessage.author)) {
         // User is in guild, and config has member requirements
