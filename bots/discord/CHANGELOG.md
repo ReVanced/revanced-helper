@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.24](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.23...@revanced/discord-bot@1.0.0-dev.24) (2024-08-14)
+
+
+### Bug Fixes
+
+* **bots/discord:** do not remove unrelated reactions ([031fd26](https://github.com/revanced/revanced-helper/commit/031fd26b2619ecafeff3964e50accacb87de6108))
+
 # @revanced/discord-bot [1.0.0-dev.23](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.22...@revanced/discord-bot@1.0.0-dev.23) (2024-08-13)
 
 
