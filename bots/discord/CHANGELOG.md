@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.26](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.25...@revanced/discord-bot@1.0.0-dev.26) (2024-08-15)
+
+
+### Bug Fixes
+
+* **bots/discord:** correct timer active condition for sticky messages ([96065ff](https://github.com/revanced/revanced-helper/commit/96065ff17584ff99a56ca5008327863ca5a7852b))
+
 # @revanced/discord-bot [1.0.0-dev.25](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.24...@revanced/discord-bot@1.0.0-dev.25) (2024-08-15)
 
 
