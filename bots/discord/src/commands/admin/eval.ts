@@ -19,14 +19,17 @@ export default new AdminCommand({
             required: false,
         },
     },
-    async execute(_, trigger, { code, 'show-hidden': showHidden }) {
+    async execute(context, trigger, { code, 'show-hidden': showHidden }) {
+        // So it doesn't show up as unused, and we can use it in `code`
+        context
+
         await trigger.reply({
             ephemeral: true,
             embeds: [
                 createSuccessEmbed('Evaluate', `\`\`\`js\n${code}\`\`\``).addFields({
                     name: 'Result',
                     // biome-ignore lint/security/noGlobalEval: This is fine as it's an admin command
-                    value: `\`\`\`js\n${inspect(eval(code), {
+                    value: `\`\`\`js\n${inspect(await eval(code), {
                         depth: 1,
                         showHidden,
                         getters: true,
