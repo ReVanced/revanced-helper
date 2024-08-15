@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.25](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.24...@revanced/discord-bot@1.0.0-dev.25) (2024-08-15)
+
+
+### Bug Fixes
+
+* **bots/discord:** allow access to `context` in `/eval` and await result ([99f65f0](https://github.com/revanced/revanced-helper/commit/99f65f07f5f8830c6e8ea4ae171e986af4d3f1f6))
+
 # @revanced/discord-bot [1.0.0-dev.24](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.23...@revanced/discord-bot@1.0.0-dev.24) (2024-08-14)
 
 
