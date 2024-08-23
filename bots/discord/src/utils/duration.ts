@@ -1,18 +1,6 @@
-export const parseDuration = (duration: string) => {
-    if (!duration.length) return Number.NaN
-    const matches = duration.match(/(?:(\d+y)?(\d+M)?(\d+w)?(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)/)!
+import parse from 'parse-duration'
 
-    const [, years, months, weeks, days, hours, minutes, seconds] = matches.map(Number)
-    return (
-        (years || 0) * 290304e5 +
-        (months || 0) * 24192e5 +
-        (weeks || 0) * 6048e5 +
-        (days || 0) * 864e5 +
-        (hours || 0) * 36e5 +
-        (minutes || 0) * 6e4 +
-        (seconds || 0) * 1e3
-    )
-}
+export const parseDuration = (duration: string) => parse(duration, 'ms') ?? Number.NaN
 
 export const durationToString = (duration: number) => {
     if (duration === 0) return '0s'

@@ -35,7 +35,8 @@
     "chalk": "^5.3.0",
     "decancer": "^3.2.3",
     "discord.js": "^14.15.3",
-    "drizzle-orm": "^0.31.4"
+    "drizzle-orm": "^0.31.4",
+    "parse-duration": "^1.1.0"
   },
   "devDependencies": {
     "@libsql/client": "^0.7.0",
