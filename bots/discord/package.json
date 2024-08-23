@@ -33,14 +33,14 @@
     "@revanced/bot-api": "workspace:*",
     "@revanced/bot-shared": "workspace:*",
     "chalk": "^5.3.0",
-    "decancer": "^3.2.3",
+    "decancer": "^3.2.4",
     "discord.js": "^14.15.3",
     "drizzle-orm": "^0.31.4",
     "parse-duration": "^1.1.0"
   },
   "devDependencies": {
     "@libsql/client": "^0.7.0",
-    "discord-api-types": "^0.37.92",
+    "discord-api-types": "^0.37.97",
     "drizzle-kit": "^0.22.8"
   }
 }

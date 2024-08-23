@@ -12,5 +12,5 @@ withContext(on, 'guildMemberAdd', async ({ database }, member) => {
         ),
     })
 
-    for (const { preset } of applieds) await applyRolesUsingPreset(preset, member, true)
+    for (const { preset } of applieds) await applyRolesUsingPreset(preset, member)
 })

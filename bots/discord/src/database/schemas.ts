@@ -16,6 +16,7 @@ export const appliedPresets = sqliteTable(
     {
         memberId: text('member').notNull(),
         guildId: text('guild').notNull(),
+        removedRoles: text('roles', { mode: 'json' }).notNull().$type<string[]>().default([]),
         preset: text('preset').notNull(),
         until: integer('until'),
     },

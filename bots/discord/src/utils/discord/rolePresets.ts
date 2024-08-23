@@ -7,7 +7,7 @@ import { and, eq } from 'drizzle-orm'
 type PresetKey = string
 
 export const applyRolePreset = async (member: GuildMember, presetName: PresetKey, expires: number) => {
-    const afterInsert = await applyRolesUsingPreset(presetName, member, true)
+    const { removed, callback } = await applyRolesUsingPreset(presetName, member)
     const until = expires === Infinity ? null : Math.ceil(expires / 1000)
 
     await database
@@ -16,39 +16,60 @@ export const applyRolePreset = async (member: GuildMember, presetName: PresetKey
             memberId: member.id,
             guildId: member.guild.id,
             preset: presetName,
+            removedRoles: removed,
             until,
         })
         .onConflictDoUpdate({
             target: [appliedPresets.memberId, appliedPresets.preset, appliedPresets.guildId],
             set: { until },
         })
-        .then(afterInsert)
+        .then(callback)
 }
 
 export const removeRolePreset = async (member: GuildMember, presetName: PresetKey) => {
-    const afterDelete = await applyRolesUsingPreset(presetName, member, false)
+    const where = and(
+        eq(appliedPresets.memberId, member.id),
+        eq(appliedPresets.preset, presetName),
+        eq(appliedPresets.guildId, member.guild.id),
+    )
 
-    await database
-        .delete(appliedPresets)
-        .where(
-            and(
-                eq(appliedPresets.memberId, member.id),
-                eq(appliedPresets.preset, presetName),
-                eq(appliedPresets.guildId, member.guild.id),
-            ),
-        )
-        .execute()
-        .then(afterDelete)
+    const data = await database.query.appliedPresets.findFirst({ where })
+    if (!data) return false
+
+    const { callback } = await applyRolesUsingPreset(presetName, member, data.removedRoles)
+    await database.delete(appliedPresets).where(where).execute().then(callback)
+
+    return true
 }
 
-export const applyRolesUsingPreset = async (presetName: string, member: GuildMember, applying: boolean) => {
+export const applyRolesUsingPreset = async (
+    presetName: string,
+    member: GuildMember,
+    removePresetGiveRoles?: string[],
+) => {
     const preset = config.rolePresets?.guilds[member.guild.id]?.[presetName]
     if (!preset) throw new Error(`The preset "${presetName}" does not exist for this server`)
 
     const roles = new Set(member.roles.cache.keys())
+    const removed: string[] = []
 
-    for (const role of preset.give) roles[applying ? 'add' : 'delete'](role)
-    for (const role of preset.take) roles[applying ? 'delete' : 'add'](role)
+    // If removePresetGiveRoles is not provided, we're applying a preset
+    if (!removePresetGiveRoles) {
+        for (const role of preset.give) roles.add(role)
+        for (const role of preset.take) {
+            if (roles.has(role)) {
+                roles.delete(role)
+                removed.push(role)
+            }
+        }
+    } else {
+        const guildRoles = await member.guild.roles.fetch()
+        for (const role of preset.give) roles.delete(role)
+        for (const role of removePresetGiveRoles) if (guildRoles.has(role)) roles.add(role)
+    }
 
-    return () => member.roles.set(Array.from(roles))
+    return {
+        removed,
+        callback: () => member.roles.set(Array.from(roles)),
+    }
 }
