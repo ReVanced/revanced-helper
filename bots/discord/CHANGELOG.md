@@ -1,3 +1,11 @@
+# @revanced/discord-bot [1.0.0-dev.27](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.26...@revanced/discord-bot@1.0.0-dev.27) (2024-08-23)
+
+
+### Bug Fixes
+
+* **bots/discord:** give only removed roles for role presets ([522ad28](https://github.com/revanced/revanced-helper/commit/522ad28fd83565e9ca411dbce86c8447574288fd))
+* **bots/discord:** replace duration parser with a library ([94c4fed](https://github.com/revanced/revanced-helper/commit/94c4fedc06e20051e4123508e3134b97eb84782a))
+
 # @revanced/discord-bot [1.0.0-dev.26](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.25...@revanced/discord-bot@1.0.0-dev.26) (2024-08-15)
 
 
