@@ -373,7 +373,7 @@ export default class Command<
             memberRequirementsForUsers = 'pass',
         } = this.requirements
 
-        const member = this.isGuildSpecific() ? null : (executor as GuildMember)
+        const member = this.isGuildSpecific() ? (executor as GuildMember) : null
         const boolDefaultCondition = defaultCondition !== 'fail'
         const boolMemberRequirementsForUsers = memberRequirementsForUsers !== 'fail'
 
