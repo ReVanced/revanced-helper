@@ -2,7 +2,7 @@
   "name": "@revanced/discord-bot",
   "type": "module",
   "private": true,
-  "version": "1.0.0-dev.27",
+  "version": "1.0.0-dev.28",
   "description": "🤖 Discord bot assisting ReVanced",
   "main": "src/index.ts",
   "scripts": {

@@ -1,3 +1,11 @@
+# @revanced/discord-bot [1.0.0-dev.28](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.27...@revanced/discord-bot@1.0.0-dev.28) (2024-09-20)
+
+
+### Bug Fixes
+
+* **bots/discord:** don't refresh timer if force timer is active for sticky messages ([4abac0c](https://github.com/revanced/revanced-helper/commit/4abac0c890c0548e14cb56723cae919353a8e726))
+* **bots/discord:** filter out text triggers correctly from image-only scans ([8c0dd67](https://github.com/revanced/revanced-helper/commit/8c0dd67d03d5a1747993da08a5bf82a39de43789))
+
 # @revanced/discord-bot [1.0.0-dev.27](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.26...@revanced/discord-bot@1.0.0-dev.27) (2024-09-05)
 
 
