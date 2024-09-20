@@ -12,18 +12,34 @@ withContext(on, 'messageCreate', async ({ discord, logger }, msg) => {
     store.timerActive = true
     if (!store.timer) store.timer = setTimeout(store.send, store.timerMs) as NodeJS.Timeout
     else {
-        // If there is a timer, but it isn't active, restart it
-        if (!timerPreviouslyActive) store.timer.refresh()
-        // If there is a timer and it is active, but the force timer isn't active...
-        else if (!store.forceTimerActive && store.forceTimerMs) {
-            logger.debug(`Channel ${msg.channelId} in guild ${msg.guildId} is active, starting force send timer and clearing existing timer`)
+        /* 
+            If:
+                - (negate carried) There's a timer
+                - The timer is not active
+                - The force timer is not active
+            Then:
+                - Restart the timer
+        */
+        if (!timerPreviouslyActive && !store.forceTimerActive) store.timer.refresh()
+        /*
+            If:
+                - Any of:
+                    - (negate carried) The timer is active
+                    - (negate carried) The force timer is active
+                - The force timer is not active
+            Then:
+                - Start the force timer and clear the existing timer
+        */ else if (!store.forceTimerActive && store.forceTimerMs) {
+            logger.debug(
+                `Channel ${msg.channelId} in guild ${msg.guildId} is active, starting force send timer and clearing existing timer`,
+            )
 
             // Clear the timer
             clearTimeout(store.timer)
             store.timerActive = false
-            store.forceTimerActive = true
 
             // (Re)start the force timer
+            store.forceTimerActive = true
             if (!store.forceTimer)
                 store.forceTimer = setTimeout(
                     () =>
