@@ -9,7 +9,7 @@ export const getResponseFromText = async (
     responses: ConfigMessageScanResponse[],
     // Just to be safe that we will never use data from the context parameter
     { api, logger }: Omit<typeof import('src/context'), 'config'>,
-    flags: { onlyImageTriggers?: boolean; skipApiRequest?: boolean } = {}
+    flags: { imageTriggersOnly?: boolean; textRegexesOnly?: boolean } = {},
 ): Promise<
     Omit<ConfigMessageScanResponse, 'triggers'> & { label?: string; triggers?: ConfigMessageScanResponse['triggers'] }
 > => {
@@ -31,7 +31,7 @@ export const getResponseFromText = async (
             triggers: { text: textTriggers, image: imageTriggers },
         } = trigger
 
-        if (flags.onlyImageTriggers) {
+        if (flags.imageTriggersOnly) {
             if (imageTriggers)
                 for (const regex of imageTriggers)
                     if (regex.test(content)) {
@@ -39,7 +39,7 @@ export const getResponseFromText = async (
                         responseConfig = trigger
                         break
                     }
-        } else
+        } else {
             for (let j = 0; j < textTriggers!.length; j++) {
                 const regex = textTriggers![j]!
 
@@ -54,55 +54,59 @@ export const getResponseFromText = async (
                     break
                 }
             }
-    }
 
-    // If none of the regexes match, we can search for labels immediately
-    if (!responseConfig.triggers && !flags.onlyImageTriggers && !flags.skipApiRequest) {
-        logger.debug('No match from before regexes, doing NLP')
-        const scan = await api.client.parseText(content)
-        if (scan.labels.length) {
-            const matchedLabel = scan.labels[0]!
-            logger.debug(`Message matched label with confidence: ${matchedLabel.name}, ${matchedLabel.confidence}`)
+            // If none of the regexes match, we can search for labels immediately
+            if (!responseConfig.triggers && !flags.textRegexesOnly) {
+                logger.debug('No match from before regexes, doing NLP')
+                const scan = await api.client.parseText(content)
+                if (scan.labels.length) {
+                    const matchedLabel = scan.labels[0]!
+                    logger.debug(
+                        `Message matched label with confidence: ${matchedLabel.name}, ${matchedLabel.confidence}`,
+                    )
 
-            let trigger: ConfigMessageScanResponseLabelConfig | undefined
-            const response = responses.find(x => {
-                const config = x.triggers.text!.find(
-                    (x): x is ConfigMessageScanResponseLabelConfig => 'label' in x && x.label === matchedLabel.name,
-                )
-                if (config) trigger = config
-                return config
-            })
+                    let trigger: ConfigMessageScanResponseLabelConfig | undefined
+                    const response = responses.find(x => {
+                        const config = x.triggers.text!.find(
+                            (x): x is ConfigMessageScanResponseLabelConfig =>
+                                'label' in x && x.label === matchedLabel.name,
+                        )
+                        if (config) trigger = config
+                        return config
+                    })
 
-            if (!response) {
-                logger.warn(`No response config found for label ${matchedLabel.name}`)
-                // This returns the default value set in line 17, which means no response matched
-                return responseConfig
+                    if (!response) {
+                        logger.warn(`No response config found for label ${matchedLabel.name}`)
+                        // This returns the default value set in line 17, which means no response matched
+                        return responseConfig
+                    }
+
+                    if (matchedLabel.confidence >= trigger!.threshold) {
+                        logger.debug('Label confidence is enough')
+                        responseConfig = { ...responseConfig, ...response, label: trigger!.label }
+                    }
+                }
             }
 
-            if (matchedLabel.confidence >= trigger!.threshold) {
-                logger.debug('Label confidence is enough')
-                responseConfig = { ...responseConfig, ...response, label: trigger!.label }
-            }
-        }
-    }
+            // If we still don't have a response config, we can match all regexes after the initial label trigger
+            if (!responseConfig.triggers && !flags.imageTriggersOnly) {
+                logger.debug('No match from NLP, doing after regexes')
+                for (let i = 0; i < responses.length; i++) {
+                    const {
+                        triggers: { text: textTriggers },
+                    } = responses[i]!
+                    const firstLabelIndex = firstLabelIndexes[i] ?? -1
 
-    // If we still don't have a response config, we can match all regexes after the initial label trigger
-    if (!responseConfig.triggers && flags.onlyImageTriggers) {
-        logger.debug('No match from NLP, doing after regexes')
-        for (let i = 0; i < responses.length; i++) {
-            const {
-                triggers: { text: textTriggers },
-            } = responses[i]!
-            const firstLabelIndex = firstLabelIndexes[i] ?? -1
+                    for (let j = firstLabelIndex + 1; j < textTriggers!.length; j++) {
+                        const trigger = textTriggers![j]!
 
-            for (let j = firstLabelIndex + 1; j < textTriggers!.length; j++) {
-                const trigger = textTriggers![j]!
-
-                if (trigger instanceof RegExp) {
-                    if (trigger.test(content)) {
-                        logger.debug(`Message matched regex (after mode): ${trigger.source}`)
-                        responseConfig = responses[i]!
-                        break
+                        if (trigger instanceof RegExp) {
+                            if (trigger.test(content)) {
+                                logger.debug(`Message matched regex (after mode): ${trigger.source}`)
+                                responseConfig = responses[i]!
+                                break
+                            }
+                        }
                     }
                 }
             }

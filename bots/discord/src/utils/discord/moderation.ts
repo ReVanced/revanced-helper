@@ -23,10 +23,7 @@ export const sendPresetReplyAndLogs = (
         ]),
     )
 
-export const sendModerationReplyAndLogs = async (
-    interaction: CommandInteraction | Message,
-    embed: EmbedBuilder,
-) => {
+export const sendModerationReplyAndLogs = async (interaction: CommandInteraction | Message, embed: EmbedBuilder) => {
     const reply = await interaction.reply({ embeds: [embed] }).then(it => it.fetch())
     const logChannel = await getLogChannel(interaction.guild!)
     await logChannel?.send({ embeds: [applyReferenceToModerationActionEmbed(embed, reply.url)] })

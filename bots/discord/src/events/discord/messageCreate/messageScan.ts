@@ -66,10 +66,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
             const mimeType = attachment.contentType?.split(';')?.[0]
             if (!mimeType) return void logger.warn(`No MIME type for attachment: ${attachment.url}`)
 
-            if (
-                config.attachments.allowedMimeTypes &&
-                !config.attachments.allowedMimeTypes.includes(mimeType)
-            ) {
+            if (config.attachments.allowedMimeTypes && !config.attachments.allowedMimeTypes.includes(mimeType)) {
                 logger.debug(`Disallowed MIME type for attachment: ${attachment.url}, ${mimeType}`)
                 continue
             }
@@ -86,10 +83,14 @@ withContext(on, 'messageCreate', async (context, msg) => {
 
                 if (isTextFile) {
                     const content = await (await fetch(attachment.url)).text()
-                    response = await getResponseFromText(content, filteredResponses, context, { skipApiRequest: true }).then(it => it.response)
+                    response = await getResponseFromText(content, filteredResponses, context, {
+                        textRegexesOnly: true,
+                    }).then(it => it.response)
                 } else {
                     const { text: content } = await api.client.parseImage(attachment.url)
-                    response = await getResponseFromText(content, filteredResponses, context, { onlyImageTriggers: true }).then(it => it.response)
+                    response = await getResponseFromText(content, filteredResponses, context, {
+                        imageTriggersOnly: true,
+                    }).then(it => it.response)
                 }
 
                 if (response) {
