@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.29](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.28...@revanced/discord-bot@1.0.0-dev.29) (2024-09-21)
+
+
+### Bug Fixes
+
+* **bots/discord:** fix get response logic ([3261294](https://github.com/revanced/revanced-helper/commit/3261294822b0a9faec094536ed5be2d3e1d5e17b))
+
 # @revanced/discord-bot [1.0.0-dev.28](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.27...@revanced/discord-bot@1.0.0-dev.28) (2024-09-20)
 
 
