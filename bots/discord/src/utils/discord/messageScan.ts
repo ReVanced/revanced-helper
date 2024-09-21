@@ -1,6 +1,7 @@
 import { type Response, responses } from '$/database/schemas'
 import type { Config, ConfigMessageScanResponse, ConfigMessageScanResponseLabelConfig } from 'config.schema'
-import type { Message, PartialUser, User } from 'discord.js'
+import { ButtonStyle, ComponentType } from 'discord.js'
+import type { APIActionRowComponent, APIButtonComponent, Message, PartialUser, User } from 'discord.js'
 import { eq } from 'drizzle-orm'
 import { createMessageScanResponseEmbed } from './embeds'
 
@@ -54,59 +55,56 @@ export const getResponseFromText = async (
                     break
                 }
             }
+        }
+    }
 
-            // If none of the regexes match, we can search for labels immediately
-            if (!responseConfig.triggers && !flags.textRegexesOnly) {
-                logger.debug('No match from before regexes, doing NLP')
-                const scan = await api.client.parseText(content)
-                if (scan.labels.length) {
-                    const matchedLabel = scan.labels[0]!
-                    logger.debug(
-                        `Message matched label with confidence: ${matchedLabel.name}, ${matchedLabel.confidence}`,
-                    )
+    // If none of the regexes match, we can search for labels immediately
+    if (!responseConfig.triggers && !flags.textRegexesOnly) {
+        logger.debug('No match from before regexes, doing NLP')
+        const scan = await api.client.parseText(content)
+        if (scan.labels.length) {
+            const matchedLabel = scan.labels[0]!
+            logger.debug(`Message matched label with confidence: ${matchedLabel.name}, ${matchedLabel.confidence}`)
 
-                    let trigger: ConfigMessageScanResponseLabelConfig | undefined
-                    const response = responses.find(x => {
-                        const config = x.triggers.text!.find(
-                            (x): x is ConfigMessageScanResponseLabelConfig =>
-                                'label' in x && x.label === matchedLabel.name,
-                        )
-                        if (config) trigger = config
-                        return config
-                    })
+            let trigger: ConfigMessageScanResponseLabelConfig | undefined
+            const response = responses.find(x => {
+                const config = x.triggers.text!.find(
+                    (x): x is ConfigMessageScanResponseLabelConfig => 'label' in x && x.label === matchedLabel.name,
+                )
+                if (config) trigger = config
+                return config
+            })
 
-                    if (!response) {
-                        logger.warn(`No response config found for label ${matchedLabel.name}`)
-                        // This returns the default value set in line 17, which means no response matched
-                        return responseConfig
-                    }
-
-                    if (matchedLabel.confidence >= trigger!.threshold) {
-                        logger.debug('Label confidence is enough')
-                        responseConfig = { ...responseConfig, ...response, label: trigger!.label }
-                    }
-                }
+            if (!response) {
+                logger.warn(`No response config found for label ${matchedLabel.name}`)
+                // This returns the default value set in line 17, which means no response matched
+                return responseConfig
             }
 
-            // If we still don't have a response config, we can match all regexes after the initial label trigger
-            if (!responseConfig.triggers && !flags.imageTriggersOnly) {
-                logger.debug('No match from NLP, doing after regexes')
-                for (let i = 0; i < responses.length; i++) {
-                    const {
-                        triggers: { text: textTriggers },
-                    } = responses[i]!
-                    const firstLabelIndex = firstLabelIndexes[i] ?? -1
+            if (matchedLabel.confidence >= trigger!.threshold) {
+                logger.debug('Label confidence is enough')
+                responseConfig = { ...responseConfig, ...response, label: trigger!.label }
+            }
+        }
+    }
 
-                    for (let j = firstLabelIndex + 1; j < textTriggers!.length; j++) {
-                        const trigger = textTriggers![j]!
+    // If we still don't have a response config, we can match all regexes after the initial label trigger
+    if (!responseConfig.triggers && !flags.imageTriggersOnly) {
+        logger.debug('No match from NLP, doing after regexes')
+        for (let i = 0; i < responses.length; i++) {
+            const {
+                triggers: { text: textTriggers },
+            } = responses[i]!
+            const firstLabelIndex = firstLabelIndexes[i] ?? -1
 
-                        if (trigger instanceof RegExp) {
-                            if (trigger.test(content)) {
-                                logger.debug(`Message matched regex (after mode): ${trigger.source}`)
-                                responseConfig = responses[i]!
-                                break
-                            }
-                        }
+            for (let j = firstLabelIndex + 1; j < textTriggers!.length; j++) {
+                const trigger = textTriggers![j]!
+
+                if (trigger instanceof RegExp) {
+                    if (trigger.test(content)) {
+                        logger.debug(`Message matched regex (after mode): ${trigger.source}`)
+                        responseConfig = responses[i]!
+                        break
                     }
                 }
             }
@@ -163,14 +161,41 @@ export const handleUserResponseCorrection = async (
             })
             .where(eq(responses.replyId, response.replyId))
 
-        await reply.edit({
+        return void (await reply.edit({
             ...correctLabelResponse.response,
             embeds: correctLabelResponse.response.embeds?.map(createMessageScanResponseEmbed),
-        })
+            components: [],
+        }))
     }
 
     await api.client.trainMessage(response.content, label)
     logger.debug(`User ${user.id} trained message ${response.replyId} as ${label} (positive)`)
 
-    await reply.reactions.removeAll()
+    await reply.edit({
+        components: [],
+    })
 }
+
+export const createMessageScanResponseComponents = (reply: Message<true>) => [
+    {
+        type: ComponentType.ActionRow,
+        components: [
+            {
+                type: ComponentType.Button,
+                style: ButtonStyle.Secondary,
+                emoji: {
+                    id: '👍',
+                },
+                custom_id: `train:${reply.id}`,
+            },
+            {
+                type: ComponentType.Button,
+                style: ButtonStyle.Secondary,
+                emoji: {
+                    id: '🔧',
+                },
+                custom_id: `edit:${reply.id}`,
+            },
+        ],
+    } as APIActionRowComponent<APIButtonComponent>,
+]
