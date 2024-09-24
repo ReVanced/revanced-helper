@@ -7,6 +7,18 @@ withContext(on, 'messageCreate', async ({ discord, logger }, msg) => {
     const store = discord.stickyMessages[msg.guildId]?.[msg.channelId]
     if (!store) return
 
+    // TODO: Fix this by fixing the logic below
+    if (store.timerActive && store.forceTimerActive) {
+        logger.error(
+            `Both timers are active in sticky message store: ${msg.guildId}.${msg.channelId}, this should not happen!`,
+        )
+        logger.info('Clearing the timer and the restarting the force timer...')
+        clearTimeout(store.timer)
+        store.timerActive = false
+        // If the force timer is active, it implies the force timer exists
+        store.forceTimer!.refresh()
+    }
+
     const timerPreviouslyActive = store.timerActive
     // If there isn't a timer, start it up
     store.timerActive = true
