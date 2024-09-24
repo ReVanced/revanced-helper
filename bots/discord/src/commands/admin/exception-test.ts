@@ -11,7 +11,10 @@ export default new AdminCommand({
             description: 'The type of exception to throw',
             type: ApplicationCommandOptionType.String,
             required: true,
-            choices: Object.keys(CommandErrorType).map(k => ({ name: k, value: k })),
+            choices: [
+                { name: 'Process', value: 'Process' },
+                ...Object.keys(CommandErrorType).map(k => ({ name: k, value: k })),
+            ],
         },
     },
     async execute(_, __, { type }) {
