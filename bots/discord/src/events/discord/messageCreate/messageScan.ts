@@ -1,4 +1,3 @@
-import { MessageScanLabeledResponseReactions } from '$/constants'
 import { responses } from '$/database/schemas'
 import { getResponseFromText, messageMatchesFilter } from '$/utils/discord/messageScan'
 import { createMessageScanResponseEmbed } from '$utils/discord/embeds'
@@ -22,7 +21,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
 
     if (msg.content.length) {
         try {
-            logger.debug(`Classifying message ${msg.id}`)
+            logger.debug(`Classifying message ${msg.id}, possible responses is ${filteredResponses.length}`)
 
             const { response, label, respondToReply } = await getResponseFromText(
                 msg.content,
@@ -48,10 +47,6 @@ withContext(on, 'messageCreate', async (context, msg) => {
                         label,
                         content: msg.content,
                     })
-
-                    for (const reaction of Object.values(MessageScanLabeledResponseReactions)) {
-                        await reply.react(reaction)
-                    }
                 }
             }
         } catch (e) {
@@ -60,7 +55,7 @@ withContext(on, 'messageCreate', async (context, msg) => {
     }
 
     if (msg.attachments.size && config.attachments?.scanAttachments) {
-        logger.debug(`Classifying message attachments for ${msg.id}`)
+        logger.debug(`Classifying message attachments for ${msg.id}, possible responses is ${filteredResponses.length}`)
 
         for (const attachment of msg.attachments.values()) {
             const mimeType = attachment.contentType?.split(';')?.[0]
