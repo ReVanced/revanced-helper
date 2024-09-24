@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.30](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.29...@revanced/discord-bot@1.0.0-dev.30) (2024-09-24)
+
+
+### Features
+
+* **bots/discord:** improve admin commands ([0346741](https://github.com/revanced/revanced-helper/commit/03467411882b8598e2c06f389a09ef2e201bb43f))
+
 # @revanced/discord-bot [1.0.0-dev.29](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.28...@revanced/discord-bot@1.0.0-dev.29) (2024-09-21)
 
 
