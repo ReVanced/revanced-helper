@@ -46,6 +46,7 @@ export default new AdminCommand({
             createContext({
                 ...globalThis,
                 context,
+                trigger,
             }),
             {
                 timeout: parseDuration(timeout ?? '10s'),
