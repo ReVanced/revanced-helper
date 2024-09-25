@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.33](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.32...@revanced/discord-bot@1.0.0-dev.33) (2024-09-25)
+
+
+### Features
+
+* **bots/discord:** add trigger to context for eval ([b5f4097](https://github.com/revanced/revanced-helper/commit/b5f40975386677ffff343c42f8ffac21f847a0b7))
+
 # @revanced/discord-bot [1.0.0-dev.32](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.31...@revanced/discord-bot@1.0.0-dev.32) (2024-09-25)
 
 
