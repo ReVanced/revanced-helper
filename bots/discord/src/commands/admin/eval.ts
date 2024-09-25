@@ -1,7 +1,7 @@
 import { unlinkSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { inspect } from 'util'
-import { runInContext } from 'vm'
+import { createContext, runInContext } from 'vm'
 import { ApplicationCommandOptionType } from 'discord.js'
 
 import { AdminCommand } from '$/classes/Command'
@@ -43,10 +43,10 @@ export default new AdminCommand({
         // to the bot while the bot is running, minus malicious actors getting the token to perform malicious actions
         const output = await runInContext(
             code,
-            {
+            createContext({
                 ...globalThis,
                 context,
-            },
+            }),
             {
                 timeout: parseDuration(timeout ?? '10s'),
                 filename: 'eval',
