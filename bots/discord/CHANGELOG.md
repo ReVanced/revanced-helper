@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.32](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.31...@revanced/discord-bot@1.0.0-dev.32) (2024-09-25)
+
+
+### Bug Fixes
+
+* **bots/discord:** contextify object before sandboxing ([062735f](https://github.com/revanced/revanced-helper/commit/062735f6d552890404d6192244c51a11b0709580))
+
 # @revanced/discord-bot [1.0.0-dev.31](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.30...@revanced/discord-bot@1.0.0-dev.31) (2024-09-25)
 
 
