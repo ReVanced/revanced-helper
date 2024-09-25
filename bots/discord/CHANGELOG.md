@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.31](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.30...@revanced/discord-bot@1.0.0-dev.31) (2024-09-25)
+
+
+### Bug Fixes
+
+* **bots/discord:** persist changes in context for eval command ([5b4965d](https://github.com/revanced/revanced-helper/commit/5b4965dcc7285676b2b3b6756c249bd56eaf8485))
+
 # @revanced/discord-bot [1.0.0-dev.30](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.29...@revanced/discord-bot@1.0.0-dev.30) (2024-09-24)
 
 
