@@ -1,7 +1,7 @@
 import { unlinkSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { inspect } from 'util'
-import { runInNewContext } from 'vm'
+import { runInContext } from 'vm'
 import { ApplicationCommandOptionType } from 'discord.js'
 
 import { AdminCommand } from '$/classes/Command'
@@ -41,7 +41,7 @@ export default new AdminCommand({
 
         // This allows developers to access and modify the context object to apply changes
         // to the bot while the bot is running, minus malicious actors getting the token to perform malicious actions
-        const output = await runInNewContext(
+        const output = await runInContext(
             code,
             {
                 ...globalThis,
