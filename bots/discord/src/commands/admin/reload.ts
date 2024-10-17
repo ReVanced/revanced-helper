@@ -1,7 +1,4 @@
-import { dirname, join } from 'path'
 import { AdminCommand } from '$/classes/Command'
-
-import type { Config } from 'config.schema'
 
 export default new AdminCommand({
     name: 'reload',
@@ -10,10 +7,8 @@ export default new AdminCommand({
         const { api, logger, discord } = context
         logger.info(`Reload triggered by ${context.executor.tag} (${context.executor.id})`)
 
-        // Apparently the query strings only work with non-Windows "URLs", otherwise it'd just infinitely hang
-        const path = `${Bun.pathToFileURL(join(dirname(Bun.main), '..', 'config.js')).toString()}?cache=${Date.now()}`
-        logger.debug(`Reloading configuration from: ${path}`)
-        context.config = ((await import(path)) as { default: Config }).default
+        logger.debug('Invalidating previous config...')
+        context.config.invalidate()
 
         if ('deferReply' in trigger) await trigger.deferReply({ ephemeral: true })
 
@@ -28,7 +23,7 @@ export default new AdminCommand({
         api.client.disconnect(true)
         api.disconnectCount = 0
         api.intentionallyDisconnecting = false
-        await api.client.connect()
+        api.client.connect()
 
         logger.info('Reinitializing Discord client to reload configuration...')
         await discord.client.destroy()
