@@ -14,13 +14,13 @@ export default new ModerationCommand({
             required: true,
             type: ModerationCommand.OptionType.User,
         },
-        reason: {
-            description: 'The reason for muting the member',
+        duration: {
+            description: 'The duration of the mute (default time unit is minutes)',
             required: false,
             type: ModerationCommand.OptionType.String,
         },
-        duration: {
-            description: 'The duration of the mute',
+        reason: {
+            description: 'The reason for muting the member',
             required: false,
             type: ModerationCommand.OptionType.String,
         },
@@ -33,7 +33,7 @@ export default new ModerationCommand({
         const guild = await interaction.client.guilds.fetch(interaction.guildId)
         const member = await guild.members.fetch(user.id)
         const moderator = await guild.members.fetch(executor.id)
-        const duration = durationInput ? parseDuration(durationInput) : Infinity
+        const duration = durationInput ? parseDuration(durationInput, 'm') : Infinity
 
         if (Number.isInteger(duration) && duration! < 1)
             throw new CommandError(

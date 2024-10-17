@@ -18,13 +18,14 @@ export default new ModerationCommand({
             required: false,
             type: ModerationCommand.OptionType.String,
         },
-        dmd: {
-            description: 'Duration to delete messages (must be from 0 to 7 days)',
+        dmt: {
+            description:
+                'Time duration to delete messages (default time unit is days, must be from 0s to 7d, default value is 0s)',
             required: false,
             type: ModerationCommand.OptionType.String,
         },
     },
-    async execute({ logger, executor }, interaction, { user, reason, dmd }) {
+    async execute({ logger, executor }, interaction, { user, reason, dmt }) {
         const guild = await interaction.client.guilds.fetch(interaction.guildId)
         const member = await guild.members.fetch(user).catch(() => {})
         const moderator = await guild.members.fetch(executor.user)
@@ -40,7 +41,7 @@ export default new ModerationCommand({
                 )
         }
 
-        const dms = Math.floor(dmd ? parseDuration(dmd) : 0 / 1000)
+        const dms = Math.floor((dmt ? parseDuration(dmt, 'd') : 0) / 1000)
         await interaction.guild!.members.ban(user, {
             reason: `Banned by moderator ${executor.user.tag} (${executor.id}): ${reason}`,
             deleteMessageSeconds: dms,

@@ -11,12 +11,12 @@ const SubcommandOptions = {
         type: ModerationCommand.OptionType.User,
     },
     preset: {
-        description: 'The preset to apply or remove',
+        description: 'The preset to manage',
         required: true,
         type: ModerationCommand.OptionType.String,
     },
     duration: {
-        description: 'The duration to apply the preset for (only for apply action)',
+        description: 'The duration to apply the preset for (only for apply action, default time unit is minutes)',
         required: false,
         type: ModerationCommand.OptionType.String,
     },
@@ -53,7 +53,7 @@ export default new ModerationCommand({
             throw new CommandError(CommandErrorType.Generic, 'This user cannot be managed by the bot.')
 
         if (apply) {
-            const duration = durationInput ? parseDuration(durationInput) : Infinity
+            const duration = durationInput ? parseDuration(durationInput, 'm') : Infinity
             if (Number.isInteger(duration) && duration! < 1)
                 throw new CommandError(
                     CommandErrorType.InvalidArgument,
@@ -83,6 +83,13 @@ export default new ModerationCommand({
                 removeRolePreset(member, preset)
             }, expires)
 
-        await sendPresetReplyAndLogs(apply ? 'apply' : 'remove', trigger, executor, user, preset, expires ? Math.ceil(expires / 1000) : undefined)
+        await sendPresetReplyAndLogs(
+            apply ? 'apply' : 'remove',
+            trigger,
+            executor,
+            user,
+            preset,
+            expires ? Math.ceil(expires / 1000) : undefined,
+        )
     },
 })

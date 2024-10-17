@@ -10,7 +10,7 @@ export default new ModerationCommand({
     description: 'Set a slowmode for a channel',
     options: {
         duration: {
-            description: 'The duration to set',
+            description: 'The duration to set (default time unit is seconds)',
             required: true,
             type: ModerationCommand.OptionType.String,
         },
@@ -23,13 +23,10 @@ export default new ModerationCommand({
     },
     async execute({ logger, executor }, interaction, { duration: durationInput, channel: channelInput }) {
         const channel = channelInput ?? (await interaction.guild!.channels.fetch(interaction.channelId))
-        const duration = parseDuration(durationInput)
+        const duration = parseDuration(durationInput, 's')
 
         if (!channel?.isTextBased() || channel.isDMBased())
-            throw new CommandError(
-                CommandErrorType.InvalidArgument,
-                'The supplied channel is not a text channel.',
-            )
+            throw new CommandError(CommandErrorType.InvalidArgument, 'The supplied channel is not a text channel.')
 
         if (Number.isNaN(duration)) throw new CommandError(CommandErrorType.InvalidArgument, 'Invalid duration.')
         if (duration < 0 || duration > 36e4)

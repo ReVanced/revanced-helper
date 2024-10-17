@@ -1,6 +1,15 @@
 import parse from 'parse-duration'
 
-export const parseDuration = (duration: string) => parse(duration, 'ms') ?? Number.NaN
+const defaultUnitValue = parse['']!
+
+export const parseDuration = (duration: string, defaultUnit?: parse.Units) => {
+    if (defaultUnit) parse[''] = parse[defaultUnit]!
+    return (
+        // biome-ignore lint/suspicious/noAssignInExpressions: Expression is ignored
+        // biome-ignore lint/style/noCommaOperator: The last expression (parse call) is returned, it is not confusing
+        (parse[''] = defaultUnitValue), parse(duration, 'ms') ?? Number.NaN
+    )
+}
 
 export const durationToString = (duration: number) => {
     if (duration === 0) return '0s'
