@@ -1,3 +1,17 @@
+# @revanced/discord-bot [1.0.0-dev.34](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.33...@revanced/discord-bot@1.0.0-dev.34) (2024-10-17)
+
+
+### Bug Fixes
+
+* **bots/discord:** attempt to fix stuck sticky message timeouts ([3ed5bd1](https://github.com/revanced/revanced-helper/commit/3ed5bd11acc3b4fbd57b0d632c68eb9f77365b8a))
+* **bots/discord:** fix reload not working ([11582d5](https://github.com/revanced/revanced-helper/commit/11582d50345cae9fb645a65ca4e621596de6a408))
+
+
+### Features
+
+* **bots/discord:** add default durations for moderation commands ([27d3b39](https://github.com/revanced/revanced-helper/commit/27d3b392092141a1e3b4b0298131ff7817458dc1))
+* **bots/discord:** cure on every event ([8ff6086](https://github.com/revanced/revanced-helper/commit/8ff6086028132cc4b49ee60846e8d6ef909f5a89))
+
 # @revanced/discord-bot [1.0.0-dev.33](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.32...@revanced/discord-bot@1.0.0-dev.33) (2024-09-25)
 
 
