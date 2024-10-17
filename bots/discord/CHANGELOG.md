@@ -1,3 +1,10 @@
+# @revanced/discord-bot [1.0.0-dev.35](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.34...@revanced/discord-bot@1.0.0-dev.35) (2024-10-17)
+
+
+### Bug Fixes
+
+* **bots/discord:** fix freeze on prod builds ([8efb549](https://github.com/revanced/revanced-helper/commit/8efb549453a04fab1ac6414a7f7f8bf702df3c93))
+
 # @revanced/discord-bot [1.0.0-dev.34](https://github.com/revanced/revanced-helper/compare/@revanced/discord-bot@1.0.0-dev.33...@revanced/discord-bot@1.0.0-dev.34) (2024-10-17)
 
 
