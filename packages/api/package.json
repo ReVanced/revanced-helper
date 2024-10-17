@@ -28,10 +28,10 @@
   "homepage": "https://github.com/revanced/revanced-helper#readme",
   "dependencies": {
     "@revanced/bot-shared": "workspace:*",
-    "ws": "^8.17.1"
+    "ws": "^8.18.0"
   },
   "devDependencies": {
-    "@types/ws": "^8.5.10",
+    "@types/ws": "^8.5.12",
     "typed-emitter": "^2.1.0"
   }
 }
