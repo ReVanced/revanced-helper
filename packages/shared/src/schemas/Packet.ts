@@ -1,18 +1,18 @@
 import {
+    url,
     type AnySchema,
+    type BooleanSchema,
     type NullSchema,
     type ObjectSchema,
     type Output,
-    type BooleanSchema,
     array,
+    boolean,
     enum_,
     null_,
     object,
     parse,
     special,
     string,
-    boolean,
-    url,
     // merge
 } from 'valibot'
 import DisconnectReason from '../constants/DisconnectReason'

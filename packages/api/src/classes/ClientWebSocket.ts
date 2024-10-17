@@ -35,7 +35,7 @@ export class ClientWebSocketManager {
 
     /**
      * Sets the URL to connect to
-     * 
+     *
      * **Requires a reconnect to take effect**
      */
     async setOptions({ url, timeout }: Partial<ClientWebSocketManagerOptions>, autoReconnect = true) {
