@@ -60,7 +60,7 @@ export default withContext(on, 'ready', async ({ config, discord, logger }, clie
                         )
                     }
                 }
-                
+
                 // Set up the store
                 discord.stickyMessages[guildId]![channelId] = {
                     forceTimerActive: false,
@@ -69,7 +69,7 @@ export default withContext(on, 'ready', async ({ config, discord, logger }, clie
                     timerMs: timeout,
                     send,
                     // If the store exists before the configuration refresh, take its current message
-                    currentMessage: oldStore?.[channelId]?.currentMessage
+                    currentMessage: oldStore?.[channelId]?.currentMessage,
                 }
 
                 // Send a new sticky message immediately, as well as deleting the old/outdated message, if it exists
