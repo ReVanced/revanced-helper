@@ -1,9 +1,9 @@
 import { on } from '$/utils/discord/events'
 import { cureNickname } from '$/utils/discord/moderation'
 
-on('guildMemberUpdate', async (oldMember, newMember) => {
+on('guildMemberUpdate', (_, newMember) => {
     if (newMember.user.bot) return
-    if (oldMember.displayName !== newMember.displayName) await cureNickname(newMember)
+    cureNickname(newMember)
 })
 
 on('guildMemberAdd', member => {
@@ -11,7 +11,7 @@ on('guildMemberAdd', member => {
     cureNickname(member)
 })
 
-on('messageCreate', async msg => {
+on('messageCreate', msg => {
     if (msg.author.bot || !msg.member) return
-    await cureNickname(msg.member)
+    cureNickname(msg.member)
 })
