@@ -1,49 +1,24 @@
 import { Database } from 'bun:sqlite'
 import { existsSync, readFileSync, readdirSync } from 'fs'
-import { dirname, join } from 'path'
+import { join } from 'path'
 import { Client as APIClient } from '@revanced/bot-api'
 import { createLogger } from '@revanced/bot-shared'
 import { Client as DiscordClient, type Message, Partials } from 'discord.js'
 import { drizzle } from 'drizzle-orm/bun-sqlite'
-import type { default as Command, CommandOptionsOptions, CommandType } from './classes/Command'
+
 import * as schemas from './database/schemas'
 
-// Export some things first, as commands require them
-import _firstConfig from '../config.js'
+import type { default as Command, CommandOptionsOptions, CommandType } from './classes/Command'
 
-let currentConfig = _firstConfig
-
-// Other parts of the code will access properties of this proxy, they don't care what the target looks like
-export const config = new Proxy(
-    {
-        INSPECTION_WARNING: 'Run `context.__getConfig()` to inspect the latest config.',
-    } as unknown as typeof currentConfig,
-    {
-        get(_, p, receiver) {
-            if (p === 'invalidate')
-                return async () => {
-                    const path = join(dirname(Bun.main), '..', 'config.js')
-                    Loader.registry.delete(path)
-                    currentConfig = (await import(path)).default
-                    logger.debug('New config set')
-                }
-
-            return Reflect.get(currentConfig, p, receiver)
-        },
-        set(_, p, newValue, receiver) {
-            return Reflect.set(currentConfig, p, newValue, receiver)
-        },
-    },
-) as typeof _firstConfig & { invalidate(): void }
-
-export const __getConfig = () => currentConfig
+import { __getConfig, config } from './config'
+export { config, __getConfig }
 
 export const logger = createLogger({
     level: config.logLevel === 'none' ? Number.MAX_SAFE_INTEGER : config.logLevel,
 })
 
-// Importing later because config needs to be exported before
-const commands = await import('./commands')
+// Export a few things before we initialize commands
+import * as commands from './commands'
 
 export const api = {
     client: new APIClient({
